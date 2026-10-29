@@ -1,3 +1,4 @@
-# Placeholder until the production domain is chosen (src/config/site.ts: indexable=false).
 User-agent: *
-Disallow: /
+Allow: /
+
+Sitemap: https://wattsplain.com/sitemap.xml

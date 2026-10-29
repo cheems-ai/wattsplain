@@ -54,7 +54,11 @@ test('state page shows its own numbers and links the tools with the state', asyn
     'href',
     '/tools/why-is-my-electric-bill-high/?state=PA',
   );
-  await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content', 'noindex, nofollow');
+  await expect(page.locator('meta[name="robots"]')).toHaveCount(0);
+  await expect(page.locator('link[rel="canonical"]')).toHaveAttribute(
+    'href',
+    'https://wattsplain.com/electricity-rates/pennsylvania/',
+  );
 });
 
 test('pages fit the screen without horizontal scrolling', async ({ page }) => {
