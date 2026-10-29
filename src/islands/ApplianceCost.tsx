@@ -109,7 +109,7 @@ export default function ApplianceCost({ rates, appliances, fixed, monthLabel }: 
           <select id="ac-state" value={code} onChange={(e) => setCode(e.currentTarget.value)}>
             {rates.map((o) => (
               <option value={o.code}>
-                {o.name} — {cents(o.price)}
+                {o.name}: {cents(o.price)}
               </option>
             ))}
           </select>

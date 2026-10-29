@@ -129,7 +129,7 @@ const description = `${s.name} homes paid ${cents(s.price)} per kWh in ${month} 
     A typical {s.name} home used <strong>{kwh(s.avgKwh)}</strong> a month in {year} (U.S.:{' '}
     {kwh(us.avgKwh)}). At the {month} price that is about{' '}
     <strong>{dollars(estBill, 0)} a month</strong>, compared with {dollars(estBillPrior, 0)} at the{' '}
-    {prior} price — {estBill >= estBillPrior ? 'an increase' : 'a decrease'} of{' '}
+    {prior} price, {estBill >= estBillPrior ? 'an increase' : 'a decrease'} of{' '}
     {dollars(Math.abs(estBill - estBillPrior), 0)} for the same use. EIA's actual {year} average
     bill was {dollars(s.avgBillAnnual)}.
   </p>
