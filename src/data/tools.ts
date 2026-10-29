@@ -63,6 +63,11 @@ export const TOOL_GROUPS: readonly ToolGroup[] = [
         title: 'Home energy savings planner',
         text: 'Up to four scenarios: fewer hours, another appliance, another price or a heat pump.',
       },
+      {
+        href: '/tools/space-heater-vs-central-heat/',
+        title: 'Space heater vs central heat',
+        text: 'Heat one room and turn the house down: does it save with your fuel and state prices?',
+      },
     ],
   },
 ];

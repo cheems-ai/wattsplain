@@ -23,6 +23,8 @@ for (const path of [
   '/tools/',
   '/electricity-rates/',
   '/electricity-rates/pennsylvania/',
+  '/electricity-rates/price-changes/',
+  '/tools/space-heater-vs-central-heat/',
   '/tools/appliance-electricity-cost/',
   '/tools/space-heater-cost/',
   '/tools/heating-cost-calculator/',

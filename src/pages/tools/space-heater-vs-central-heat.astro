@@ -1,0 +1,161 @@
+---
+import { ELECTRICITY, US_PRICE_CHANGE } from '../../data/electricity';
+import { ELECTRIC_BASIS, HEATING, HEATING_OPTIONS, HEATING_ROWS } from '../../data/heating';
+import ZoneHeating from '../../islands/ZoneHeating';
+import Base from '../../layouts/Base.astro';
+import { dollars, monthLabel } from '../../lib/format';
+import { BTU, compareSystems, type SystemId } from '../../lib/heating';
+import { ROOM_EXTRA_LOSS, setbackShare, zoneHeating } from '../../lib/zone';
+
+const electricLabel = `${ELECTRIC_BASIS.label}, ${monthLabel(ELECTRIC_BASIS.from)} – ${monthLabel(ELECTRIC_BASIS.to)}`;
+const week = new Date(`${HEATING.propane.week}T00:00:00Z`).toLocaleDateString('en-US', {
+  month: 'long',
+  day: 'numeric',
+  year: 'numeric',
+  timeZone: 'UTC',
+});
+// The example every number on this page uses (the calculator starts from the same values).
+const EX = { roomSqft: 200, hoursPerDay: 8, setbackF: 6, heaterWatts: 1500, seasonDays: 150 };
+const ORDER: SystemId[] = ['gas', 'propane', 'oil', 'electric', 'heat-pump'];
+const SHORT: Record<SystemId, string> = {
+  gas: 'Natural gas',
+  propane: 'Propane',
+  oil: 'Heating oil',
+  electric: 'Electric resistance',
+  'heat-pump': 'Heat pump',
+};
+const rows = HEATING_ROWS.map((h) => {
+  const costs = compareSystems(h.heat, h.prices);
+  const net = Object.fromEntries(
+    ORDER.map((id) => {
+      const c = costs.find((x) => x.system.id === id)!;
+      return [
+        id,
+        zoneHeating({
+          ...EX,
+          homeHeat: h.heat,
+          homeSqft: h.typicalSqft,
+          homeCost: c.perYear,
+          centsPerKwh: h.prices.electric,
+        }).net,
+      ];
+    }),
+  ) as Record<SystemId, number>;
+  return { h, net };
+}).sort((a, b) => a.h.name.localeCompare(b.h.name));
+const usElectric = US_PRICE_CHANGE?.avg12 ?? ELECTRICITY.us.price;
+const usCosts = compareSystems(1, {
+  'heat-pump': usElectric,
+  electric: usElectric,
+  gas: HEATING.gas.us.price,
+  propane: HEATING.propane.us,
+  oil: HEATING.oil.us,
+});
+const saves = (id: SystemId) => {
+  const n = rows.filter((r) => r.net[id] < 0).length;
+  return n === 0 ? 'none' : String(n);
+};
+const share = setbackShare(EX.setbackF, EX.hoursPerDay);
+const title = 'Space heater vs central heat: which is cheaper?';
+const description = `Does heating one room with a space heater and turning the rest of the house down save money? Your state's electricity, gas, propane and oil prices decide. Calculator.`;
+---
+
+<Base
+  title={title}
+  description={description}
+  crumbs={[
+    ['Tools', '/tools/'],
+    ['Space heater vs central heat', '/tools/space-heater-vs-central-heat/'],
+  ]}
+  jsonLd={[
+    {
+      '@context': 'https://schema.org',
+      '@type': 'WebApplication',
+      name: 'Space heater vs central heat calculator',
+      url: 'https://wattsplain.com/tools/space-heater-vs-central-heat/',
+      applicationCategory: 'UtilitiesApplication',
+      operatingSystem: 'Any',
+      offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+    },
+  ]}
+>
+  <h1>Space heater vs central heat: which is cheaper?</h1>
+  <p class="lede">
+    {`A space heater saves money only if the central heat you no longer buy costs more than the electricity the heater uses. That depends mostly on your heating fuel. In our example (one ${EX.roomSqft} sq ft room, ${EX.hoursPerDay} hours a day, the rest of the home ${EX.setbackF}°F cooler), the heater saves money in ${saves('oil')} of 51 states for homes heated with oil, ${saves('propane')} with propane, ${saves('electric')} with electric baseboard or furnace, ${saves('gas')} with natural gas and ${saves('heat-pump')} with a heat pump.`}
+  </p>
+
+  <ZoneHeating client:load options={HEATING_OPTIONS} electricLabel={electricLabel} />
+
+  <h2>Why the fuel decides</h2>
+  <p>
+    {`A space heater turns each kWh into ${BTU.kwh.toLocaleString('en-US')} Btu of heat, no more. A gas furnace, oil boiler or propane furnace turns fuel into heat at 80 to 95% efficiency, and a heat pump moves 2 to 3 units of heat for every unit of electricity. So the question is what a million Btu of heat costs you each way:`}
+  </p>
+  <ul>
+    {usCosts.map((c) => (
+      <li>
+        {`${c.system.name}: ${dollars(c.perMmbtu, 0)} per million Btu of heat${c.system.id === 'electric' ? ' (the same as a space heater)' : ''}`}
+      </li>
+    ))}
+  </ul>
+  <p>
+    {`U.S. average prices: electricity ${US_PRICE_CHANGE ? `${US_PRICE_CHANGE.avg12.toFixed(2)}¢/kWh (12-month average)` : ''}, natural gas ${dollars(HEATING.gas.us.price)}/Mcf, propane ${dollars(HEATING.propane.us)}/gal and heating oil ${dollars(HEATING.oil.us)}/gal (week of ${week}), with the default efficiencies of the heating calculator. The trade is a share of the whole home's heat at your central price against one room's heat at the resistance price: the further your central heat is below resistance heat per million Btu, the less a space heater can save.`}
+  </p>
+
+  <h2>Space heater vs central heat in every state</h2>
+  <div class="table-scroll" tabindex="0" role="region" aria-label="Space heater result by state">
+    <table>
+      <caption>{`Winter result of heating one ${EX.roomSqft} sq ft room ${EX.hoursPerDay} hours a day with a space heater while the rest of the typical home in each state is ${EX.setbackF}°F cooler. “saves” = the heater lowers the winter bill; “+” = it adds to it. Electricity: ${electricLabel}; propane and oil: week of ${week}; gas: EIA.`}</caption>
+      <thead>
+        <tr>
+          <th>State</th>
+          {ORDER.map((id) => (
+            <th>{SHORT[id]}</th>
+          ))}
+        </tr>
+      </thead>
+      <tbody>
+        {rows.map((r) => (
+          <tr>
+            <td>
+              <a href={`/electricity-rates/${r.h.slug}/`}>{r.h.name}</a>
+            </td>
+            {ORDER.map((id) => (
+              <td class={r.net[id] < 0 ? 'down' : 'up'}>
+                {r.net[id] < 0 ? `saves ${dollars(-r.net[id], 0)}` : `+${dollars(r.net[id], 0)}`}
+              </td>
+            ))}
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+
+  <h2>How we estimate it</h2>
+  <ul>
+    <li>
+      {`Central heat saved: turning the thermostat back 7 to 10°F for 8 hours a day can save up to 10% a year on heating (U.S. Department of Energy), about 1% per °F per 8 hours. ${EX.setbackF}°F for ${EX.hoursPerDay} hours is ${(share * 100).toFixed(0)}% of the year's heating cost. Change it in the calculator if you know better.`}
+    </li>
+    <li>
+      {`The room's heat: its share of the home's floor area and of the day, plus ${ROOM_EXTRA_LOSS * 100}% because a warm room loses heat through inside walls and doors to the cooler rooms around it (our assumption).`}
+    </li>
+    <li>
+      The typical home's heat comes from EIA's Residential Energy Consumption Survey (RECS 2020),
+      the same basis as the <a href="/tools/heating-cost-calculator/">heating cost calculator</a>.
+      Your own heating bills are better: enter last winter's total.
+    </li>
+    <li>
+      Heat pumps: a big turn-down can make a heat pump use its electric backup strips when it warms
+      the house back up, which can erase the saving. A smaller setback, or a thermostat with heat
+      pump recovery, avoids that.
+    </li>
+    <li>
+      Safety: plug a space heater straight into a wall outlet, not an extension cord or power strip,
+      and keep it well away from anything that can burn.
+    </li>
+  </ul>
+  <p>
+    Related: <a href="/tools/space-heater-cost/">what a space heater costs per hour</a> ·{' '}
+    <a href="/tools/heating-cost-calculator/">heat pump vs gas, propane and oil</a> ·{' '}
+    <a href="/tools/electric-bill-diagnosis/">why did my electric bill go up?</a>
+  </p>
+</Base>

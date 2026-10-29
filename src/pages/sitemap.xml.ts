@@ -14,6 +14,7 @@ const paths = [
   '/tools/electric-bill-diagnosis/',
   '/tools/appliance-electricity-cost/',
   '/tools/space-heater-cost/',
+  '/tools/space-heater-vs-central-heat/',
   '/tools/heating-cost-calculator/',
   '/about/',
   '/methodology/',
