@@ -108,3 +108,32 @@ test('state page tables fit a phone screen', async ({ page }, info) => {
     expect(overflow).toBeLessThanOrEqual(0);
   }
 });
+
+test('sends a cookieless page view and one tool event, with no visitor details', async ({
+  page,
+  context,
+}) => {
+  const events: Record<string, unknown>[] = [];
+  await page.route('**/api/e', async (route) => {
+    events.push(JSON.parse(route.request().postData() ?? '{}'));
+    await route.fulfill({ status: 204 });
+  });
+  await page.goto('/tools/why-is-my-electric-bill-high/?state=PA');
+  await expect.poll(() => events.length).toBe(1);
+  expect(events[0]).toEqual({
+    e: 'view',
+    p: '/tools/why-is-my-electric-bill-high/',
+    s: 'direct',
+    a: 1,
+  });
+  await page.locator('#bc-pk').fill('800');
+  await page.locator('#bc-pd').fill('140');
+  await page.locator('#bc-nk').fill('950');
+  await page.locator('#bc-nd').fill('200');
+  await page.locator('#bc-nd').fill('210');
+  await expect.poll(() => events.filter((x) => x['e'] === 'tool').length).toBe(1);
+  await page.waitForTimeout(300);
+  expect(events.filter((x) => x['e'] === 'tool')).toHaveLength(1);
+  expect(await context.cookies()).toEqual([]);
+  expect(await page.evaluate(() => localStorage.length + sessionStorage.length)).toBe(0);
+});

@@ -1,13 +1,17 @@
-// Cloudflare Workers configuration: an assets-only Worker (no Worker code, no bindings) that
-// serves the prerendered site in dist/ on wattsplain.com. Deploy: npm run build && npm run deploy.
+// Cloudflare Workers configuration: the prerendered site in dist/ is served as static assets on
+// wattsplain.com; only /api/* runs Worker code (worker/index.ts: first-party analytics).
+// Deploy: npm run build && npm run deploy.
 {
   "$schema": "./node_modules/wrangler/config-schema.json",
   "name": "wattsplain",
+  "main": "./worker/index.ts",
   "compatibility_date": "2026-10-19",
   "assets": {
     "directory": "./dist",
     // Unknown URLs get dist/404.html with a real 404 status.
     "not_found_handling": "404-page",
+    // With 404-page handling, only these paths reach the Worker.
+    "run_worker_first": ["/api/*"],
   },
   // Apex only; www is not set up yet.
   "routes": [{ "pattern": "wattsplain.com", "custom_domain": true }],

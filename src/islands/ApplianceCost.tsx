@@ -1,5 +1,6 @@
 import { useState } from 'preact/hooks';
 
+import { track } from '../analytics/client';
 import type { Appliance } from '../data/appliances';
 import type { RateOption } from '../data/electricity';
 import { runningCost } from '../lib/energy';
@@ -41,7 +42,16 @@ export default function ApplianceCost({ rates, appliances, fixed, monthLabel }: 
 
   return (
     <div class="tool">
-      <form class="card" onSubmit={(e) => e.preventDefault()} aria-label="Appliance and usage">
+      <form
+        class="card"
+        onSubmit={(e) => e.preventDefault()}
+        // Any change by the visitor counts as using the tool (once per page view).
+        onInput={() => track('tool')}
+        onClick={(e) => {
+          if ((e.target as HTMLElement).closest('button')) track('tool');
+        }}
+        aria-label="Appliance and usage"
+      >
         {!fixed && (
           <div class="field">
             <label for="ac-appliance">Appliance</label>

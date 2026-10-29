@@ -109,5 +109,10 @@ const ld = [...(breadcrumbLd ? [breadcrumbLd] : []), ...jsonLd];
         </nav>
       </div>
     </footer>
+    <script>
+      import { track } from '../analytics/client';
+
+      track('view');
+    </script>
   </body>
 </html>

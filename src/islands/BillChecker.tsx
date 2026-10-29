@@ -1,5 +1,6 @@
-import { useState } from 'preact/hooks';
+import { useEffect, useState } from 'preact/hooks';
 
+import { track } from '../analytics/client';
 import type { RateOption } from '../data/electricity';
 import { compareBills } from '../lib/energy';
 import { cents, dollars, kwh, signedPct } from '../lib/format';
@@ -36,6 +37,11 @@ export default function BillChecker({
       ? compareBills({ kwh: pk!, dollars: pd! }, { kwh: nk!, dollars: nd! })
       : null;
   const change = stateChange[code] ?? 0;
+  // Count the tool as used once the visitor has entered two complete bills.
+  const hasResult = r !== null;
+  useEffect(() => {
+    if (hasResult) track('tool');
+  }, [hasResult]);
 
   const total = r ? Math.abs(r.rateEffect) + Math.abs(r.usageEffect) : 0;
   const share = (x: number) => (total > 0 ? (Math.abs(x) / total) * 100 : 0);

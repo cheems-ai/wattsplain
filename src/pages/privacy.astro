@@ -9,12 +9,28 @@ import Base from '../layouts/Base.astro';
   crumbs={[['Privacy', '/privacy/']]}
 >
   <h1>Privacy</h1>
+  <h2>What you type into the calculators</h2>
+  <p>The numbers you enter stay in your browser. They are not sent to us or stored.</p>
+  <h2>Visit counts</h2>
   <p>
-    The numbers you enter in our calculators stay in your browser; they are not sent to us or
-    stored.
+    To learn which pages are useful, each page view sends us four things: the page address (for
+    example /electricity-rates/ohio/), whether you used a calculator on it, a broad category for how
+    you arrived (search engine, AI assistant, social site, another website, a link on this site, or
+    directly), and whether the browser is automated. We add these up into daily totals.
   </p>
   <p>
-    This site currently sets no cookies and uses no analytics or advertising scripts. If that
-    changes, this page will say so first.
+    We do not store your IP address, browser details, the exact page you came from, or anything else
+    that could identify you, and we do not use cookies or local storage, so there is nothing to
+    consent to and nothing that follows you between visits or sites.
+  </p>
+  <h2>Advertising and other services</h2>
+  <p>
+    This site currently has no advertising and no third-party scripts. If that changes, this page
+    will say so first. The site is hosted on Cloudflare, which processes requests to deliver the
+    pages.
+  </p>
+  <h2>Contact</h2>
+  <p>
+    <a href={`mailto:${SITE.contactEmail}`}>{SITE.contactEmail}</a>
   </p>
 </Base>
