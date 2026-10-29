@@ -32,10 +32,12 @@ test('bill checker splits a bill increase into price and usage', async ({ page }
   await page.locator('#bc-nd').fill('200');
   const result = page.locator('.result');
   await expect(result).toContainText('+$60.00 (+42.9%)');
-  await expect(result).toContainText('Price per kWh: +$31.09');
-  await expect(result).toContainText('Usage: +$28.91');
+  await expect(result.locator('tr', { hasText: 'Energy price per kWh' })).toContainText('+$31.09');
+  await expect(result.locator('tr', { hasText: 'Using more or fewer kWh' })).toContainText(
+    '+$28.91',
+  );
   await expect(result).toContainText(
-    `Average residential price in Pennsylvania: ${cents(price('PA').price)}`,
+    `Pennsylvania: the average residential price was ${cents(price('PA').price)}`,
   );
   expect(errors).toEqual([]);
 });
@@ -57,8 +59,13 @@ test('appliance calculator uses the state price and a custom rate', async ({ pag
   await expect(page.locator('.result .big')).toHaveText(
     `${money((360 * price('HI').price) / 100)} / month`,
   );
-  await page.getByLabel('Or your own rate').fill('10');
+  await page.getByLabel('Price to use').selectOption('custom');
+  await page.locator('#ac-rate-custom').fill('10');
   await expect(page.locator('.result .big')).toHaveText('$36.00 / month');
+  // A bill price in dollars typed in cents mode is read as dollars, and the page says so.
+  await page.locator('#ac-rate-custom').fill('0.10');
+  await expect(page.locator('.result .big')).toHaveText('$36.00 / month');
+  await expect(page.locator('#ac-rate-msg')).toContainText('Read as $0.1 per kWh');
 });
 
 test('space heater page offers wattage presets', async ({ page }) => {
@@ -203,12 +210,12 @@ test('heating calculator compares systems for your own fuel use and prices', asy
   ) as { gas: { byState: Record<string, { price: number }> } };
   await page.goto('/tools/heating-cost-calculator/?state=PA');
   await expect(page.getByLabel('Your state')).toHaveValue('PA');
-  await expect(page.locator('.result tbody tr')).toHaveCount(5);
+  await expect(page.locator('.result table.systems tbody tr')).toHaveCount(5);
   await page.getByLabel('How much heat?').selectOption('therms');
   await page.locator('#hc-amount').fill('600');
   // 600 therms in an 85% furnace = 51 million Btu of heat. A 95% furnace burns 536.84 therms.
   const perTherm = heating.gas.byState['PA']!.price / 10.36;
-  const gasRow = page.locator('.result tbody tr', { hasText: 'Natural gas furnace' });
+  const gasRow = page.locator('.result table.systems tr', { hasText: 'Natural gas furnace' });
   await expect(gasRow).toContainText('537 therms');
   await expect(gasRow).toContainText(`$${Math.round(536.842 * perTherm).toLocaleString('en-US')}`);
   // Heat pump, HSPF2 7.8: 51e6 Btu ÷ 7,800 Btu per kWh = 6,538 kWh, at 8¢ = $523.
@@ -275,11 +282,110 @@ test('appliance sliders move the result and the rate can go back to the state av
     `${money((180 * price('TX').price) / 100)} / month`,
   );
   await page.getByLabel('Drag to try a different price').fill('20');
-  await expect(page.locator('#ac-rate')).toHaveValue('20.00');
+  await expect(page.locator('#ac-rate-custom')).toHaveValue('20.00');
   await expect(page.locator('.result .big')).toHaveText('$36.00 / month');
   await page.getByRole('button', { name: /Back to the Texas average/ }).click();
-  await expect(page.locator('#ac-rate')).toHaveValue('');
+  await expect(page.locator('#ac-rate-mode')).toHaveValue('state');
   await expect(page.locator('.result .big')).toHaveText(
     `${money((180 * price('TX').price) / 100)} / month`,
   );
+});
+
+test('a ?state= link never shows the default state before the calculator switches', async ({
+  page,
+}) => {
+  let release: () => void = () => {};
+  const gate = new Promise<void>((r) => (release = r));
+  await page.route('**/_astro/*.js', async (route) => {
+    await gate;
+    await route.continue();
+  });
+  await page.goto('/tools/appliance-electricity-cost/?state=TX', { waitUntil: 'commit' });
+  await page.locator('.tool').waitFor({ state: 'attached' });
+  // Prerendered with Pennsylvania: hidden until the island has switched to Texas.
+  await expect(page.locator('.tool')).toBeHidden();
+  release();
+  await expect(page.locator('.tool')).toBeVisible();
+  await expect(page.getByLabel('Your state')).toHaveValue('TX');
+  await expect(page.locator('.result .note').first()).toContainText('Texas average');
+});
+
+test('state page, links and calculators use the same price', async ({ page }) => {
+  await page.goto('/electricity-rates/texas/');
+  await expect(page.locator('.lede')).toContainText(`${cents(price('TX').price)} per kWh`);
+  await page.getByRole('link', { name: 'Calculate any appliance' }).click();
+  await expect(page).toHaveURL(/\/tools\/appliance-electricity-cost\/\?state=TX$/);
+  await expect(page.getByLabel('Your state')).toHaveValue('TX');
+  await expect(page.getByLabel('Price to use')).toHaveValue('state');
+  await expect(page.locator('.result .note').first()).toContainText(
+    `at ${cents(price('TX').price)} per kWh (Texas average`,
+  );
+});
+
+test('state page lists the states that share a border', async ({ page }) => {
+  await page.goto('/electricity-rates/texas/');
+  await expect(page.locator('h2', { hasText: 'States that border Texas' })).toBeVisible();
+  const table = page.locator('h2:has-text("States that border Texas") + .table-scroll tbody');
+  await expect(table.locator('tr')).toHaveCount(4);
+  for (const name of ['Arkansas', 'Louisiana', 'New Mexico', 'Oklahoma'])
+    await expect(table).toContainText(name);
+  // The bill estimate is labelled as an estimate, with both periods named.
+  await expect(page.locator('main')).toContainText('Same use at recent prices (estimate)');
+  await expect(page.locator('main')).toContainText('is not an actual bill');
+});
+
+test('bill checker separates fixed charges and billing days from the price per kWh', async ({
+  page,
+}) => {
+  await page.goto('/tools/why-is-my-electric-bill-high/?state=PA');
+  await expect(page.locator('astro-island[ssr]')).toHaveCount(0);
+  // 30 × 30 kWh → 35 × 30 kWh at 15¢ energy; customer charge $10 → $25.
+  await page.locator('#bc-pk').fill('900');
+  await page.locator('#bc-pd').fill('145');
+  await page.locator('#bc-nk').fill('1050');
+  await page.locator('#bc-nd').fill('182.50');
+  await page.locator('summary', { hasText: 'More lines from the bills' }).click();
+  await page.locator('#bc-p-days').fill('30');
+  await page.locator('#bc-n-days').fill('35');
+  await page.locator('#bc-p-fixed').fill('10');
+  // Half-filled pairs are refused rather than misread.
+  await expect(page.locator('.result .error')).toContainText('fixed charges on both bills');
+  await page.locator('#bc-n-fixed').fill('25');
+  const result = page.locator('.result');
+  await expect(result.locator('tr', { hasText: 'Longer or shorter billing period' })).toContainText(
+    '+$22.50',
+  );
+  await expect(result.locator('tr', { hasText: 'Fixed charges' })).toContainText('+$15.00');
+  await expect(result.locator('tr', { hasText: 'Energy price per kWh' })).toHaveCount(0);
+  await expect(result).toContainText('15.00¢ → 15.00¢');
+  await expect(result).toContainText('Daily use: 30.0 → 30.0 kWh a day');
+});
+
+test('rate from a bill removes the fixed charge', async ({ page }) => {
+  await page.goto('/tools/appliance-electricity-cost/');
+  await expect(page.locator('astro-island[ssr]')).toHaveCount(0);
+  await page.getByLabel('Price to use').selectOption('bill');
+  await page.getByLabel('Bill total ($)').fill('152.40');
+  await page.getByLabel('kWh on that bill').fill('900');
+  await page.getByLabel('Fixed monthly charges ($, optional)').fill('12');
+  await expect(page.locator('#ac-rate-msg')).toContainText('Using 15.60¢ per kWh');
+  // Space heater default: 1,500 W × 8 h × 30 days = 360 kWh × 15.6¢
+  await expect(page.locator('.result .big')).toHaveText('$56.16 / month');
+});
+
+test('heating calculator: cold weather, backup heat and price sensitivity', async ({ page }) => {
+  await page.goto('/tools/heating-cost-calculator/?state=MN');
+  await expect(page.getByLabel('Your state')).toHaveValue('MN');
+  await page.locator('summary', { hasText: 'Your prices' }).click();
+  await page.getByLabel('Electricity (¢ or $ per kWh)').fill('10');
+  const hpRow = page.locator('.result table.systems tr', { hasText: 'Heat pump' });
+  const before = await hpRow.innerText();
+  // HSPF2 7.8 × 0.7 = 5.46
+  await page.getByLabel('Cold-weather performance').selectOption('severe');
+  await expect(page.locator('.result .verdict')).toContainText('effective HSPF2 of 5.5');
+  await expect(hpRow).not.toHaveText(before);
+  await expect(page.locator('table.sens tbody tr')).toHaveCount(3);
+  // Heated area scales the typical home's heat.
+  await page.getByLabel('Heated area (sq ft)').fill('1000');
+  await expect(page.locator('.result > .note').first()).toContainText('million Btu of heat a year');
 });

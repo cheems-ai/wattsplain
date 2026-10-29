@@ -2,6 +2,12 @@ import { describe, expect, it } from 'vitest';
 
 import {
   SYSTEMS,
+  adjustHeat,
+  costAt,
+  effectiveHspf,
+  simplePayback,
+  totalCost,
+  typicalGasHomeArea,
   breakEvenElectricity,
   cheapestOf,
   compareSystems,
@@ -96,5 +102,53 @@ describe('cheapestOf', () => {
     expect(c[0]!.system.id).toBe('propane');
     expect(cheapestOf(c, ['propane']).system.id).toBe('gas');
     expect(cheapestOf(c, []).system.id).toBe('propane');
+  });
+});
+
+describe('heating adjustments', () => {
+  it('scales the typical home by floor area and insulation step', () => {
+    expect(adjustHeat(50, { typicalSqft: 2000, insulation: 'typical' })).toBe(50);
+    expect(adjustHeat(50, { sqft: 1000, typicalSqft: 2000, insulation: 'typical' })).toBe(25);
+    expect(adjustHeat(50, { sqft: 2000, typicalSqft: 2000, insulation: 'worse' })).toBeCloseTo(
+      60,
+      10,
+    );
+  });
+
+  it('derives the typical gas-heated area from the RECS ratio', () => {
+    // New England 1,645 sq ft × 1,837 / 1,614
+    expect(typicalGasHomeArea(1645, 1614, 1837)).toBeCloseTo(1872.3, 1);
+  });
+
+  it('effective HSPF2: no derate and no backup changes nothing', () => {
+    expect(effectiveHspf(7.8, 0, 0)).toBeCloseTo(7.8, 10);
+  });
+
+  it('effective HSPF2: all-backup is resistance heat (COP 1)', () => {
+    expect(effectiveHspf(9, 0.2, 1)).toBeCloseTo(3.412, 10);
+  });
+
+  it('effective HSPF2: 20% of the heat from strips at COP 2.5', () => {
+    // COP 2.5 → energy per unit heat = 0.8/2.5 + 0.2 = 0.52 → COP 1.923
+    const hspf = 2.5 * 3.412;
+    expect(effectiveHspf(hspf, 0, 0.2) / 3.412).toBeCloseTo(1 / 0.52, 10);
+  });
+
+  it('a 25% derate raises the heat pump running cost by a third', () => {
+    const base = costAt('heat-pump', 60, 18, 7.8);
+    const cold = costAt('heat-pump', 60, 18, effectiveHspf(7.8, 0.25, 0));
+    expect(cold / base).toBeCloseTo(4 / 3, 10);
+  });
+
+  it('total cost of ownership and payback', () => {
+    expect(totalCost({ running: 1000, install: 8000, maintenance: 150 }, 15)).toBe(
+      8000 + 15 * 1150,
+    );
+    expect(simplePayback(3000, 600)).toBe(5);
+    expect(simplePayback(3000, -10)).toBeUndefined();
+  });
+
+  it('price sensitivity scales running cost linearly', () => {
+    expect(costAt('gas', 50, 15, 0.95, 20) / costAt('gas', 50, 15, 0.95)).toBeCloseTo(1.2, 10);
   });
 });

@@ -608,3 +608,94 @@ fieldset legend {
     display: none;
   }
 }
+
+/* Calculators reached through ?state=XX: hidden until the island has switched state. If the
+   JavaScript never runs, show them anyway after 4 s. */
+[data-qs] .tool:not([data-ready]) {
+  visibility: hidden;
+  animation: qs-reveal 0s 4s forwards;
+}
+@keyframes qs-reveal {
+  to {
+    visibility: visible;
+  }
+}
+
+/* Two or three mutually exclusive choices shown as one control. */
+.segmented {
+  display: inline-flex;
+  flex-wrap: wrap;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 12px;
+}
+.segmented button {
+  font: inherit;
+  font-size: 0.9rem;
+  min-height: 40px;
+  padding: 6px 12px;
+  border: 0;
+  background: var(--surface);
+  color: var(--fg);
+  cursor: pointer;
+}
+.segmented button + button {
+  border-left: 1px solid var(--border);
+}
+.segmented button[aria-pressed='true'] {
+  background: var(--accent);
+  color: var(--accent-fg);
+}
+.rate-field {
+  border-top: 1px solid var(--border);
+  padding-top: 12px;
+}
+.rate-field legend {
+  font-weight: 700;
+}
+.tool details.inline summary {
+  font-weight: 400;
+  font-size: 0.9rem;
+  padding: 4px 0;
+  color: var(--accent);
+}
+
+/* Bill change broken into parts: label, bar, amount. */
+table.parts th {
+  font-weight: 400;
+  text-align: left;
+  white-space: normal;
+}
+table.parts .bar-cell {
+  width: 35%;
+  min-width: 4rem;
+}
+.pbar {
+  display: block;
+  height: 10px;
+  border-radius: 5px;
+  min-width: 2px;
+}
+.pbar.pos {
+  background: var(--up);
+}
+.pbar.neg {
+  background: var(--down);
+}
+table.sens th[scope='row'] {
+  text-align: left;
+}
+table.facts th {
+  font-weight: 400;
+  text-align: left;
+  white-space: normal;
+}
+table.facts td {
+  font-weight: 600;
+}
+table.facts td.src {
+  font-weight: 400;
+  color: var(--muted);
+  font-size: 0.85rem;
+}
