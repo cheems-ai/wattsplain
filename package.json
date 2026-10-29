@@ -18,6 +18,8 @@
     "format:check": "prettier --check .",
     "test": "vitest run",
     "data:eia": "node --env-file-if-exists=.env scripts/data/fetch-eia.mjs",
+    "data:heating": "node --env-file-if-exists=.env scripts/data/fetch-heating.mjs",
+    "data:recs": "node scripts/data/fetch-recs.mjs",
     "check": "npm run format:check && npm run typecheck && npm run test && npm run build && npm run check:dist",
     "test:e2e": "playwright test",
     "check:dist": "node scripts/check-dist.mjs",

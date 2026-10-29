@@ -1,6 +1,7 @@
 ---
 import { APPLIANCE_SOURCE } from '../data/appliances';
 import { ELECTRICITY, HISTORY } from '../data/electricity';
+import { HEATING } from '../data/heating';
 import Base from '../layouts/Base.astro';
 import { monthLabel } from '../lib/format';
 ---
@@ -37,6 +38,33 @@ import { monthLabel } from '../lib/format';
       EIA's price is total residential revenue divided by kWh sold, so fixed charges are spread
       across every kWh. Your utility's rate structure (tiers, time-of-use, fixed fees) can make your
       own price higher or lower.
+    </li>
+  </ul>
+  <h2>Heating fuel prices and heat needs</h2>
+  <ul>
+    <li>
+      {`Natural gas: residential price by state from the `}
+      <a href={HEATING.gas.source}>EIA Natural Gas Monthly</a>
+      {` (Open Data API), averaged over the 12 months ${monthLabel(HEATING.gas.from)} to ${monthLabel(HEATING.gas.period)} and weighted by the gas each month delivered, so the heating season counts most. Months EIA withholds are skipped; a state with fewer than 9 published months uses its latest annual average instead.`}
+    </li>
+    <li>
+      {`Propane and No. 2 heating oil: residential prices from EIA's `}
+      <a href={HEATING.propane.source}>State Heating Oil and Propane Program</a>
+      {`, week of ${HEATING.propane.week}. EIA publishes them weekly from October to March for the states it surveys; other states use their region's average (PADD) or the U.S. average, and the calculator says so.`}
+    </li>
+    <li>
+      Electricity for heating: the simple average of the last 12 monthly prices, because a heating
+      season spans several months.
+    </li>
+    <li>
+      {`Heat a home needs: `}
+      <a href={HEATING.recs.source}>EIA RECS {HEATING.recs.survey}, Table CE8.15.M</a>
+      {`, the gas used for space heating by the average gas-heated home in each state, times an assumed 85% furnace efficiency. Hawaii, where EIA withholds the figure, uses the Pacific division average.`}
+    </li>
+    <li>
+      Heat content (EIA): 3,412 Btu per kWh, 1,036 Btu per cubic foot of natural gas, 91,452 per
+      gallon of propane, 138,500 per gallon of heating oil. Heat pump seasonal efficiency = HSPF2 ÷
+      3.412.
     </li>
   </ul>
   <h2>Appliance wattages</h2>

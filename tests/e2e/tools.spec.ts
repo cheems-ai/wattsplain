@@ -1,4 +1,25 @@
+import { readFileSync } from 'node:fs';
+
 import { expect, test } from '@playwright/test';
+
+// Expected values come from the data the site was built with, so the tests keep passing when the
+// daily job brings in a new EIA month (or new weekly heating fuel prices).
+const data = JSON.parse(
+  readFileSync(new URL('../../src/data/electricity.json', import.meta.url), 'utf8'),
+) as {
+  states: { code: string; price: number; pricePrior: number }[];
+  history: { periods: string[] };
+};
+const price = (code: string) => data.states.find((s) => s.code === code)!;
+const cents = (n: number) => `${n.toFixed(2)}¢`;
+const money = (n: number) =>
+  `$${n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+const monthLabel = (p: string) =>
+  new Date(`${p}-01T00:00:00Z`).toLocaleString('en-US', {
+    month: 'long',
+    year: 'numeric',
+    timeZone: 'UTC',
+  });
 
 test('bill checker splits a bill increase into price and usage', async ({ page }) => {
   const errors: string[] = [];
@@ -13,7 +34,9 @@ test('bill checker splits a bill increase into price and usage', async ({ page }
   await expect(result).toContainText('+$60.00 (+42.9%)');
   await expect(result).toContainText('Price per kWh: +$31.09');
   await expect(result).toContainText('Usage: +$28.91');
-  await expect(result).toContainText('Average residential price in Pennsylvania: 21.77¢');
+  await expect(result).toContainText(
+    `Average residential price in Pennsylvania: ${cents(price('PA').price)}`,
+  );
   expect(errors).toEqual([]);
 });
 
@@ -30,8 +53,10 @@ test('appliance calculator uses the state price and a custom rate', async ({ pag
   await page.goto('/tools/appliance-electricity-cost/?state=HI');
   await page.getByLabel('Appliance', { exact: true }).selectOption('space-heater');
   await page.getByLabel('Hours per day').fill('8');
-  // 1,500 W × 8 h × 30 days = 360 kWh × 47.18¢ = $169.85
-  await expect(page.locator('.result .big')).toHaveText('$169.85 / month');
+  // 1,500 W × 8 h × 30 days = 360 kWh at the Hawaii price
+  await expect(page.locator('.result .big')).toHaveText(
+    `${money((360 * price('HI').price) / 100)} / month`,
+  );
   await page.getByLabel('Or your own rate').fill('10');
   await expect(page.locator('.result .big')).toHaveText('$36.00 / month');
 });
@@ -40,15 +65,18 @@ test('space heater page offers wattage presets', async ({ page }) => {
   await page.goto('/tools/space-heater-cost/?state=TX');
   await page.getByRole('button', { name: '750 W' }).click();
   await expect(page.getByRole('button', { name: '750 W' })).toHaveAttribute('aria-pressed', 'true');
-  // 750 W × 8 h × 30 = 180 kWh × 15.91¢ = $28.64
-  await expect(page.locator('.result .big')).toHaveText('$28.64 / month');
+  // 750 W × 8 h × 30 = 180 kWh at the Texas price
+  await expect(page.locator('.result .big')).toHaveText(
+    `${money((180 * price('TX').price) / 100)} / month`,
+  );
 });
 
 test('state page shows its own numbers and links the tools with the state', async ({ page }) => {
   await page.goto('/electricity-rates/pennsylvania/');
   await expect(page.locator('h1')).toHaveText('Pennsylvania electricity rates and average bill');
+  await expect(page.locator('.lede')).toContainText(`${cents(price('PA').price)} per kWh`);
   await expect(page.locator('.lede')).toContainText(
-    '21.77¢ per kWh, higher than a year earlier (19.93¢).',
+    `a year earlier (${cents(price('PA').pricePrior)}).`,
   );
   await expect(page.getByRole('link', { name: /Enter two of your bills/ })).toHaveAttribute(
     'href',
@@ -66,6 +94,7 @@ test('pages fit the screen without horizontal scrolling', async ({ page }) => {
     '/',
     '/electricity-rates/pennsylvania/',
     '/tools/why-is-my-electric-bill-high/',
+    '/tools/heating-cost-calculator/',
   ]) {
     await page.goto(path);
     const overflow = await page.evaluate(
@@ -80,10 +109,15 @@ test('state page shows the 24-month trend with a hover tooltip and a data table'
 }, info) => {
   await page.goto('/electricity-rates/pennsylvania/');
   const chart = page.locator('.trend');
-  await expect(chart.locator('figcaption')).toContainText('September 2024 – August 2026');
+  const { periods } = data.history;
+  await expect(chart.locator('figcaption')).toContainText(
+    `${monthLabel(periods[0]!)} – ${monthLabel(periods.at(-1)!)}`,
+  );
   await expect(chart.locator('svg:visible path.line')).toHaveCount(2);
+  const year = periods.at(-1)!.slice(0, 4);
+  const months = periods.filter((p) => p.startsWith(year)).length;
   await expect(page.locator('main')).toContainText(
-    'So far in 2026 (8 months), Pennsylvania has averaged',
+    `So far in ${year} (${months} months), Pennsylvania has averaged`,
   );
   await expect(
     page.locator('h2', { hasText: 'Why is my electric bill so high in Pennsylvania?' }),
@@ -156,4 +190,51 @@ test('keeps what the visitor typed before the calculator finished loading', asyn
   release();
   await expect(page.locator('.result')).toContainText('+$60.00 (+42.9%)');
   await expect(page.locator('#bc-nd')).toHaveValue('200');
+});
+
+test('heating calculator compares systems for your own fuel use and prices', async ({ page }) => {
+  const errors: string[] = [];
+  page.on('pageerror', (e) => errors.push(e.message));
+  const heating = JSON.parse(
+    readFileSync(new URL('../../src/data/heating.json', import.meta.url), 'utf8'),
+  ) as { gas: { byState: Record<string, { price: number }> } };
+  await page.goto('/tools/heating-cost-calculator/?state=PA');
+  await expect(page.getByLabel('Your state')).toHaveValue('PA');
+  await expect(page.locator('.result tbody tr')).toHaveCount(5);
+  await page.getByLabel('How much heat?').selectOption('therms');
+  await page.locator('#hc-amount').fill('600');
+  // 600 therms in an 85% furnace = 51 million Btu of heat. A 95% furnace burns 536.84 therms.
+  const perTherm = heating.gas.byState['PA']!.price / 10.36;
+  const gasRow = page.locator('.result tbody tr', { hasText: 'Natural gas furnace' });
+  await expect(gasRow).toContainText('537 therms');
+  await expect(gasRow).toContainText(`$${Math.round(536.842 * perTherm).toLocaleString('en-US')}`);
+  // Heat pump, HSPF2 7.8: 51e6 Btu ÷ 7,800 Btu per kWh = 6,538 kWh, at 8¢ = $523.
+  await page.locator('summary', { hasText: 'Your prices' }).click();
+  await page.getByLabel('Electricity (¢ per kWh)').fill('8');
+  await expect(page.locator('.result .big')).toHaveText('Heat pump: $523/yr');
+  await expect(page.locator('.result .verdict')).toContainText(
+    'the heat pump is cheaper to run than the gas furnace',
+  );
+  expect(errors).toEqual([]);
+});
+
+test('state page compares heating costs and links the calculator with the state', async ({
+  page,
+}) => {
+  await page.goto('/electricity-rates/michigan/');
+  const section = page.locator('h2', { hasText: 'Heating costs in Michigan' });
+  await expect(section).toBeVisible();
+  await expect(page.getByRole('link', { name: /Compare with your own fuel use/ })).toHaveAttribute(
+    'href',
+    '/tools/heating-cost-calculator/?state=MI',
+  );
+});
+
+test('heating page table fits a phone screen', async ({ page }, info) => {
+  test.skip(info.project.name !== 'phone', 'phone layout only');
+  await page.goto('/tools/heating-cost-calculator/');
+  for (const scroller of await page.locator('main .table-scroll').all()) {
+    const overflow = await scroller.evaluate((el) => el.scrollWidth - el.clientWidth);
+    expect(overflow).toBeLessThanOrEqual(0);
+  }
 });

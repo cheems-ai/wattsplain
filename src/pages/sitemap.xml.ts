@@ -10,6 +10,7 @@ const paths = [
   '/tools/why-is-my-electric-bill-high/',
   '/tools/appliance-electricity-cost/',
   '/tools/space-heater-cost/',
+  '/tools/heating-cost-calculator/',
   '/about/',
   '/methodology/',
   '/privacy/',

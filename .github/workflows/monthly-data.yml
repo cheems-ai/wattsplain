@@ -1,6 +1,7 @@
-# Daily check for new EIA electricity data (EIA publishes the Electric Power Monthly late each
-# month). When the data changed: gates + browser tests → commit → deploy → production check →
-# IndexNow. When it did not change, the job stops after the fetch.
+# Daily check for new EIA data: electricity prices (EIA publishes the Electric Power Monthly late
+# each month) and heating fuel prices (natural gas monthly; propane and heating oil weekly from
+# October to March, so in the heating season this deploys about once a week). When the data
+# changed: gates + browser tests → commit → deploy → production check → IndexNow. When it did not change, the job stops after the fetch.
 #
 # Secrets: EIA_API_KEY, CLOUDFLARE_API_TOKEN (Workers deploy for wattsplain only),
 # CLOUDFLARE_ACCOUNT_ID.
@@ -43,6 +44,10 @@ jobs:
         env:
           EIA_API_KEY: ${{ secrets.EIA_API_KEY }}
         run: npm run data:eia
+      - name: Fetch EIA heating fuel prices
+        env:
+          EIA_API_KEY: ${{ secrets.EIA_API_KEY }}
+        run: npm run data:heating
       - name: Did the data change?
         id: diff
         run: node scripts/data/changed.mjs >> "$GITHUB_OUTPUT"
@@ -61,8 +66,8 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add src/data/electricity.json
-          git diff --cached --quiet || git commit -m "chore(data): EIA electricity data $(node -p "require('./src/data/electricity.json').monthly.period")"
+          git add src/data/electricity.json src/data/heating.json
+          git diff --cached --quiet || git commit -m "chore(data): EIA data, electricity $(node -p "require('./src/data/electricity.json').monthly.period"), heating fuels week $(node -p "require('./src/data/heating.json').propane.week")"
           git push
       - name: Deploy
         if: env.GO == 'true'
@@ -79,7 +84,11 @@ jobs:
             curl -fsS --retry 5 --retry-delay 10 -o page.html "https://wattsplain.com$path"
             grep -q "$label" page.html || { echo "::error::$path does not show $label"; exit 1; }
           done
-          echo "production shows $label"
+          week=$(node -p "require('./src/data/heating.json').propane.week")
+          wlabel=$(node -e "console.log(new Date('${week}T00:00:00Z').toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric',timeZone:'UTC'}))")
+          curl -fsS --retry 5 --retry-delay 10 -o page.html "https://wattsplain.com/tools/heating-cost-calculator/"
+          grep -q "$wlabel" page.html || { echo "::error::heating calculator does not show $wlabel"; exit 1; }
+          echo "production shows $label and heating fuel prices for the week of $wlabel"
       - name: IndexNow
         if: env.GO == 'true'
         run: |

@@ -1,0 +1,161 @@
+{
+  "survey": 2020,
+  "source": "https://www.eia.gov/consumption/residential/data/2020/c&e/xls/CE8.15.M.2020.AverageSpaceHeatingNaturalGasConsumption.xlsx",
+  "us": 44.9,
+  "byState": {
+    "CT": {
+      "mmbtu": 48.8
+    },
+    "ME": {
+      "mmbtu": 49.3
+    },
+    "MA": {
+      "mmbtu": 48.9
+    },
+    "NH": {
+      "mmbtu": 44
+    },
+    "RI": {
+      "mmbtu": 64.3
+    },
+    "VT": {
+      "mmbtu": 47.1
+    },
+    "NJ": {
+      "mmbtu": 60.6
+    },
+    "NY": {
+      "mmbtu": 46.2
+    },
+    "PA": {
+      "mmbtu": 57.2
+    },
+    "IL": {
+      "mmbtu": 66.3
+    },
+    "IN": {
+      "mmbtu": 59.3
+    },
+    "MI": {
+      "mmbtu": 72.7
+    },
+    "OH": {
+      "mmbtu": 62.3
+    },
+    "WI": {
+      "mmbtu": 59.7
+    },
+    "IA": {
+      "mmbtu": 56.8
+    },
+    "KS": {
+      "mmbtu": 50.9
+    },
+    "MN": {
+      "mmbtu": 64.1
+    },
+    "MO": {
+      "mmbtu": 56.7
+    },
+    "NE": {
+      "mmbtu": 51.4
+    },
+    "ND": {
+      "mmbtu": 69.1
+    },
+    "SD": {
+      "mmbtu": 53.5
+    },
+    "DE": {
+      "mmbtu": 40.6
+    },
+    "DC": {
+      "mmbtu": 28.9
+    },
+    "FL": {
+      "mmbtu": 8.5
+    },
+    "GA": {
+      "mmbtu": 37
+    },
+    "MD": {
+      "mmbtu": 43.8
+    },
+    "NC": {
+      "mmbtu": 35.7
+    },
+    "SC": {
+      "mmbtu": 29.1
+    },
+    "VA": {
+      "mmbtu": 44
+    },
+    "WV": {
+      "mmbtu": 59.9
+    },
+    "AL": {
+      "mmbtu": 28.6
+    },
+    "KY": {
+      "mmbtu": 43
+    },
+    "MS": {
+      "mmbtu": 34.2
+    },
+    "TN": {
+      "mmbtu": 43.8
+    },
+    "AR": {
+      "mmbtu": 44.3
+    },
+    "LA": {
+      "mmbtu": 20.8
+    },
+    "OK": {
+      "mmbtu": 42.6
+    },
+    "TX": {
+      "mmbtu": 23.5
+    },
+    "AZ": {
+      "mmbtu": 16.1
+    },
+    "CO": {
+      "mmbtu": 52.6
+    },
+    "ID": {
+      "mmbtu": 51.1
+    },
+    "MT": {
+      "mmbtu": 60.5
+    },
+    "NV": {
+      "mmbtu": 25.1
+    },
+    "NM": {
+      "mmbtu": 38.7
+    },
+    "UT": {
+      "mmbtu": 46.3
+    },
+    "WY": {
+      "mmbtu": 63
+    },
+    "CA": {
+      "mmbtu": 17.6
+    },
+    "OR": {
+      "mmbtu": 43.2
+    },
+    "WA": {
+      "mmbtu": 46.4
+    },
+    "AK": {
+      "mmbtu": 94.5
+    },
+    "HI": {
+      "mmbtu": 23.6,
+      "area": "Pacific"
+    }
+  }
+}

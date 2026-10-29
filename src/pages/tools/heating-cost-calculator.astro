@@ -1,0 +1,120 @@
+---
+import { ELECTRIC_BASIS, HEATING, HEATING_OPTIONS, HEATING_ROWS } from '../../data/heating';
+import HeatingCost from '../../islands/HeatingCost';
+import Base from '../../layouts/Base.astro';
+import { breakEvenElectricity, perTherm, type SystemId } from '../../lib/heating';
+import { cents, dollars, monthLabel } from '../../lib/format';
+
+const short = (p: string) => monthLabel(p).replace(/^(\w{3})\w*/, '$1');
+const electricLabel = `${ELECTRIC_BASIS.label}, ${short(ELECTRIC_BASIS.from)} – ${short(ELECTRIC_BASIS.to)}`;
+const gasLabel = `12 months to ${short(HEATING.gas.period)}`;
+const week = new Date(`${HEATING.propane.week}T00:00:00Z`).toLocaleDateString('en-US', {
+  month: 'long',
+  day: 'numeric',
+  year: 'numeric',
+  timeZone: 'UTC',
+});
+const cost = (r: (typeof HEATING_ROWS)[number], id: SystemId) =>
+  r.costs.find((c) => c.system.id === id)!.perYear;
+const rows = [...HEATING_ROWS].sort((a, b) => a.name.localeCompare(b.name));
+const hpWins = HEATING_ROWS.filter((r) => cost(r, 'heat-pump') < cost(r, 'gas'));
+const usBreakEven = breakEvenElectricity(HEATING.gas.us.price, 0.95, 7.8);
+const title = 'Heating cost calculator: heat pump vs gas, propane and oil';
+const description = `Compare what a heat pump, gas furnace, propane, heating oil and electric heat cost to run a year in your state, with EIA fuel prices from the week of ${week}.`;
+---
+
+<Base
+  title={title}
+  description={description}
+  crumbs={[['Heating cost', '/tools/heating-cost-calculator/']]}
+>
+  <h1>Heating cost calculator</h1>
+  <p class="lede">
+    {`What the same amount of heat costs with a heat pump, a gas, propane or oil furnace, or electric baseboard heat, at your state's current fuel prices. At today's prices a heat pump is cheaper to run than a new gas furnace in ${hpWins.length} of 51 states.`}
+  </p>
+  <p class="updated">
+    {`Prices: EIA. Propane and heating oil: week of ${week}. Natural gas: ${gasLabel}. Electricity: ${electricLabel}. Checked ${HEATING.fetchedAt}.`}
+  </p>
+
+  <HeatingCost
+    client:load
+    options={HEATING_OPTIONS}
+    electricLabel={electricLabel}
+    propaneWeek={week}
+    gasLabel={gasLabel}
+  />
+
+  <h2>Cheapest way to heat a home in each state</h2>
+  <div class="table-scroll">
+    <table>
+      <caption>
+        {`Yearly running cost for the typical gas-heated home in each state (EIA RECS ${HEATING.recs.survey}), with a new heat pump (HSPF2 7.8), a 95% gas or propane furnace and an 85% oil furnace.`}
+      </caption>
+      <thead>
+        <tr>
+          <th>State</th>
+          <th>Heat pump</th>
+          <th>Gas</th>
+          <th class="hide-sm">Propane</th>
+          <th class="hide-sm">Oil</th>
+          <th>Cheapest</th>
+        </tr>
+      </thead>
+      <tbody>
+        {rows.map((r) => (
+          <tr>
+            <td>
+              <a href={`/electricity-rates/${r.slug}/`}>{r.name}</a>
+            </td>
+            <td>{dollars(cost(r, 'heat-pump'), 0)}</td>
+            <td>{dollars(cost(r, 'gas'), 0)}</td>
+            <td class="hide-sm">
+              {`${dollars(cost(r, 'propane'), 0)}${r.national.includes('propane') ? '*' : ''}`}
+            </td>
+            <td class="hide-sm">
+              {`${dollars(cost(r, 'oil'), 0)}${r.national.includes('oil') ? '*' : ''}`}
+            </td>
+            <td>{r.cheapest.system.name.replace(/ furnace.*| or baseboard/, '')}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+  <p class="note">
+    Propane and heating oil prices come from the state where EIA surveys it, otherwise from the
+    region. * U.S. average: EIA has no price for the state or its region, so that fuel is not
+    counted as the cheapest. Homes in warm states need little heat, so every option is cheap there.
+  </p>
+
+  <h2>When is a heat pump cheaper than gas?</h2>
+  <p>
+    {`It depends on the ratio of your electricity price to your gas price. At the U.S. average gas price of ${dollars(perTherm(HEATING.gas.us.price))} per therm, a heat pump with an HSPF2 of 7.8 beats a 95% gas furnace when electricity costs less than about `}
+    <strong>{`${cents(usBreakEven)} per kWh`}</strong>
+    {'. A more efficient heat pump raises that line; a cheaper gas price lowers it.'}
+  </p>
+  <ul>
+    <li>
+      <strong>Cold climates.</strong> HSPF2 is measured for a moderate climate. In the coldest
+      weather a heat pump gives fewer units of heat per kWh, and some homes need backup heat, so in
+      the northern states real costs can be higher than shown. Cold-climate models hold their
+      efficiency better.
+    </li>
+    <li>
+      <strong>Fixed charges.</strong> Dropping gas entirely also saves the monthly gas customer
+      charge, which this comparison leaves out.
+    </li>
+    <li>
+      <strong>Equipment cost.</strong> This compares running costs only. Installation, rebates and
+      tax credits change the payback.
+    </li>
+  </ul>
+
+  <h2>How the comparison works</h2>
+  <p>
+    {`We start from the heat a house needs, in million Btu (MMBtu). For the typical home we use EIA's Residential Energy Consumption Survey (${HEATING.recs.survey}): the gas burned for space heating by the average gas-heated home in your state, times 85% for the efficiency of its furnace. Each system then needs that heat divided by its efficiency, and the fuel is priced at your state's price. Heat content: 3,412 Btu per kWh, 103,600 Btu per 100 cubic feet of gas (1.036 therms), 91,452 Btu per gallon of propane and 138,500 per gallon of heating oil (EIA). A heat pump's seasonal efficiency is its HSPF2 divided by 3.412.`}
+  </p>
+  <p>
+    <a href="/methodology/">Data & methodology</a> ·{' '}
+    <a href="/tools/space-heater-cost/">Space heater cost</a>
+  </p>
+</Base>

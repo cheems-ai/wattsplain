@@ -19,4 +19,8 @@ test('capture', async ({ page }, info) => {
   await page.locator('#bc-nk').fill('950');
   await page.locator('#bc-nd').fill('200');
   await page.screenshot({ path: `${dir}-bill-checker.png`, fullPage: true });
+  await page.goto('/tools/heating-cost-calculator/?state=MI');
+  await page.screenshot({ path: `${dir}-heating.png`, fullPage: true });
+  await page.locator('summary', { hasText: 'Your prices' }).click();
+  await page.screenshot({ path: `${dir}-heating-open.png` });
 });

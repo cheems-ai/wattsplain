@@ -4,8 +4,10 @@ import type { GetStaticPaths } from 'astro';
 import { APPLIANCES } from '../../data/appliances';
 import PriceTrend from '../../components/PriceTrend.astro';
 import { ELECTRICITY, STATE_ROWS, stateTrend, type StateRow } from '../../data/electricity';
+import { ELECTRIC_BASIS, heatingRow } from '../../data/heating';
 import Base from '../../layouts/Base.astro';
 import { runningCost } from '../../lib/energy';
+import { breakEvenElectricity, perTherm } from '../../lib/heating';
 import { cents, dollars, kwh, monthLabel, signedPct } from '../../lib/format';
 
 export const getStaticPaths = (() =>
@@ -34,6 +36,9 @@ const trend = stateTrend(s.code);
 const monthName = (p: string) => monthLabel(p).split(' ')[0];
 const direction = s.change > 0.5 ? 'higher' : s.change < -0.5 ? 'lower' : 'about the same';
 const comparison = direction === 'about the same' ? 'about the same as' : `${direction} than`;
+const heating = heatingRow(s.code)!;
+const heatPump = heating.costs.find((c) => c.system.id === 'heat-pump')!;
+const breakEven = breakEvenElectricity(heating.prices.gas, 0.95, 7.8);
 const title = `${s.name} electricity rates and average bill (${month})`;
 const description = `${s.name} homes paid ${cents(s.price)} per kWh in ${month} (${signedPct(s.change)} vs ${prior}). Typical monthly bill, how it compares with the U.S., and what appliances cost to run.`;
 ---
@@ -157,6 +162,45 @@ const description = `${s.name} homes paid ${cents(s.price)} per kWh in ${month} 
   <p>
     <a href={`/tools/appliance-electricity-cost/?state=${s.code}`}>Calculate any appliance</a> ·{' '}
     <a href={`/tools/space-heater-cost/?state=${s.code}`}>Space heater cost in {s.name}</a>
+  </p>
+
+  <h2>Heating costs in {s.name}: heat pump vs gas, propane and oil</h2>
+  <p>
+    {`The typical gas-heated ${s.name} home needs about ${Math.round(heating.heat)} million Btu of heat a year${heating.heatFromDivision ? ` (${s.division} average; EIA has no separate figure for ${s.name})` : ''}. At current prices the cheapest way to provide it is a ${heating.cheapest.system.name.toLowerCase()}, at about `}
+    <strong>{`${dollars(heating.cheapest.perYear, 0)} a year`}</strong>
+    {`. A heat pump (HSPF2 7.8) beats a 95% gas furnace here when electricity costs less than ${cents(breakEven)} per kWh; the ${ELECTRIC_BASIS.label} in ${s.name} is ${cents(heatPump.price)}.`}
+  </p>
+  <div class="table-scroll">
+    <table>
+      <thead>
+        <tr>
+          <th>System</th>
+          <th>Fuel price</th>
+          <th>Per year</th>
+        </tr>
+      </thead>
+      <tbody>
+        {heating.costs.map((c) => (
+          <tr>
+            <td>{c.system.name}</td>
+            <td>
+              {c.system.fuel === 'kwh'
+                ? `${cents(c.price)}/kWh`
+                : c.system.id === 'gas'
+                  ? `${dollars(perTherm(c.price))}/therm`
+                  : `${dollars(c.price)}/gal`}
+              {heating.notes[c.system.id] ? ` (${heating.notes[c.system.id]})` : ''}
+            </td>
+            <td>{dollars(c.perYear, 0)}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+  <p>
+    <a href={`/tools/heating-cost-calculator/?state=${s.code}`}>
+      Compare with your own fuel use and prices →
+    </a>
   </p>
 
   {neighbours.length > 0 && (

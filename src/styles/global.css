@@ -363,6 +363,22 @@ fieldset legend {
   padding: 0;
   margin-bottom: 4px;
 }
+.tool details summary {
+  cursor: pointer;
+  font-weight: 600;
+  padding: 10px 0;
+}
+.tool details[open] summary {
+  margin-bottom: 8px;
+}
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
 
 /* Charts (dataviz palette slots 1–2, validated for both surfaces) */
 :root {
