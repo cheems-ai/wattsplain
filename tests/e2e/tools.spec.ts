@@ -502,7 +502,10 @@ test('no Content-Security-Policy violations or console errors on the main pages'
 }) => {
   const problems: string[] = [];
   page.on('console', (m) => {
-    if (m.type() === 'error') problems.push(`${page.url()}: ${m.text()}`);
+    // Cloudflare's edge injects its Web Analytics beacon on production; the policy blocks it on
+    // purpose (the privacy page promises no third-party scripts). Anything else is a failure.
+    if (m.type() === 'error' && !m.text().includes('static.cloudflareinsights.com/beacon'))
+      problems.push(`${page.url()}: ${m.text()}`);
   });
   page.on('pageerror', (e) => problems.push(`${page.url()}: ${e.message}`));
   // Analytics beacons have no backend under `astro preview`.
