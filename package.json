@@ -21,7 +21,8 @@
     "check": "npm run format:check && npm run typecheck && npm run test && npm run build && npm run check:dist",
     "test:e2e": "playwright test",
     "check:dist": "node scripts/check-dist.mjs",
-    "deploy": "wrangler deploy"
+    "deploy": "wrangler deploy",
+    "indexnow": "node scripts/ops/indexnow.mjs"
   },
   "dependencies": {
     "@astrojs/preact": "6.1.1",
