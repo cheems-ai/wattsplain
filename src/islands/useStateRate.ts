@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'preact/hooks';
 
 import type { RateOption } from '../data/electricity';
+import { parseRate } from '../lib/energy';
 
 /**
  * Selected state (prefilled from ?state=XX so state pages can deep-link) plus an optional
@@ -14,15 +15,15 @@ export function useStateRate(rates: readonly RateOption[], fallback = 'PA') {
     if (q && rates.some((r) => r.code === q)) setCode(q);
   }, [rates]);
   const state = rates.find((r) => r.code === code) ?? rates[0]!;
-  const customNum = Number(custom);
-  const useCustom = custom.trim() !== '' && Number.isFinite(customNum) && customNum > 0;
+  const customNum = parseRate(custom);
+  const useCustom = customNum !== null;
   return {
     code,
     setCode,
     custom,
     setCustom,
     state,
-    rate: useCustom ? customNum : state.price,
+    rate: customNum ?? state.price,
     useCustom,
   };
 }

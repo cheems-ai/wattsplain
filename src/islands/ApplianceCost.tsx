@@ -115,7 +115,7 @@ export default function ApplianceCost({ rates, appliances, fixed, monthLabel }: 
           </select>
         </div>
         <div class="field">
-          <label for="ac-rate">Or your own rate (¢ per kWh)</label>
+          <label for="ac-rate">Or your own rate (¢ or $ per kWh)</label>
           <input
             id="ac-rate"
             inputMode="decimal"

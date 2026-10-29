@@ -2,6 +2,7 @@ import { useEffect, useState } from 'preact/hooks';
 
 import { track } from '../analytics/client';
 import type { HeatingOption } from '../data/heating';
+import { parseRate } from '../lib/energy';
 import { cents, dollars } from '../lib/format';
 import {
   BTU,
@@ -69,8 +70,8 @@ export default function HeatingCost({ options, electricLabel, propaneWeek, gasLa
     return n !== null && n > 0 ? n : fallback;
   };
   const prices: Record<SystemId, number> = {
-    'heat-pump': or(elec, state.prices['heat-pump']),
-    electric: or(elec, state.prices.electric),
+    'heat-pump': parseRate(elec) ?? state.prices['heat-pump'],
+    electric: parseRate(elec) ?? state.prices.electric,
     // Gas is entered per therm (like the bill) and stored per Mcf.
     gas: num(gas) ? num(gas)! * (BTU.mcf / BTU.therm) : state.prices.gas,
     propane: or(propane, state.prices.propane),
@@ -158,7 +159,7 @@ export default function HeatingCost({ options, electricLabel, propaneWeek, gasLa
         <details>
           <summary>Your prices and equipment (optional)</summary>
           <div class="field">
-            <label for="hc-elec">Electricity (¢ per kWh)</label>
+            <label for="hc-elec">Electricity (¢ or $ per kWh)</label>
             <input
               id="hc-elec"
               inputMode="decimal"

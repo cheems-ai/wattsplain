@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { compareBills, pctChange, runningCost } from './energy';
+import { compareBills, parseRate, pctChange, runningCost } from './energy';
 
 describe('runningCost', () => {
   it('matches the DOE worked example (window fan, 200 W, 4 h/day, 8.5 ¢/kWh)', () => {
@@ -65,5 +65,23 @@ describe('compareBills', () => {
 describe('pctChange', () => {
   it('computes the year-over-year change', () => {
     expect(pctChange(21.77, 19.93)).toBeCloseTo(9.232, 3);
+  });
+});
+
+describe('parseRate', () => {
+  it('reads cents and dollars the way bills print them', () => {
+    expect(parseRate('18.2')).toBeCloseTo(18.2, 10);
+    expect(parseRate('18.2¢')).toBeCloseTo(18.2, 10);
+    expect(parseRate('18 cents per kWh')).toBeCloseTo(18, 10);
+    expect(parseRate('0.182')).toBeCloseTo(18.2, 10);
+    expect(parseRate('$0.182/kWh')).toBeCloseTo(18.2, 10);
+    expect(parseRate('$.18')).toBeCloseTo(18, 10);
+  });
+
+  it('ignores empty or unusable input', () => {
+    expect(parseRate('')).toBeNull();
+    expect(parseRate('  ')).toBeNull();
+    expect(parseRate('abc')).toBeNull();
+    expect(parseRate('0')).toBeNull();
   });
 });

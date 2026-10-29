@@ -210,7 +210,10 @@ test('heating calculator compares systems for your own fuel use and prices', asy
   await expect(gasRow).toContainText(`$${Math.round(536.842 * perTherm).toLocaleString('en-US')}`);
   // Heat pump, HSPF2 7.8: 51e6 Btu ÷ 7,800 Btu per kWh = 6,538 kWh, at 8¢ = $523.
   await page.locator('summary', { hasText: 'Your prices' }).click();
-  await page.getByLabel('Electricity (¢ per kWh)').fill('8');
+  await page.getByLabel('Electricity (¢ or $ per kWh)').fill('8');
+  await expect(page.locator('.result .big')).toHaveText('Heat pump: $523/yr');
+  // Bills print dollars too: $0.08 is the same 8¢.
+  await page.getByLabel('Electricity (¢ or $ per kWh)').fill('$0.08');
   await expect(page.locator('.result .big')).toHaveText('Heat pump: $523/yr');
   await expect(page.locator('.result .verdict')).toContainText(
     'the heat pump is cheaper to run than the gas furnace',

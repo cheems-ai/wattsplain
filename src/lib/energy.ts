@@ -25,6 +25,17 @@ export function runningCost(watts: number, hoursPerDay: number, centsPerKwh: num
   };
 }
 
+/**
+ * A price per kWh as a visitor types it, in cents. Bills print it either way (18.2¢ or $0.182), so
+ * a "$" or a value under 1 is read as dollars: no US home pays less than 1¢ per kWh. Null when
+ * nothing usable was typed.
+ */
+export function parseRate(s: string): number | null {
+  const n = Number(s.replace(/[^0-9.]/g, ''));
+  if (s.trim() === '' || !Number.isFinite(n) || n <= 0) return null;
+  return s.includes('$') || n < 1 ? n * 100 : n;
+}
+
 export interface Bill {
   kwh: number;
   dollars: number;
