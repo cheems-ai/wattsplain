@@ -1,0 +1,202 @@
+---
+// Line chart of monthly prices (cents/kWh) for up to two series, rendered as static SVG. A small
+// script adds a crosshair + tooltip; the <details> table is the accessible / no-hover view.
+import { monthLabel } from '../lib/format';
+
+interface Series {
+  label: string;
+  values: number[];
+}
+interface Props {
+  periods: string[];
+  series: Series[];
+  caption: string;
+}
+
+const { periods, series, caption } = Astro.props;
+const all = series.flatMap((s) => s.values);
+const rawMin = Math.min(...all);
+const rawMax = Math.max(...all);
+const step = [0.5, 1, 2, 2.5, 5, 10].find((s) => (rawMax - rawMin) / s <= 5) ?? 10;
+const yMin = Math.floor(rawMin / step) * step;
+const yMax = Math.ceil(rawMax / step) * step || yMin + step;
+const ticks: number[] = [];
+for (let v = yMin; v <= yMax + 1e-9; v += step) ticks.push(Math.round(v * 100) / 100);
+const short = (p: string) => monthLabel(p).replace(/^(\w{3})\w*/, '$1');
+
+// Two layouts of the same chart: SVG text scales with the viewBox, so phones get their own
+// narrower layout (picked by CSS) instead of a shrunken desktop chart with unreadable labels.
+function layout(variant: 'wide' | 'narrow') {
+  const W = variant === 'wide' ? 640 : 360;
+  const H = 240;
+  const M = variant === 'wide' ? { l: 44, r: 92, t: 14, b: 30 } : { l: 38, r: 64, t: 12, b: 30 };
+  const minGap = variant === 'wide' ? 3 : 7;
+  const x = (i: number) => M.l + (i * (W - M.l - M.r)) / Math.max(1, periods.length - 1);
+  const y = (v: number) => M.t + ((yMax - v) * (H - M.t - M.b)) / (yMax - yMin);
+  const paths = series.map((s) =>
+    s.values.map((v, i) => `${i ? 'L' : 'M'}${x(i).toFixed(1)},${y(v).toFixed(1)}`).join(''),
+  );
+  const xLabels = periods
+    .map((p, i) => ({ p, i }))
+    .filter(({ p, i }) => i === 0 || i === periods.length - 1 || p.endsWith('-01'))
+    .filter(({ i }, k, arr) => k === 0 || i - arr[k - 1]!.i >= minGap)
+    .map(({ p, i }) => ({ label: short(p), x: x(i) }));
+  // End labels: keep them at least 14 units apart; the dots stay on the lines.
+  const ends = series.map((s) => {
+    const cy = y(s.values.at(-1)!);
+    return { v: s.values.at(-1)!, cy, y: cy };
+  });
+  if (ends.length === 2 && Math.abs(ends[0]!.y - ends[1]!.y) < 14) {
+    const [a, b] = ends[0]!.y < ends[1]!.y ? [ends[0]!, ends[1]!] : [ends[1]!, ends[0]!];
+    const mid = (a.y + b.y) / 2;
+    a.y = mid - 7;
+    b.y = mid + 7;
+  }
+  return {
+    variant,
+    W,
+    H,
+    M,
+    xs: periods.map((_, i) => x(i)),
+    grid: ticks.map((t) => ({ t, y: y(t) })),
+    paths,
+    xLabels,
+    ends,
+  };
+}
+const layouts = [layout('wide'), layout('narrow')];
+const data = JSON.stringify({
+  periods: periods.map(short),
+  series: series.map((s) => s.values),
+  labels: series.map((s) => s.label),
+});
+const summary = `${caption}. ${series.map((s) => `${s.label}: ${s.values[0]}¢ in ${monthLabel(periods[0]!)}, ${s.values.at(-1)}¢ in ${monthLabel(periods.at(-1)!)}`).join('; ')}.`;
+---
+
+<figure class="trend">
+  <figcaption>{caption}</figcaption>
+  <div class="trend-legend">
+    {series.map((s, k) => (
+      <span>
+        <i class={`key s${k + 1}`} />
+        {s.label}
+      </span>
+    ))}
+  </div>
+  <div class="trend-plot" data-chart={data}>
+    {layouts.map((l) => (
+      <svg
+        class={l.variant}
+        viewBox={`0 0 ${l.W} ${l.H}`}
+        role="img"
+        aria-label={summary}
+        data-x={JSON.stringify(l.xs)}
+        data-w={l.W}
+      >
+        {l.grid.map((g) => (
+          <line class="grid" x1={l.M.l} x2={l.W - l.M.r} y1={g.y} y2={g.y} />
+        ))}
+        {l.grid.map((g) => (
+          <text class="tick" x={l.M.l - 6} y={g.y + 4} text-anchor="end">{`${g.t}¢`}</text>
+        ))}
+        {l.xLabels.map((xl) => (
+          <text class="tick" x={xl.x} y={l.H - 8} text-anchor="middle">
+            {xl.label}
+          </text>
+        ))}
+        {l.paths.map((d, k) => (
+          <path class={`line s${k + 1}`} d={d} />
+        ))}
+        {l.ends.map((e, k) => (
+          <circle class={`dot s${k + 1}`} cx={l.xs.at(-1)} cy={e.cy} r="4" />
+        ))}
+        {l.ends.map((e) => (
+          <text class="end" x={l.W - l.M.r + 10} y={e.y + 4}>{`${e.v.toFixed(2)}¢`}</text>
+        ))}
+        <line class="cross" x1="0" x2="0" y1={l.M.t} y2={l.H - l.M.b} visibility="hidden" />
+      </svg>
+    ))}
+    <div class="trend-tip" hidden></div>
+  </div>
+  <details>
+    <summary>Show the data table</summary>
+    <div class="table-scroll">
+      <table>
+        <thead>
+          <tr>
+            <th>Month</th>
+            {series.map((s) => (
+              <th>{s.label} (¢/kWh)</th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {periods.map((p, i) => (
+            <tr>
+              <td>{monthLabel(p)}</td>
+              {series.map((s) => (
+                <td>{s.values[i]!.toFixed(2)}</td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  </details>
+</figure>
+
+<script>
+  // Crosshair + tooltip: snaps to the nearest month and lists every series (values as text).
+  for (const plot of document.querySelectorAll<HTMLElement>('.trend-plot')) {
+    const d = JSON.parse(plot.dataset['chart'] ?? '{}') as {
+      periods: string[];
+      series: number[][];
+      labels: string[];
+    };
+    const tip = plot.querySelector<HTMLElement>('.trend-tip')!;
+    // The layout that CSS shows at this screen width.
+    const visible = () =>
+      [...plot.querySelectorAll<SVGSVGElement>('svg')].find(
+        (s) => s.getBoundingClientRect().width > 0,
+      );
+    const show = (clientX: number) => {
+      const svg = visible();
+      if (!svg) return;
+      const xs = JSON.parse(svg.dataset['x'] ?? '[]') as number[];
+      const W = Number(svg.dataset['w']);
+      const cross = svg.querySelector<SVGLineElement>('.cross')!;
+      const r = svg.getBoundingClientRect();
+      const vx = ((clientX - r.left) / r.width) * W;
+      let i = 0;
+      xs.forEach((px, k) => {
+        if (Math.abs(px - vx) < Math.abs(xs[i]! - vx)) i = k;
+      });
+      cross.setAttribute('x1', String(xs[i]));
+      cross.setAttribute('x2', String(xs[i]));
+      cross.setAttribute('visibility', 'visible');
+      tip.replaceChildren();
+      const head = document.createElement('div');
+      head.className = 'tip-head';
+      head.textContent = d.periods[i] ?? '';
+      tip.append(head);
+      d.series.forEach((vals, k) => {
+        const row = document.createElement('div');
+        const key = document.createElement('i');
+        key.className = `key s${k + 1}`;
+        const val = document.createElement('strong');
+        val.textContent = `${vals[i]!.toFixed(2)}¢`;
+        row.append(key, val, document.createTextNode(` ${d.labels[k]}`));
+        tip.append(row);
+      });
+      tip.hidden = false;
+      const left = (xs[i]! / W) * r.width;
+      tip.style.left = `${Math.min(Math.max(left - 70, 0), r.width - 150)}px`;
+    };
+    const hide = () => {
+      for (const c of plot.querySelectorAll('.cross')) c.setAttribute('visibility', 'hidden');
+      tip.hidden = true;
+    };
+    plot.addEventListener('pointermove', (e) => show(e.clientX));
+    plot.addEventListener('pointerleave', hide);
+  }
+</script>

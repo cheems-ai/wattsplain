@@ -1,0 +1,94 @@
+---
+import { ELECTRICITY, STATE_ROWS } from '../../data/electricity';
+import Base from '../../layouts/Base.astro';
+import { cents, dollars, kwh, monthLabel, signedPct } from '../../lib/format';
+
+const month = monthLabel(ELECTRICITY.monthly.period);
+const prior = monthLabel(ELECTRICITY.monthly.priorPeriod);
+const year = ELECTRICITY.annual.year;
+const rows = [...STATE_ROWS].sort((a, b) => b.price - a.price);
+const up = rows.filter((s) => s.change > 0).length;
+const down = rows.filter((s) => s.change < 0).length;
+const title = `Electricity rates by state (${month})`;
+const description = `Average residential electricity price in every U.S. state for ${month} vs ${prior}, the year-over-year change, and the typical monthly bill. Source: EIA.`;
+---
+
+<Base
+  title={title}
+  description={description}
+  crumbs={[['Electricity rates', '/electricity-rates/']]}
+>
+  <h1>{title}</h1>
+  <p class="lede">
+    U.S. average: <strong>{cents(ELECTRICITY.us.price)}</strong> per kWh,{' '}
+    <span class={ELECTRICITY.us.change > 0 ? 'up' : 'down'}>
+      {signedPct(ELECTRICITY.us.change)}
+    </span>{' '}
+    from {prior}. Prices rose in {up} states and fell in {down}. Pick your state for details and
+    calculators.
+  </p>
+  <p class="updated">
+    Residential prices: EIA Electric Power Monthly, Table 5.6.A ({month} is preliminary). Average
+    use and bill: EIA, {year}. Checked {ELECTRICITY.fetchedAt}.{' '}
+    <a href="/methodology/">How we use this data</a>
+  </p>
+
+  <div class="table-scroll">
+    <table>
+      <caption>{`Sorted from most to least expensive. Estimated bill = ${year} average use × ${month} price.`}</caption>
+      <thead>
+        <tr>
+          <th>State</th>
+          <th>{month}</th>
+          <th>{prior}</th>
+          <th>Change</th>
+          <th>Avg use ({year})</th>
+          <th>Est. monthly bill</th>
+        </tr>
+      </thead>
+      <tbody>
+        {rows.map((s) => (
+          <tr>
+            <td>
+              <a href={`/electricity-rates/${s.slug}/`}>{s.name}</a>
+            </td>
+            <td>{cents(s.price)}</td>
+            <td>{cents(s.pricePrior)}</td>
+            <td class={s.change > 0 ? 'up' : 'down'}>{signedPct(s.change)}</td>
+            <td>{kwh(s.avgKwh)}</td>
+            <td>{dollars((s.avgKwh * s.price) / 100, 0)}</td>
+          </tr>
+        ))}
+        <tr>
+          <td>
+            <strong>U.S. average</strong>
+          </td>
+          <td>
+            <strong>{cents(ELECTRICITY.us.price)}</strong>
+          </td>
+          <td>{cents(ELECTRICITY.us.pricePrior)}</td>
+          <td>{signedPct(ELECTRICITY.us.change)}</td>
+          <td>{kwh(ELECTRICITY.us.avgKwh)}</td>
+          <td>{dollars((ELECTRICITY.us.avgKwh * ELECTRICITY.us.price) / 100, 0)}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2>Reading these numbers</h2>
+  <ul>
+    <li>
+      The price is EIA's average: all residential revenue divided by all residential kWh sold, so it
+      already spreads fixed monthly charges over each kWh. Your own rate depends on your utility and
+      plan.
+    </li>
+    <li>
+      We compare the same month a year apart, so the season does not distort the change. A single
+      month can still move because of fuel costs or billing adjustments.
+    </li>
+    <li>
+      Use varies a lot by season and by heating type; homes with electric heat use far more in
+      winter.
+    </li>
+  </ul>
+</Base>

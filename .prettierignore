@@ -1,0 +1,10 @@
+dist/
+.astro/
+coverage/
+playwright-report/
+test-results/
+package-lock.json
+*.md
+src/data/*.json
+scripts/lib/fixtures/
+public/

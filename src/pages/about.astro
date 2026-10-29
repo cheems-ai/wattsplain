@@ -1,0 +1,25 @@
+---
+import { SITE } from '../config/site';
+import Base from '../layouts/Base.astro';
+---
+
+<Base
+  title="About"
+  description={`About ${SITE.name}: who runs it and how it is funded.`}
+  crumbs={[['About', '/about/']]}
+>
+  <h1>About {SITE.name}</h1>
+  <p>
+    {SITE.name} helps U.S. households understand what electricity costs where they live. Every
+    calculator uses the latest state prices published by the U.S. Energy Information Administration,
+    refreshed every month, and shows the month the data is from.
+  </p>
+  <p>
+    The calculators run entirely in your browser. You do not need an account, and we never ask for a
+    phone number or address.
+  </p>
+  <p>We do not sell electricity plans or installations and we are not paid by utilities.</p>
+  <p>
+    <a href="/methodology/">Data & methodology</a>
+  </p>
+</Base>

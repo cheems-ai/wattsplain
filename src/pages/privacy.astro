@@ -1,0 +1,20 @@
+---
+import { SITE } from '../config/site';
+import Base from '../layouts/Base.astro';
+---
+
+<Base
+  title="Privacy"
+  description={`How ${SITE.name} handles your data.`}
+  crumbs={[['Privacy', '/privacy/']]}
+>
+  <h1>Privacy</h1>
+  <p>
+    The numbers you enter in our calculators stay in your browser; they are not sent to us or
+    stored.
+  </p>
+  <p>
+    This site currently sets no cookies and uses no analytics or advertising scripts. If that
+    changes, this page will say so first.
+  </p>
+</Base>

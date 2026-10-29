@@ -1,0 +1,192 @@
+---
+import type { GetStaticPaths } from 'astro';
+
+import { APPLIANCES } from '../../data/appliances';
+import PriceTrend from '../../components/PriceTrend.astro';
+import { ELECTRICITY, STATE_ROWS, stateTrend, type StateRow } from '../../data/electricity';
+import Base from '../../layouts/Base.astro';
+import { runningCost } from '../../lib/energy';
+import { cents, dollars, kwh, monthLabel, signedPct } from '../../lib/format';
+
+export const getStaticPaths = (() =>
+  STATE_ROWS.map((s) => ({ params: { state: s.slug }, props: { s } }))) satisfies GetStaticPaths;
+
+const { s } = Astro.props as { s: StateRow };
+const month = monthLabel(ELECTRICITY.monthly.period);
+const prior = monthLabel(ELECTRICITY.monthly.priorPeriod);
+const year = ELECTRICITY.annual.year;
+const us = ELECTRICITY.us;
+const vsUs = ((s.price - us.price) / us.price) * 100;
+const estBill = (s.avgKwh * s.price) / 100;
+const estBillPrior = (s.avgKwh * s.pricePrior) / 100;
+const neighbours = STATE_ROWS.filter((x) => x.division === s.division && x.code !== s.code);
+const examples = [
+  'space-heater',
+  'dehumidifier',
+  'clothes-dryer',
+  'electric-blanket',
+  'ceiling-fan',
+  'hair-dryer',
+]
+  .map((id) => APPLIANCES.find((a) => a.id === id)!)
+  .map((a) => ({ a, cost: runningCost(a.watts * (a.dutyCycle ?? 1), a.hours, s.price) }));
+const trend = stateTrend(s.code);
+const monthName = (p: string) => monthLabel(p).split(' ')[0];
+const direction = s.change > 0.5 ? 'higher' : s.change < -0.5 ? 'lower' : 'about the same';
+const comparison = direction === 'about the same' ? 'about the same as' : `${direction} than`;
+const title = `${s.name} electricity rates and average bill (${month})`;
+const description = `${s.name} homes paid ${cents(s.price)} per kWh in ${month} (${signedPct(s.change)} vs ${prior}). Typical monthly bill, how it compares with the U.S., and what appliances cost to run.`;
+---
+
+<Base
+  title={title}
+  description={description}
+  crumbs={[
+    ['Electricity rates', '/electricity-rates/'],
+    [s.name, `/electricity-rates/${s.slug}/`],
+  ]}
+>
+  <h1>{s.name} electricity rates and average bill</h1>
+  <p class="lede">
+    {`In ${month}, the average residential price in ${s.name} was `}
+    <strong>{`${cents(s.price)} per kWh`}</strong>
+    {`, ${comparison} a year earlier (${cents(s.pricePrior)}).`}
+  </p>
+  <p class="updated">
+    Source: EIA Table 5.6.A ({month}, preliminary) and EIA {year} averages. Checked{' '}
+    {ELECTRICITY.fetchedAt}.
+  </p>
+
+  <div class="stats">
+    <div class="stat">
+      <div class="k">Price, {month}</div>
+      <div class="v">{cents(s.price)}</div>
+      <div class="s">per kWh</div>
+    </div>
+    <div class="stat">
+      <div class="k">Change since {prior}</div>
+      <div class={`v ${s.change > 0 ? 'up' : 'down'}`}>{signedPct(s.change)}</div>
+      <div class="s">U.S.: {signedPct(us.change)}</div>
+    </div>
+    <div class="stat">
+      <div class="k">Rank</div>
+      <div class="v">#{s.rank} of 51</div>
+      <div class="s">1 = most expensive</div>
+    </div>
+    <div class="stat">
+      <div class="k">vs U.S. average</div>
+      <div class="v">{signedPct(vsUs, 0)}</div>
+      <div class="s">U.S.: {cents(us.price)}</div>
+    </div>
+  </div>
+
+  {trend && (
+    <>
+      <h2>{s.name} electricity prices, month by month</h2>
+      <PriceTrend
+        caption={`Average residential price, ${monthLabel(trend.periods[0]!)} – ${monthLabel(trend.periods.at(-1)!)} (¢/kWh)`}
+        periods={trend.periods}
+        series={[
+          { label: s.name, values: trend.values },
+          { label: 'U.S. average', values: trend.us },
+        ]}
+      />
+      <p>
+        {`So far in ${trend.ytd.year} (${trend.ytd.months} months), ${s.name} has averaged ${cents(trend.ytd.avg)} per kWh, `}
+        <span class={trend.ytd.change > 0 ? 'up' : 'down'}>{signedPct(trend.ytd.change)}</span>
+        {` compared with the same months of ${Number(trend.ytd.year) - 1} (${cents(trend.ytd.avgPrior)}). Over the last 12 months the price was highest in ${monthLabel(trend.high.period)} (${cents(trend.high.price)}) and lowest in ${monthLabel(trend.low.period)} (${cents(trend.low.price)}).`}
+      </p>
+    </>
+  )}
+
+  <h2>Why is my electric bill so high in {s.name}?</h2>
+  <ul>
+    <li>
+      {`Price: ${s.name} homes paid ${cents(s.price)} per kWh in ${month}, ${signedPct(s.change)} from ${prior}${trend ? ` (${signedPct(trend.ytd.change)} for ${trend.ytd.year} so far)` : ''}. The U.S. average changed ${signedPct(us.change)}.`}
+    </li>
+    {trend && trend.high.price - trend.low.price > 0.5 && (
+      <li>
+        {`Season: the price itself moves through the year, from ${cents(trend.low.price)} in ${monthName(trend.low.period)} to ${cents(trend.high.price)} in ${monthName(trend.high.period)}, on top of the extra heating or cooling you use.`}
+      </li>
+    )}
+    <li>
+      {`Use: a typical ${s.name} home uses about ${kwh(s.avgKwh)} a month (${year}). Compare your bill with that, and with the same month last year rather than last month.`}
+    </li>
+  </ul>
+  <p>
+    <a href={`/tools/why-is-my-electric-bill-high/?state=${s.code}`}>
+      Enter two of your bills to see how much is price and how much is use →
+    </a>
+  </p>
+
+  <h2>Average electric bill in {s.name}</h2>
+  <p>
+    A typical {s.name} home used <strong>{kwh(s.avgKwh)}</strong> a month in {year} (U.S.:{' '}
+    {kwh(us.avgKwh)}). At the {month} price that is about{' '}
+    <strong>{dollars(estBill, 0)} a month</strong>, compared with {dollars(estBillPrior, 0)} at the{' '}
+    {prior} price — {estBill >= estBillPrior ? 'an increase' : 'a decrease'} of{' '}
+    {dollars(Math.abs(estBill - estBillPrior), 0)} for the same use. EIA's actual {year} average
+    bill was {dollars(s.avgBillAnnual)}.
+  </p>
+  <h2>What common appliances cost to run in {s.name}</h2>
+  <p class="note">{`At ${cents(s.price)} per kWh. Wattages are typical values from the U.S. Department of Energy.`}</p>
+  <div class="table-scroll">
+    <table>
+      <thead>
+        <tr>
+          <th>Appliance</th>
+          <th>Watts</th>
+          <th>Hours/day</th>
+          <th>Per month</th>
+          <th class="hide-sm">Per year</th>
+        </tr>
+      </thead>
+      <tbody>
+        {examples.map(({ a, cost }) => (
+          <tr>
+            <td>{a.name}</td>
+            <td>{a.watts.toLocaleString('en-US')}</td>
+            <td>{a.dutyCycle ? `${a.hours} (cycles)` : a.hours}</td>
+            <td>{dollars(cost.perMonth)}</td>
+            <td class="hide-sm">{dollars(cost.perYear, 0)}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+  <p>
+    <a href={`/tools/appliance-electricity-cost/?state=${s.code}`}>Calculate any appliance</a> ·{' '}
+    <a href={`/tools/space-heater-cost/?state=${s.code}`}>Space heater cost in {s.name}</a>
+  </p>
+
+  {neighbours.length > 0 && (
+    <>
+      <h2>Nearby states ({s.division})</h2>
+      <div class="table-scroll">
+        <table>
+          <thead>
+            <tr>
+              <th>State</th>
+              <th>{month}</th>
+              <th>Change</th>
+            </tr>
+          </thead>
+          <tbody>
+            {neighbours.map((n) => (
+              <tr>
+                <td>
+                  <a href={`/electricity-rates/${n.slug}/`}>{n.name}</a>
+                </td>
+                <td>{cents(n.price)}</td>
+                <td class={n.change > 0 ? 'up' : 'down'}>{signedPct(n.change)}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </>
+  )}
+  <p>
+    <a href="/electricity-rates/">All states →</a>
+  </p>
+</Base>

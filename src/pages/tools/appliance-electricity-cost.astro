@@ -1,0 +1,38 @@
+---
+import { APPLIANCES, APPLIANCE_SOURCE } from '../../data/appliances';
+import { ELECTRICITY, RATE_OPTIONS } from '../../data/electricity';
+import ApplianceCost from '../../islands/ApplianceCost';
+import Base from '../../layouts/Base.astro';
+import { monthLabel } from '../../lib/format';
+
+const month = monthLabel(ELECTRICITY.monthly.period);
+const title = 'Appliance electricity cost calculator (by state)';
+const description = `How much an appliance costs to run per hour, day, month and year at your state's ${month} electricity price. Typical wattages from the U.S. Department of Energy.`;
+---
+
+<Base
+  title={title}
+  description={description}
+  crumbs={[['Appliance cost', '/tools/appliance-electricity-cost/']]}
+>
+  <h1>Appliance electricity cost calculator</h1>
+  <p class="lede">
+    Pick an appliance, check the watts on its label, and see what it costs to run at your state's
+    latest electricity price.
+  </p>
+
+  <ApplianceCost client:load rates={RATE_OPTIONS} appliances={[...APPLIANCES]} monthLabel={month} />
+
+  <h2>The formula</h2>
+  <p>
+    Watts × hours per day ÷ 1,000 = kWh per day. kWh × price per kWh = cost. A 1,500 W heater
+    running 8 hours uses 12 kWh a day; at 20¢ per kWh that is $2.40 a day.
+  </p>
+  <h2>Where the wattages come from</h2>
+  <p>
+    Default wattages are typical nameplate values from{' '}
+    <a href={APPLIANCE_SOURCE.url}>{APPLIANCE_SOURCE.title}</a>. The label on your appliance is more
+    accurate. Appliances with a thermostat or compressor (fridges, freezers, heaters) cycle on and
+    off, so they use less than their nameplate wattage × hours.
+  </p>
+</Base>

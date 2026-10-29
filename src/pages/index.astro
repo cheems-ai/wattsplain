@@ -1,0 +1,85 @@
+---
+import { SITE } from '../config/site';
+import { ELECTRICITY, STATE_ROWS } from '../data/electricity';
+import Base from '../layouts/Base.astro';
+import { cents, monthLabel, signedPct } from '../lib/format';
+
+const month = monthLabel(ELECTRICITY.monthly.period);
+const prior = monthLabel(ELECTRICITY.monthly.priorPeriod);
+const risers = [...STATE_ROWS].sort((a, b) => b.change - a.change).slice(0, 5);
+const tools = [
+  [
+    '/tools/why-is-my-electric-bill-high/',
+    'Why is my electric bill so high?',
+    'Compare two bills and see how much of the increase is the price and how much is usage.',
+  ],
+  [
+    '/tools/appliance-electricity-cost/',
+    'Appliance electricity cost',
+    'What a fridge, dryer, dehumidifier or anything else costs to run at your state’s price.',
+  ],
+  [
+    '/tools/space-heater-cost/',
+    'Space heater cost',
+    'Cost per hour, day and month for a 750 W or 1,500 W heater in your state.',
+  ],
+  [
+    '/electricity-rates/',
+    'Electricity rates by state',
+    `All 50 states and DC, ${month} vs ${prior}, with the average monthly bill.`,
+  ],
+];
+---
+
+<Base
+  title={`${SITE.name}: electricity prices by state and cost calculators`}
+  description={SITE.description}
+>
+  <h1>What electricity really costs where you live</h1>
+  <p class="lede">
+    The average U.S. home paid <strong>{cents(ELECTRICITY.us.price)}</strong> per kWh in {month},{' '}
+    <span class={ELECTRICITY.us.change > 0 ? 'up' : 'down'}>
+      {signedPct(ELECTRICITY.us.change)}
+    </span>{' '}
+    from a year earlier. Our calculators use your state's latest price from the U.S. Energy
+    Information Administration, refreshed every month.
+  </p>
+
+  <div class="grid">
+    {tools.map(([href, title, text]) => (
+      <a class="card tool-card" href={href}>
+        <h3>{title}</h3>
+        <p>{text}</p>
+      </a>
+    ))}
+  </div>
+
+  <h2>
+    Biggest price increases, {prior} → {month}
+  </h2>
+  <div class="table-scroll">
+    <table>
+      <thead>
+        <tr>
+          <th>State</th>
+          <th>{month}</th>
+          <th>Change</th>
+        </tr>
+      </thead>
+      <tbody>
+        {risers.map((s) => (
+          <tr>
+            <td>
+              <a href={`/electricity-rates/${s.slug}/`}>{s.name}</a>
+            </td>
+            <td>{cents(s.price)}</td>
+            <td class="up">{signedPct(s.change)}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+  <p>
+    <a href="/electricity-rates/">See all states →</a>
+  </p>
+</Base>

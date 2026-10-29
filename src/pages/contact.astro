@@ -1,0 +1,21 @@
+---
+import { SITE } from '../config/site';
+import Base from '../layouts/Base.astro';
+---
+
+<Base
+  title="Contact"
+  description={`How to reach ${SITE.name}: questions, corrections and data issues.`}
+  crumbs={[['Contact', '/contact/']]}
+>
+  <h1>Contact</h1>
+  <p>
+    Questions, corrections or a number that looks wrong for your state? Email{' '}
+    <a href={`mailto:${SITE.contactEmail}`}>{SITE.contactEmail}</a>.
+  </p>
+  <p>
+    If you are reporting a data issue, tell us the page and your state. We check every report
+    against the EIA source and correct the site if we got it wrong.
+  </p>
+  <p>We cannot answer questions about a specific utility account; your utility can.</p>
+</Base>

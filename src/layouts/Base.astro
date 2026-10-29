@@ -1,0 +1,113 @@
+---
+import '../styles/global.css';
+
+import { SITE } from '../config/site';
+import { ELECTRICITY } from '../data/electricity';
+import { monthLabel } from '../lib/format';
+
+interface Props {
+  title: string;
+  description: string;
+  /** Breadcrumb trail after Home: [label, path][]; the last item is the current page. */
+  crumbs?: [string, string][];
+  jsonLd?: Record<string, unknown>[];
+}
+
+const { title, description, crumbs = [], jsonLd = [] } = Astro.props;
+const canonical = new URL(Astro.url.pathname, SITE.origin).href;
+const fullTitle = Astro.url.pathname === '/' ? title : `${title} | ${SITE.name}`;
+const path = Astro.url.pathname;
+const nav: [string, string][] = [
+  ['Electricity rates', '/electricity-rates/'],
+  ['Bill checker', '/tools/why-is-my-electric-bill-high/'],
+  ['Appliance cost', '/tools/appliance-electricity-cost/'],
+  ['Space heater cost', '/tools/space-heater-cost/'],
+];
+const breadcrumbLd =
+  crumbs.length > 0
+    ? {
+        '@context': 'https://schema.org',
+        '@type': 'BreadcrumbList',
+        itemListElement: [['Home', '/'] as [string, string], ...crumbs].map(([name, p], i) => ({
+          '@type': 'ListItem',
+          position: i + 1,
+          name,
+          item: new URL(p, SITE.origin).href,
+        })),
+      }
+    : null;
+const ld = [...(breadcrumbLd ? [breadcrumbLd] : []), ...jsonLd];
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    {!SITE.indexable && <meta name="robots" content="noindex, nofollow" />}
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={SITE.name} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    {ld.map((item) => (
+      <script type="application/ld+json" set:html={JSON.stringify(item)} />
+    ))}
+  </head>
+  <body>
+    <a class="skip" href="#main">
+      Skip to content
+    </a>
+    <header class="site-header">
+      <div class="wrap">
+        <a class="brand" href="/">
+          {SITE.name}
+        </a>
+        <nav class="nav" aria-label="Main">
+          {nav.map(([label, href]) => (
+            <a href={href} aria-current={path === href ? 'page' : undefined}>
+              {label}
+            </a>
+          ))}
+        </nav>
+      </div>
+    </header>
+    <main id="main" class="wrap">
+      {crumbs.length > 0 && (
+        <nav class="crumbs" aria-label="Breadcrumb">
+          <a href="/">Home</a>
+          {crumbs.map(([label, href], i) =>
+            i === crumbs.length - 1 ? (
+              <span> › {label}</span>
+            ) : (
+              <span>
+                {' '}
+                › <a href={href}>{label}</a>
+              </span>
+            ),
+          )}
+        </nav>
+      )}
+      <slot />
+    </main>
+    <footer class="site-footer">
+      <div class="wrap">
+        <p>
+          Electricity prices: U.S. Energy Information Administration,{' '}
+          {monthLabel(ELECTRICITY.monthly.period)} (preliminary), checked {ELECTRICITY.fetchedAt}.
+          Estimates only; your utility bill is the final word.
+        </p>
+        <nav aria-label="Site">
+          <a href="/about/">About</a>
+          <a href="/methodology/">Data & methodology</a>
+          <a href="/privacy/">Privacy</a>
+          <a href="/contact/">Contact</a>
+        </nav>
+      </div>
+    </footer>
+  </body>
+</html>

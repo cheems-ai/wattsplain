@@ -1,0 +1,49 @@
+---
+import { APPLIANCE_SOURCE } from '../data/appliances';
+import { ELECTRICITY, HISTORY } from '../data/electricity';
+import Base from '../layouts/Base.astro';
+import { monthLabel } from '../lib/format';
+---
+
+<Base
+  title="Data & methodology"
+  description="Where our electricity prices and appliance wattages come from, how often they are updated, and the limits of the estimates."
+  crumbs={[['Data & methodology', '/methodology/']]}
+>
+  <h1>Data & methodology</h1>
+  <h2>Electricity prices</h2>
+  <ul>
+    <li>
+      Monthly residential price by state:{' '}
+      <a href={ELECTRICITY.monthly.source}>EIA Electric Power Monthly, Table 5.6.A</a>. Current
+      data: {monthLabel(ELECTRICITY.monthly.period)} (preliminary) and{' '}
+      {monthLabel(ELECTRICITY.monthly.priorPeriod)}.
+    </li>
+    <li>
+      Average monthly use and bill by state: <a href={ELECTRICITY.annual.source}>EIA Table 5A</a>,{' '}
+      {ELECTRICITY.annual.year}.
+    </li>
+    {HISTORY && (
+      <li>
+        {`Monthly price history (trend charts): EIA Open Data API, electricity retail sales, residential sector, ${monthLabel(HISTORY.periods[0]!)} to ${monthLabel(HISTORY.periods.at(-1)!)}. Year-to-date figures are simple averages of the monthly prices. `}
+        <a href={HISTORY.source}>EIA data browser</a>
+      </li>
+    )}
+    <li>
+      Last checked: {ELECTRICITY.fetchedAt}. We check for new EIA data every month; the update is
+      automatic and refuses to publish if any state is missing.
+    </li>
+    <li>
+      EIA's price is total residential revenue divided by kWh sold, so fixed charges are spread
+      across every kWh. Your utility's rate structure (tiers, time-of-use, fixed fees) can make your
+      own price higher or lower.
+    </li>
+  </ul>
+  <h2>Appliance wattages</h2>
+  <p>
+    Typical nameplate ranges from <a href={APPLIANCE_SOURCE.url}>{APPLIANCE_SOURCE.title}</a>. The
+    label on your appliance is more accurate.
+  </p>
+  <h2>Limits</h2>
+  <p>All results are estimates for planning. Your utility bill is the final word.</p>
+</Base>

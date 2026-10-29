@@ -1,0 +1,67 @@
+---
+import { ELECTRICITY, RATE_OPTIONS, STATE_ROWS } from '../../data/electricity';
+import BillChecker from '../../islands/BillChecker';
+import Base from '../../layouts/Base.astro';
+import { cents, monthLabel, signedPct } from '../../lib/format';
+
+const month = monthLabel(ELECTRICITY.monthly.period);
+const prior = monthLabel(ELECTRICITY.monthly.priorPeriod);
+const stateChange = Object.fromEntries(STATE_ROWS.map((s) => [s.code, s.change]));
+const title = 'Why is my electric bill so high? Compare two bills';
+const description =
+  'Enter two electric bills and see how much of the increase came from a higher price per kWh and how much from using more electricity, compared with your state average.';
+---
+
+<Base
+  title={title}
+  description={description}
+  crumbs={[['Bill checker', '/tools/why-is-my-electric-bill-high/']]}
+>
+  <h1>Why is my electric bill so high?</h1>
+  <p class="lede">
+    A bill goes up for two reasons: you paid more for each kWh, or you used more kWh. Enter two
+    bills and this checker shows how much of the difference each one caused.
+  </p>
+
+  <BillChecker
+    client:load
+    rates={RATE_OPTIONS}
+    stateChange={stateChange}
+    monthLabel={month}
+    priorLabel={prior}
+    annualYear={ELECTRICITY.annual.year}
+  />
+
+  <h2>How the split works</h2>
+  <p>
+    Your price per kWh on each bill is the total divided by the kWh. The change in the bill is then
+    split into the price part (the change in that price, applied to your average use of the two
+    bills) and the usage part (the change in kWh, at the average of the two prices). The two parts
+    always add up exactly to the change in your bill.
+  </p>
+
+  <h2>Common reasons, and what to check</h2>
+  <ul>
+    <li>
+      <strong>Rate increases.</strong> Across the U.S., the average residential price was{' '}
+      {cents(ELECTRICITY.us.price)} in {month}, {signedPct(ELECTRICITY.us.change)} from {prior}.
+      Your state’s change is on its <a href="/electricity-rates/">rates page</a>.
+    </li>
+    <li>
+      <strong>Season.</strong> Heating and air conditioning are the largest loads in most homes.
+      Compare with the same month last year, not last month.
+    </li>
+    <li>
+      <strong>Billing period.</strong> A 33-day bill has about 10% more days than a 30-day bill.
+    </li>
+    <li>
+      <strong>New or failing equipment.</strong> A space heater, a dehumidifier, an older fridge or
+      a well pump that runs too often can add tens of dollars. Use the{' '}
+      <a href="/tools/appliance-electricity-cost/">appliance cost calculator</a> to check.
+    </li>
+    <li>
+      <strong>Estimated reading.</strong> If the bill says “estimated”, the next actual reading may
+      correct it.
+    </li>
+  </ul>
+</Base>
