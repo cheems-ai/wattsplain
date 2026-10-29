@@ -171,7 +171,7 @@ const description = `${s.name} homes paid ${cents(s.price)} per kWh in ${month},
         <tr>
           <th>Appliance</th>
           <th>Watts</th>
-          <th>Hours/day</th>
+          <th>Hours a day</th>
           <th>Per month used</th>
           <th class="hide-sm">Per year</th>
         </tr>
@@ -179,11 +179,14 @@ const description = `${s.name} homes paid ${cents(s.price)} per kWh in ${month},
       <tbody>
         {examples.map(({ a, p, e }) => (
           <tr>
-            <td>{a.name}</td>
-            <td>{a.watts.toLocaleString('en-US')}</td>
             <td>
-              {`${a.hours}${p.dutyCycle < 1 ? ' (cycles)' : ''}${p.monthsPerYear < 12 ? `, ${p.monthsPerYear} mo/yr` : ''}`}
+              {a.name}{' '}
+              {p.monthsPerYear < 12 && (
+                <span class="hint">{`${p.monthsPerYear} months a year`}</span>
+              )}
             </td>
+            <td>{a.watts.toLocaleString('en-US')}</td>
+            <td>{`${a.hours}${p.dutyCycle < 1 ? ' (cycles)' : ''}`}</td>
             <td>{dollars(cost(e.kwhPerMonthInUse, s.price))}</td>
             <td class="hide-sm">{dollars(cost(e.kwhPerYear, s.price), 0)}</td>
           </tr>
@@ -221,7 +224,12 @@ const description = `${s.name} homes paid ${cents(s.price)} per kWh in ${month},
                 : c.system.id === 'gas'
                   ? `${dollars(perTherm(c.price))}/therm`
                   : `${dollars(c.price)}/gal`}
-              {heating.notes[c.system.id] ? ` (${heating.notes[c.system.id]})` : ''}
+              {heating.notes[c.system.id] && (
+                <>
+                  {' '}
+                  <span class="hint">{heating.notes[c.system.id]}</span>
+                </>
+              )}
             </td>
             <td>{dollars(c.perYear, 0)}</td>
           </tr>

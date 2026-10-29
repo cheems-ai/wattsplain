@@ -151,6 +151,31 @@ const ld = [...(breadcrumbLd ? [breadcrumbLd] : []), ...jsonLd];
       import { track } from '../analytics/client';
 
       track('view');
+
+      // A table wider than the screen scrolls inside .table-scroll: make that region reachable and
+      // named for keyboard and screen reader users (WCAG scrollable-region-focusable).
+      const label = (el: HTMLElement) =>
+        el.querySelector('caption')?.textContent?.trim() ||
+        el.previousElementSibling?.textContent?.trim().slice(0, 80) ||
+        'Table';
+      const mark = () => {
+        for (const el of document.querySelectorAll<HTMLElement>('.table-scroll')) {
+          const scrolls = el.scrollWidth > el.clientWidth + 1;
+          if (scrolls && !el.hasAttribute('tabindex')) {
+            el.tabIndex = 0;
+            el.setAttribute('role', 'region');
+            el.setAttribute('aria-label', `${label(el)} (scrolls sideways)`);
+          } else if (!scrolls && el.getAttribute('role') === 'region') {
+            el.removeAttribute('tabindex');
+            el.removeAttribute('role');
+            el.removeAttribute('aria-label');
+          }
+        }
+      };
+      mark();
+      addEventListener('resize', mark);
+      // Calculators re-render their tables as the visitor types.
+      new MutationObserver(mark).observe(document.body, { childList: true, subtree: true });
     </script>
   </body>
 </html>

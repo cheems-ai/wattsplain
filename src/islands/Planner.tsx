@@ -92,7 +92,9 @@ const fromLoad = (l: Load): UiLoad => ({
   standby: String(l.standbyWatts),
 });
 
-let nextKey = 1;
+// Keys end up in field ids, so the two starting scenarios use fixed keys: the prerendered HTML
+// and the browser must agree on them. Scenarios added later count up from 100.
+let nextKey = 100;
 const keyed = (s: Omit<UiScenario, 'key'>): UiScenario => ({ ...s, key: nextKey++ });
 
 function startScenarios(appliances: Appliance[], applianceId: string | null): UiScenario[] {
@@ -102,14 +104,15 @@ function startScenarios(appliances: Appliance[], applianceId: string | null): Ui
   const now = uiLoad(a);
   const fewer = Math.max(0.5, Number(now.hours) - 3);
   return [
-    keyed({ name: 'Now', price: '', heating: '', eff: '', loads: [now] }),
-    keyed({
+    { key: 1, name: 'Now', price: '', heating: '', eff: '', loads: [now] },
+    {
+      key: 2,
       name: `${fewer} h a day`,
       price: '',
       heating: '',
       eff: '',
       loads: [{ ...now, hours: String(fewer) }],
-    }),
+    },
   ];
 }
 

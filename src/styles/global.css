@@ -694,6 +694,7 @@ table.facts th {
 }
 table.facts td {
   font-weight: 600;
+  white-space: normal;
 }
 table.facts td.src {
   font-weight: 400;
@@ -998,4 +999,22 @@ table.compare td {
 .result h2.sub {
   font-size: 1.1rem;
   margin: 1.4em 0 0.4em;
+}
+td .hint {
+  display: block;
+  white-space: normal;
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+.table-scroll[role='region']:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+@media (max-width: 40rem) {
+  /* Let headers and the sensitivity grid wrap rather than push the table off screen. */
+  thead th,
+  table.sens td,
+  table.sens th {
+    white-space: normal;
+  }
 }
