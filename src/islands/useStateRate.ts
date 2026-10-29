@@ -1,31 +1,21 @@
 import { useEffect, useState } from 'preact/hooks';
 
-import type { RateOption } from '../data/electricity';
-import { parseRate } from '../lib/energy';
-
 /**
- * Selected state (prefilled from ?state=XX so state pages can deep-link) plus an optional
- * user-entered rate in cents/kWh that overrides the state average.
+ * Selected state, prefilled from ?state=XX so state pages can deep-link. The page is prerendered
+ * with `fallback`, so the island first renders that (hydration must match the HTML) and switches
+ * after hydration; `ready` turns true at that point. The layout hides `.tool` content while a
+ * ?state= link is still showing the fallback (see Base.astro), so a Texas visitor never reads
+ * Pennsylvania numbers.
  */
-export function useStateRate(rates: readonly RateOption[], fallback = 'PA') {
+export function useStateCode(codes: readonly { code: string }[], fallback = 'PA') {
   const [code, setCode] = useState(fallback);
-  const [custom, setCustom] = useState(() => initial('ac-rate', ''));
+  const [ready, setReady] = useState(false);
   useEffect(() => {
     const q = new URLSearchParams(window.location.search).get('state')?.toUpperCase();
-    if (q && rates.some((r) => r.code === q)) setCode(q);
-  }, [rates]);
-  const state = rates.find((r) => r.code === code) ?? rates[0]!;
-  const customNum = parseRate(custom);
-  const useCustom = customNum !== null;
-  return {
-    code,
-    setCode,
-    custom,
-    setCustom,
-    state,
-    rate: customNum ?? state.price,
-    useCustom,
-  };
+    if (q && codes.some((r) => r.code === q)) setCode(q);
+    setReady(true);
+  }, [codes]);
+  return { code, setCode, ready };
 }
 
 /**

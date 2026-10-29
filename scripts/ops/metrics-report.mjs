@@ -47,6 +47,6 @@ table(
 console.log('Top pages (real visitors):');
 table(
   query(
-    `SELECT path, SUM(CASE WHEN event = 'view' THEN count END) AS views, SUM(CASE WHEN event = 'tool' THEN count END) AS tool_uses FROM daily_events WHERE day >= '${since}' AND segment = 'real' GROUP BY path ORDER BY views DESC LIMIT 20`,
+    `SELECT path, SUM(CASE WHEN event = 'view' THEN count END) AS views, SUM(CASE WHEN event = 'tool' THEN count END) AS tool_uses, SUM(CASE WHEN event = 'result' THEN count END) AS results, SUM(CASE WHEN event = 'error' THEN count END) AS errors, SUM(CASE WHEN event = 'compare' THEN count END) AS compares, SUM(CASE WHEN event = 'share' THEN count END) AS shares, SUM(CASE WHEN event = 'home-tool' THEN count END) AS home_tool_clicks FROM daily_events WHERE day >= '${since}' AND segment = 'real' GROUP BY path ORDER BY views DESC LIMIT 20`,
   ),
 );

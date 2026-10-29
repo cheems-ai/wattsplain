@@ -4,6 +4,7 @@ import {
   cheapestOf,
   compareSystems,
   heatNeed,
+  typicalGasHomeArea,
   type SystemCost,
   type SystemId,
 } from '../lib/heating.ts';
@@ -27,6 +28,7 @@ export const HEATING = {
   propane: raw.propane,
   oil: raw.oil,
   recs: { survey: need.survey, source: need.source, us: need.us },
+  area: need.area,
 };
 
 /** SHOPP regions (PADDs and the PADD 1 subdistricts) a state's price may fall back to. */
@@ -67,6 +69,8 @@ export interface HeatingRow extends State {
   heat: number;
   /** RECS value came from the census division (Hawaii). */
   heatFromDivision: boolean;
+  /** Heated floor area of the typical gas-heated home it is based on, sq ft (see typicalGasHomeArea). */
+  typicalSqft: number;
   costs: SystemCost[];
   /** Systems priced at the U.S. average because EIA has no state or regional price. */
   national: SystemId[];
@@ -112,6 +116,11 @@ export const HEATING_ROWS: readonly HeatingRow[] = STATE_ROWS.map((s) => {
     gas,
     heat,
     heatFromDivision: Boolean(recs.area),
+    typicalSqft: typicalGasHomeArea(
+      need.area.byDivision[s.division as keyof typeof need.area.byDivision],
+      need.area.usAll,
+      need.area.usGas,
+    ),
     costs,
     national,
     cheapest: cheapestOf(costs, national),
@@ -129,5 +138,7 @@ export const HEATING_OPTIONS = HEATING_ROWS.map((r) => ({
   notes: r.notes,
   national: r.national,
   heat: r.heat,
+  typicalSqft: r.typicalSqft,
+  division: r.division,
 })).sort((a, b) => a.name.localeCompare(b.name));
 export type HeatingOption = (typeof HEATING_OPTIONS)[number];

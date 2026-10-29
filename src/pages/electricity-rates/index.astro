@@ -10,6 +10,17 @@ const rows = [...STATE_ROWS].sort((a, b) => b.price - a.price);
 const up = rows.filter((s) => s.change > 0).length;
 const down = rows.filter((s) => s.change < 0).length;
 const title = `Electricity rates by state (${month})`;
+const longDate = (d: string | undefined) =>
+  d
+    ? new Date(`${d}T00:00:00Z`).toLocaleDateString('en-US', {
+        month: 'long',
+        day: 'numeric',
+        year: 'numeric',
+        timeZone: 'UTC',
+      })
+    : undefined;
+const releasedLabel = longDate(ELECTRICITY.monthly.released) ?? 'see EIA';
+const nextLabel = longDate(ELECTRICITY.monthly.nextRelease);
 const description = `Average residential electricity price in every U.S. state for ${month} vs ${prior}, the year-over-year change, and the typical monthly bill. Source: EIA.`;
 ---
 
@@ -17,6 +28,21 @@ const description = `Average residential electricity price in every U.S. state f
   title={title}
   description={description}
   crumbs={[['Electricity rates', '/electricity-rates/']]}
+  jsonLd={[
+    {
+      '@context': 'https://schema.org',
+      '@type': 'Dataset',
+      name: `Average residential electricity price by U.S. state, ${month}`,
+      description: `Average residential electricity price (cents per kWh) in each U.S. state and DC for ${month} and ${prior}, with the year-over-year change and ${year} average monthly use and bill. Compiled from U.S. Energy Information Administration tables.`,
+      url: 'https://wattsplain.com/electricity-rates/',
+      isBasedOn: [ELECTRICITY.monthly.source, ELECTRICITY.annual.source],
+      temporalCoverage: ELECTRICITY.monthly.period,
+      spatialCoverage: 'United States',
+      dateModified: ELECTRICITY.fetchedAt,
+      variableMeasured: 'Average residential retail price of electricity (cents per kWh)',
+      creator: { '@type': 'Organization', name: 'Wattsplain', url: 'https://wattsplain.com/' },
+    },
+  ]}
 >
   <h1>{title}</h1>
   <p class="lede">
@@ -28,14 +54,13 @@ const description = `Average residential electricity price in every U.S. state f
     calculators.
   </p>
   <p class="updated">
-    Residential prices: EIA Electric Power Monthly, Table 5.6.A ({month} is preliminary). Average
-    use and bill: EIA, {year}. Checked {ELECTRICITY.fetchedAt}.{' '}
+    {`Residential prices: EIA Electric Power Monthly, Table 5.6.A (${month} is preliminary), released ${releasedLabel}${nextLabel ? `; next release ${nextLabel}` : ''}. Average use and bill: EIA, ${year}. Checked ${ELECTRICITY.fetchedAt}.`}{' '}
     <a href="/methodology/">How we use this data</a>
   </p>
 
   <div class="table-scroll">
     <table>
-      <caption>{`Sorted from most to least expensive. Estimated bill = ${year} average use × ${month} price.`}</caption>
+      <caption>{`Sorted from most to least expensive. Estimated bill = ${year} average use × ${month} price: an estimate, not an actual bill.`}</caption>
       <thead>
         <tr>
           <th>State</th>

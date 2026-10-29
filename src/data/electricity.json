@@ -3,7 +3,9 @@
   "monthly": {
     "period": "2026-08",
     "priorPeriod": "2025-08",
-    "source": "https://www.eia.gov/electricity/monthly/epm_table_grapher.php?t=epmt_5_6_a"
+    "source": "https://www.eia.gov/electricity/monthly/epm_table_grapher.php?t=epmt_5_6_a",
+    "released": "2026-10-23",
+    "nextRelease": "2026-11-24"
   },
   "annual": {
     "year": 2024,

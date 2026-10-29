@@ -25,9 +25,29 @@ const description = `How much an appliance costs to run per hour, day, month and
 
   <h2>The formula</h2>
   <p>
-    Watts × hours per day ÷ 1,000 = kWh per day. kWh × price per kWh = cost. A 1,500 W heater
-    running 8 hours uses 12 kWh a day; at 20¢ per kWh that is $2.40 a day.
+    kWh a year = watts × running share × hours a day × days used a year ÷ 1,000, plus standby watts
+    for the hours it is off. Days used a year = 365 × days a week ÷ 7 × months a year ÷ 12. Cost =
+    kWh × your price. A 1,500 W heater running 8 hours uses 12 kWh a day; at 20¢ per kWh that is
+    $2.40 a day, or $72 in a 30-day month of use.
   </p>
+  <ul>
+    <li>
+      <strong>Running share.</strong> Heaters, fridges and dehumidifiers switch on and off. At 100%
+      the result is the most the appliance can use; lower it if yours cycles.
+    </li>
+    <li>
+      <strong>Season.</strong> Heaters and fans default to part of the year; set the months you
+      actually use them.
+    </li>
+    <li>
+      <strong>EnergyGuide label.</strong> For fridges, washers, dishwashers, water heaters and TVs
+      you can enter the label's kWh per year instead.
+    </li>
+    <li>
+      <strong>Price.</strong> The state average includes fixed charges spread over every kWh; you
+      can use your own price, one worked out from a bill, or a time-of-use blend.
+    </li>
+  </ul>
   <h2>Where the wattages come from</h2>
   <p>
     Default wattages are typical nameplate values from{' '}

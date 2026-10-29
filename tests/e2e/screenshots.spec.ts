@@ -4,7 +4,7 @@ import { test } from '@playwright/test';
 test.skip(!process.env['SHOTS'], 'set SHOTS=1 to capture screenshots');
 
 test('capture', async ({ page }, info) => {
-  const dir = `../screenshots/${info.project.name}`;
+  const dir = `${process.env['SHOTS_DIR'] ?? '../screenshots'}/${info.project.name}`;
   await page.goto('/');
   await page.screenshot({ path: `${dir}-home.png`, fullPage: true });
   await page.getByLabel('Start with your state').selectOption('texas');
@@ -30,4 +30,6 @@ test('capture', async ({ page }, info) => {
   await page.screenshot({ path: `${dir}-heating.png`, fullPage: true });
   await page.locator('summary', { hasText: 'Your prices' }).click();
   await page.screenshot({ path: `${dir}-heating-open.png` });
+  await page.goto('/tools/home-energy-savings-planner/?state=TX');
+  await page.screenshot({ path: `${dir}-planner.png`, fullPage: true });
 });

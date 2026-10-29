@@ -1,0 +1,121 @@
+---
+import { APPLIANCES, applianceById, defaultProfile } from '../../data/appliances';
+import { ELECTRICITY, STATE_ROWS, stateRow } from '../../data/electricity';
+import { HEATING, HEATING_ROWS } from '../../data/heating';
+import Planner, { type PlannerState } from '../../islands/Planner';
+import Base from '../../layouts/Base.astro';
+import { cents, dollars, monthLabel } from '../../lib/format';
+import { compareScenarios } from '../../lib/scenario';
+
+const month = monthLabel(ELECTRICITY.monthly.period);
+const states: PlannerState[] = STATE_ROWS.map((s) => {
+  const h = HEATING_ROWS.find((r) => r.code === s.code)!;
+  return {
+    code: s.code,
+    name: s.name,
+    price: s.price,
+    avgKwh: s.avgKwh,
+    fuel: { gas: h.prices.gas, propane: h.prices.propane, oil: h.prices.oil },
+    heat: h.heat,
+    typicalSqft: h.typicalSqft,
+  };
+}).sort((a, b) => a.name.localeCompare(b.name));
+const week = new Date(`${HEATING.propane.week}T00:00:00Z`).toLocaleDateString('en-US', {
+  month: 'long',
+  day: 'numeric',
+  year: 'numeric',
+  timeZone: 'UTC',
+});
+const fuelNote = `EIA natural gas (12 months to ${monthLabel(HEATING.gas.period)}), propane and heating oil (week of ${week}), state or regional averages`;
+
+// Worked example from the same code the planner runs: a 1,500 W heater, 8 vs 5 hours a day.
+const tx = stateRow('TX')!;
+const heater = defaultProfile(applianceById('space-heater')!);
+const load = { kind: 'space-heater', name: 'Portable space heater', ...heater };
+const example = compareScenarios(
+  { monthlyKwh: tx.avgKwh, fixedMonthly: 0, fuelPrices: { gas: 0, propane: 0, oil: 0 } },
+  [
+    { name: '8 hours', cents: tx.price, loads: [load] },
+    { name: '5 hours', cents: tx.price, loads: [{ ...load, hoursPerDay: 5 }] },
+  ],
+);
+const saved = -example[1]!.diffPerYear;
+
+const title = 'Home energy savings planner: compare costs before you change anything';
+const description = `Compare what your home's electricity and heating cost under different appliances, hours, prices and heating systems. State prices from the EIA (${month}); share or download the comparison.`;
+---
+
+<Base
+  title={title}
+  description={description}
+  crumbs={[['Savings planner', '/tools/home-energy-savings-planner/']]}
+  jsonLd={[
+    {
+      '@context': 'https://schema.org',
+      '@type': 'WebApplication',
+      name: 'Home Energy Savings Planner',
+      url: 'https://wattsplain.com/tools/home-energy-savings-planner/',
+      applicationCategory: 'UtilitiesApplication',
+      operatingSystem: 'Any (runs in the browser)',
+      isAccessibleForFree: true,
+      description,
+    },
+  ]}
+>
+  <h1>Home energy savings planner</h1>
+  <p class="lede">
+    Put in your state and what you use, then compare it with other ways of doing things: fewer
+    hours, a more efficient appliance, another electricity plan or a heat pump. You get the monthly
+    and yearly difference, the assumptions behind it, and a link to share.
+  </p>
+
+  <Planner
+    client:load
+    states={states}
+    appliances={[...APPLIANCES]}
+    monthLabel={month}
+    fuelNote={fuelNote}
+  />
+
+  <h2>Example: running a space heater 5 hours a day instead of 8</h2>
+  <p>
+    {`In Texas, at the ${month} average of ${cents(tx.price)} per kWh, a 1,500 W heater used 8 hours a day for a 5-month heating season costs about ${dollars(example[0]!.loads[0]!.perYear, 0)} a year. Cutting it to 5 hours saves about `}
+    <strong>{`${dollars(saved, 0)} a year`}</strong>
+    {` (${dollars(saved / 5, 0)} in each month it is used). The planner opens with this example; change any number to match your home.`}
+  </p>
+
+  <h2>How the planner works</h2>
+  <ul>
+    <li>
+      <strong>Your home.</strong> The monthly kWh (from your bill, or your state's EIA average) is
+      your whole household. The appliances and electric heating you list in the first scenario are
+      part of it; the rest is "everything else" and stays the same in every scenario.
+    </li>
+    <li>
+      <strong>Appliances.</strong> kWh a year = watts × hours a day × running share × days used ÷
+      1,000, plus standby watts for the hours it is off. Cost = kWh × the scenario's price.
+    </li>
+    <li>
+      <strong>Heating.</strong> Heat need starts from the typical gas-heated home in your state (EIA
+      RECS 2020), scaled by floor area if you give it. Each system needs that heat divided by its
+      efficiency (AFUE, or HSPF2 ÷ 3.412 for a heat pump), priced at your state's fuel price.
+    </li>
+    <li>
+      <strong>Uncertainty.</strong> We show how each difference moves if every price is 20% lower or
+      higher. The bigger uncertainty is usually your own hours and running shares.
+    </li>
+  </ul>
+  <p>
+    Full formulas and sources: <a href="/methodology/">Data & methodology</a>. Single-question
+    tools: <a href="/tools/appliance-electricity-cost/">appliance cost</a> ·{' '}
+    <a href="/tools/heating-cost-calculator/">heating cost</a> ·{' '}
+    <a href="/tools/why-is-my-electric-bill-high/">bill checker</a>.
+  </p>
+
+  <h2>What it does not do</h2>
+  <p>
+    It does not know your utility's exact tariff, tiers or demand charges, the weather in a given
+    year, or installation prices. Savings shown are predictions under the inputs, not a guarantee.
+    Nothing you type is sent to our server; a shared link carries only the energy parameters.
+  </p>
+</Base>

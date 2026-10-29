@@ -2,7 +2,10 @@
 // with parseEvent and adds 1 to a daily aggregate row. Nothing identifies a visitor: no IP, no
 // user agent, no full referrer, no cookie or local storage.
 
-export const EVENTS = ['view', 'tool'] as const;
+// view: page view · tool: first input on a calculator · result: first valid result after input ·
+// error: a form error was shown · compare: a scenario added in the planner · share: link,
+// summary, CSV or print used · home-tool: a tool opened from the home page.
+export const EVENTS = ['view', 'tool', 'result', 'error', 'compare', 'share', 'home-tool'] as const;
 export const SOURCES = ['search', 'ai', 'social', 'direct', 'internal', 'other'] as const;
 export type EventName = (typeof EVENTS)[number];
 export type Source = (typeof SOURCES)[number];

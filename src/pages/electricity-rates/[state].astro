@@ -1,12 +1,13 @@
 ---
 import type { GetStaticPaths } from 'astro';
 
-import { APPLIANCES } from '../../data/appliances';
+import { APPLIANCES, defaultProfile } from '../../data/appliances';
+import { BORDERS } from '../../data/borders';
 import PriceTrend from '../../components/PriceTrend.astro';
 import { ELECTRICITY, STATE_ROWS, stateTrend, type StateRow } from '../../data/electricity';
 import { ELECTRIC_BASIS, heatingRow } from '../../data/heating';
 import Base from '../../layouts/Base.astro';
-import { runningCost } from '../../lib/energy';
+import { applianceEnergy, cost } from '../../lib/appliance';
 import { breakEvenElectricity, perTherm } from '../../lib/heating';
 import { cents, dollars, kwh, monthLabel, signedPct } from '../../lib/format';
 
@@ -19,9 +20,11 @@ const prior = monthLabel(ELECTRICITY.monthly.priorPeriod);
 const year = ELECTRICITY.annual.year;
 const us = ELECTRICITY.us;
 const vsUs = ((s.price - us.price) / us.price) * 100;
-const estBill = (s.avgKwh * s.price) / 100;
-const estBillPrior = (s.avgKwh * s.pricePrior) / 100;
-const neighbours = STATE_ROWS.filter((x) => x.division === s.division && x.code !== s.code);
+const borders = BORDERS[s.code] ?? [];
+// Alaska and Hawaii border no state; they get the other states of their census division instead.
+const neighbours = STATE_ROWS.filter((x) =>
+  borders.length ? borders.includes(x.code) : x.division === s.division && x.code !== s.code,
+);
 const examples = [
   'space-heater',
   'dehumidifier',
@@ -31,16 +34,25 @@ const examples = [
   'hair-dryer',
 ]
   .map((id) => APPLIANCES.find((a) => a.id === id)!)
-  .map((a) => ({ a, cost: runningCost(a.watts * (a.dutyCycle ?? 1), a.hours, s.price) }));
+  .map((a) => ({ a, p: defaultProfile(a), e: applianceEnergy(defaultProfile(a)) }));
 const trend = stateTrend(s.code);
+// A typical month's bill needs a price for the whole year, not one month: use the 12-month
+// average when the history is there. Use is EIA's latest annual average (an earlier year).
+const last12 = trend ? trend.values.slice(-12) : [];
+const price12 = last12.length === 12 ? last12.reduce((a, b) => a + b, 0) / 12 : undefined;
+const estBill = (s.avgKwh * (price12 ?? s.price)) / 100;
+const priceBasis = price12
+  ? `the average price over the 12 months to ${month} (${cents(price12)})`
+  : `the ${month} price (${cents(s.price)})`;
 const monthName = (p: string) => monthLabel(p).split(' ')[0];
 const direction = s.change > 0.5 ? 'higher' : s.change < -0.5 ? 'lower' : 'about the same';
 const comparison = direction === 'about the same' ? 'about the same as' : `${direction} than`;
 const heating = heatingRow(s.code)!;
 const heatPump = heating.costs.find((c) => c.system.id === 'heat-pump')!;
 const breakEven = breakEvenElectricity(heating.prices.gas, 0.95, 7.8);
-const title = `${s.name} electricity rates and average bill (${month})`;
-const description = `${s.name} homes paid ${cents(s.price)} per kWh in ${month} (${signedPct(s.change)} vs ${prior}). Typical monthly bill, how it compares with the U.S., and what appliances cost to run.`;
+const shortMonth = month.replace(/^(\w{3})\w*/, '$1');
+const title = `${s.name} electricity rates: ${cents(s.price)}/kWh (${shortMonth})`;
+const description = `${s.name} homes paid ${cents(s.price)} per kWh in ${month}, ${signedPct(s.change)} vs a year earlier (EIA). Typical bill, 24-month trend, heating and appliance costs.`;
 ---
 
 <Base
@@ -125,35 +137,58 @@ const description = `${s.name} homes paid ${cents(s.price)} per kWh in ${month} 
   </p>
 
   <h2>Average electric bill in {s.name}</h2>
-  <p>
-    A typical {s.name} home used <strong>{kwh(s.avgKwh)}</strong> a month in {year} (U.S.:{' '}
-    {kwh(us.avgKwh)}). At the {month} price that is about{' '}
-    <strong>{dollars(estBill, 0)} a month</strong>, compared with {dollars(estBillPrior, 0)} at the{' '}
-    {prior} price, {estBill >= estBillPrior ? 'an increase' : 'a decrease'} of{' '}
-    {dollars(Math.abs(estBill - estBillPrior), 0)} for the same use. EIA's actual {year} average
-    bill was {dollars(s.avgBillAnnual)}.
+  <div class="table-scroll">
+    <table class="facts">
+      <tbody>
+        <tr>
+          <th scope="row">{`Average monthly use, ${year}`}</th>
+          <td>{`${kwh(s.avgKwh)} (U.S.: ${kwh(us.avgKwh)})`}</td>
+          <td class="src hide-sm">{`EIA, ${year} annual data`}</td>
+        </tr>
+        <tr>
+          <th scope="row">{`Average monthly bill, ${year}`}</th>
+          <td>{dollars(s.avgBillAnnual)}</td>
+          <td class="src hide-sm">{`EIA, ${year} prices`}</td>
+        </tr>
+        <tr>
+          <th scope="row">Same use at recent prices (estimate)</th>
+          <td>{`about ${dollars(estBill, 0)} a month`}</td>
+          <td class="src hide-sm">Our calculation</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="note">
+    {`The estimate is ${year} average use × ${priceBasis}. It mixes two periods and is not an actual bill: real bills swing with the season and with each home's use, and include fixed charges that differ by utility.`}
   </p>
   <h2>What common appliances cost to run in {s.name}</h2>
-  <p class="note">{`At ${cents(s.price)} per kWh. Wattages are typical values from the U.S. Department of Energy.`}</p>
+  <p class="note">
+    {`At ${cents(s.price)} per kWh (${month} average). Wattages are typical values from the U.S. Department of Energy; schedules are examples, and heaters are counted only in a 5-month heating season.`}
+  </p>
   <div class="table-scroll">
     <table>
       <thead>
         <tr>
           <th>Appliance</th>
           <th>Watts</th>
-          <th>Hours/day</th>
-          <th>Per month</th>
+          <th>Hours a day</th>
+          <th>Per month used</th>
           <th class="hide-sm">Per year</th>
         </tr>
       </thead>
       <tbody>
-        {examples.map(({ a, cost }) => (
+        {examples.map(({ a, p, e }) => (
           <tr>
-            <td>{a.name}</td>
+            <td>
+              {a.name}{' '}
+              {p.monthsPerYear < 12 && (
+                <span class="hint">{`${p.monthsPerYear} months a year`}</span>
+              )}
+            </td>
             <td>{a.watts.toLocaleString('en-US')}</td>
-            <td>{a.dutyCycle ? `${a.hours} (cycles)` : a.hours}</td>
-            <td>{dollars(cost.perMonth)}</td>
-            <td class="hide-sm">{dollars(cost.perYear, 0)}</td>
+            <td>{`${a.hours}${p.dutyCycle < 1 ? ' (cycles)' : ''}`}</td>
+            <td>{dollars(cost(e.kwhPerMonthInUse, s.price))}</td>
+            <td class="hide-sm">{dollars(cost(e.kwhPerYear, s.price), 0)}</td>
           </tr>
         ))}
       </tbody>
@@ -189,7 +224,12 @@ const description = `${s.name} homes paid ${cents(s.price)} per kWh in ${month} 
                 : c.system.id === 'gas'
                   ? `${dollars(perTherm(c.price))}/therm`
                   : `${dollars(c.price)}/gal`}
-              {heating.notes[c.system.id] ? ` (${heating.notes[c.system.id]})` : ''}
+              {heating.notes[c.system.id] && (
+                <>
+                  {' '}
+                  <span class="hint">{heating.notes[c.system.id]}</span>
+                </>
+              )}
             </td>
             <td>{dollars(c.perYear, 0)}</td>
           </tr>
@@ -205,7 +245,11 @@ const description = `${s.name} homes paid ${cents(s.price)} per kWh in ${month} 
 
   {neighbours.length > 0 && (
     <>
-      <h2>Other states in the {s.division} region</h2>
+      <h2>
+        {borders.length
+          ? `States that border ${s.name}`
+          : `Other states in the ${s.division} census division`}
+      </h2>
       <div class="table-scroll">
         <table>
           <thead>

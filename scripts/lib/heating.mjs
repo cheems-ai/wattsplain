@@ -7,12 +7,16 @@
 //   Not every state is surveyed: we fall back to the PADD region, then the U.S. average.
 // - Space heating need: RECS 2020 Table CE8.15.M, average natural gas used for space heating per
 //   gas-heated household, by state (million Btu).
+// - Heated floor area: RECS 2020 Table HC10.9, average heated square footage by census division
+//   and for gas-heated homes nationally, used to scale the typical home to the visitor's size.
 import { readFirstSheet } from './xlsx.mjs';
 
 export const GAS_SOURCE = 'https://www.eia.gov/naturalgas/monthly/';
 export const SHOPP_SOURCE = 'https://www.eia.gov/petroleum/heatingoilpropane/';
 export const RECS_URL =
   'https://www.eia.gov/consumption/residential/data/2020/c&e/xls/CE8.15.M.2020.AverageSpaceHeatingNaturalGasConsumption.xlsx';
+export const RECS_AREA_URL =
+  'https://www.eia.gov/consumption/residential/data/2020/hc/xls/HC%2010.9.xlsx';
 
 /** Petroleum Administration for Defense Districts used by SHOPP, by state. */
 export const PADD = {
@@ -183,4 +187,60 @@ export function parseRecsHeating(buf, states) {
     us: annual.get('All homes'),
     byState: Object.fromEntries(states.map((s) => [s.code, pick(s)])),
   };
+}
+
+const DIVISIONS = [
+  'New England',
+  'Middle Atlantic',
+  'East North Central',
+  'West North Central',
+  'South Atlantic',
+  'East South Central',
+  'West South Central',
+  'Mountain',
+  'Pacific',
+];
+
+/**
+ * RECS 2020 HC10.9 → average heated square feet per home: all homes nationally, gas-heated homes
+ * nationally (the "Main space heating fuel: Natural gas" row) and all homes by census division.
+ */
+export function parseRecsArea(buf) {
+  const rows = readFirstSheet(buf);
+  // Columns: label, housing units, total sq ft, heated sq ft, cooled sq ft, …
+  const heated = (r) => (typeof r[3] === 'number' ? r[3] : undefined);
+  const all = rows.find((r) => r[0] === 'All homes');
+  const fuelAt = rows.findIndex((r) => r[0] === 'Main space heating fuel');
+  const gas = fuelAt >= 0 ? rows.slice(fuelAt + 1).find((r) => r[0] === 'Natural gas') : undefined;
+  if (!all || !heated(all) || !gas || !heated(gas))
+    throw new Error('RECS HC10.9: "All homes" or gas-heated row not found');
+  const byDivision = {};
+  for (const d of DIVISIONS) {
+    const r = rows.find((x) => x[0] === d);
+    if (!r || !heated(r)) throw new Error(`RECS HC10.9: no heated area for ${d}`);
+    byDivision[d] = heated(r);
+  }
+  return { source: RECS_AREA_URL, usAll: heated(all), usGas: heated(gas), byDivision };
+}
+
+/**
+ * Sanity checks before new fuel prices replace the published ones: never older periods, and
+ * every state's price inside a plausible range. Throws, so nothing is written.
+ */
+export function validateHeating(next, published) {
+  const problems = [];
+  if (published?.gas?.period && next.gas.period < published.gas.period)
+    problems.push(
+      `gas data ${next.gas.period} is older than the published ${published.gas.period}`,
+    );
+  for (const fuel of ['propane', 'oil'])
+    if (published?.[fuel]?.week && next[fuel].week < published[fuel].week)
+      problems.push(`${fuel} week ${next[fuel].week} is older than ${published[fuel].week}`);
+  const ranges = { gas: [3, 80], propane: [0.5, 10], oil: [1, 10] };
+  for (const [fuel, [lo, hi]] of Object.entries(ranges))
+    for (const [code, v] of Object.entries(next[fuel].byState))
+      if (!(v.price >= lo && v.price <= hi))
+        problems.push(`${fuel} ${code} ${v.price} out of range`);
+  if (problems.length)
+    throw new Error(`Heating data failed validation:\n- ${problems.join('\n- ')}`);
 }

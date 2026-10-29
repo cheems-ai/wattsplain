@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // Refreshes src/data/electricity.json from the EIA (run monthly, after EIA publishes the Electric
 // Power Monthly). Fails without writing if any state is missing, so a layout change at EIA never
-// publishes a partial dataset. With EIA_API_KEY (site/.env) it also stores 24 months of monthly
+// publishes a partial dataset, and validateDataset refuses older or implausible data. With EIA_API_KEY (site/.env) it also stores 24 months of monthly
 // prices per state for the trend charts.
 //
 //   npm run data:eia
@@ -16,6 +16,7 @@ import {
   parseAnnualTable,
   parseHistory,
   parseMonthlyTable,
+  validateDataset,
 } from '../lib/eia.mjs';
 
 async function download(url, label = url) {
@@ -52,6 +53,8 @@ const dataset = buildDataset(
   history,
 );
 const out = new URL('../../src/data/electricity.json', import.meta.url);
+// Throws before writing if the new data is older than, or implausible next to, what we publish.
+validateDataset(dataset, existsSync(out) ? JSON.parse(readFileSync(out, 'utf8')) : null);
 writeFileSync(out, `${JSON.stringify(dataset, null, 2)}\n`);
 console.log(
   `electricity.json: ${dataset.states.length} states, monthly ${dataset.monthly.period} vs ${dataset.monthly.priorPeriod}, annual ${dataset.annual.year}` +

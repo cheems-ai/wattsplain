@@ -3,7 +3,14 @@ import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 
 import { STATES } from '../../src/data/states.ts';
-import { PADD, parseGas, parseRecsHeating, parseShopp } from './heating.mjs';
+import {
+  PADD,
+  parseGas,
+  parseRecsArea,
+  parseRecsHeating,
+  parseShopp,
+  validateHeating,
+} from './heating.mjs';
 
 // Saved copies of real EIA API responses (trimmed to the fields we read, no key) and RECS 2020
 // Table CE8.15.M. Gas: monthly Aug 2024 – Jul 2026 and annual 2023–2025; SHOPP: Oct 2026 weeks.
@@ -105,5 +112,36 @@ describe('parseRecsHeating', () => {
 
   it('uses the census division for withheld states', () => {
     expect(recs.byState.HI).toEqual({ mmbtu: 23.6, area: 'Pacific' });
+  });
+});
+
+describe('parseRecsArea', () => {
+  it('reads heated square feet nationally, for gas-heated homes and by division', () => {
+    const area = parseRecsArea(fixture('recs-2020-hc10-9.xlsx'));
+    expect(area.usAll).toBe(1614);
+    expect(area.usGas).toBe(1837);
+    expect(area.byDivision['New England']).toBe(1645);
+    expect(area.byDivision.Pacific).toBe(1313);
+    expect(Object.keys(area.byDivision)).toHaveLength(9);
+  });
+});
+
+describe('validateHeating', () => {
+  const published = JSON.parse(
+    readFileSync(new URL('../../src/data/heating.json', import.meta.url), 'utf8'),
+  );
+
+  it('accepts the published data', () => {
+    expect(() => validateHeating(published, published)).not.toThrow();
+  });
+
+  it('refuses older weeks and impossible prices', () => {
+    const older = { ...published, propane: { ...published.propane, week: '2020-01-06' } };
+    expect(() => validateHeating(older, published)).toThrow(/older/);
+    const bad = {
+      ...published,
+      oil: { ...published.oil, byState: { ...published.oil.byState, PA: { price: 40 } } },
+    };
+    expect(() => validateHeating(bad, published)).toThrow(/oil PA 40 out of range/);
   });
 });

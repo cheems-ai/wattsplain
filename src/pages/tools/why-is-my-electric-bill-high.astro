@@ -34,10 +34,18 @@ const description =
 
   <h2>How the split works</h2>
   <p>
-    Your price per kWh on each bill is the total divided by the kWh. The change in the bill is then
-    split into the price part (the change in that price, applied to your average use of the two
-    bills) and the usage part (the change in kWh, at the average of the two prices). The two parts
-    always add up exactly to the change in your bill.
+    Your energy price per kWh on each bill is the energy charges divided by the kWh. With only the
+    totals, that is the whole bill ÷ kWh; if you add fixed charges, taxes and credits, they are
+    taken out first and shown as their own lines. The change in the energy charges is split into the
+    price part (the change in price per kWh, applied to your average use of the two bills) and the
+    usage part (the change in kWh, at the average of the two prices). With the days of both billing
+    periods, the usage part is split again into daily use and period length. All the parts always
+    add up exactly to the change in your bill.
+  </p>
+  <p>
+    The parts are arithmetic, not proof of a cause: a higher price per kWh can mean a rate increase,
+    a higher usage tier or more use in peak hours. For a guided check, use the{' '}
+    <a href="/tools/electric-bill-diagnosis/">step-by-step bill diagnosis</a>.
   </p>
 
   <h2>Common reasons, and what to check</h2>

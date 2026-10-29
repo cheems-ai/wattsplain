@@ -2,7 +2,10 @@
 import { SITE } from '../config/site';
 import { ELECTRICITY, STATE_ROWS } from '../data/electricity';
 import Base from '../layouts/Base.astro';
-import { cents, monthLabel, signedPct } from '../lib/format';
+import { applianceById, defaultProfile } from '../data/appliances';
+import { TOOL_GROUPS } from '../data/tools';
+import { cents, dollars, monthLabel, signedPct } from '../lib/format';
+import { compareScenarios } from '../lib/scenario';
 
 const month = monthLabel(ELECTRICITY.monthly.period);
 const prior = monthLabel(ELECTRICITY.monthly.priorPeriod);
@@ -12,33 +15,20 @@ const byName = [...STATE_ROWS].sort((a, b) => a.name.localeCompare(b.name));
 const summary = (s: (typeof STATE_ROWS)[number]) =>
   `${s.name}: ${cents(s.price)} per kWh in ${month}, ${s.change >= 0 ? 'up' : 'down'} ` +
   `${Math.abs(s.change).toFixed(1)}% from a year earlier (U.S. average ${cents(ELECTRICITY.us.price)}).`;
-const tools = [
+// A worked example, computed by the planner's own code at the U.S. average price.
+const heater = defaultProfile(applianceById('space-heater')!);
+const load = { kind: 'space-heater', name: 'Space heater', ...heater };
+const [eight, five] = compareScenarios(
+  {
+    monthlyKwh: ELECTRICITY.us.avgKwh,
+    fixedMonthly: 0,
+    fuelPrices: { gas: 0, propane: 0, oil: 0 },
+  },
   [
-    '/tools/why-is-my-electric-bill-high/',
-    'Why is my electric bill so high?',
-    'Compare two bills and see how much of the increase is the price and how much is usage.',
+    { name: '8 h', cents: ELECTRICITY.us.price, loads: [load] },
+    { name: '5 h', cents: ELECTRICITY.us.price, loads: [{ ...load, hoursPerDay: 5 }] },
   ],
-  [
-    '/tools/appliance-electricity-cost/',
-    'Appliance electricity cost',
-    'What a fridge, dryer, dehumidifier or anything else costs to run at your state’s price.',
-  ],
-  [
-    '/tools/heating-cost-calculator/',
-    'Heating cost: heat pump vs gas',
-    'A heat pump, gas, propane, oil or electric heat: what each costs a year in your state.',
-  ],
-  [
-    '/tools/space-heater-cost/',
-    'Space heater cost',
-    'Cost per hour, day and month for a 750 W or 1,500 W heater in your state.',
-  ],
-  [
-    '/electricity-rates/',
-    'Electricity rates by state',
-    `All 50 states and DC, ${month} vs ${prior}, with the average monthly bill.`,
-  ],
-];
+);
 ---
 
 <Base
@@ -73,19 +63,32 @@ const tools = [
     <p class="start-answer" aria-live="polite" hidden></p>
   </form>
 
-  <h2 class="tools-heading">Or start with a question</h2>
-  <div class="grid tool-grid">
-    {tools.map(([href, title, text]) => (
-      <a
-        class="card tool-card"
-        href={href}
-        data-tool={href?.startsWith('/tools/') ? '' : undefined}
-      >
-        <h3>{title}</h3>
-        <p>{text}</p>
-      </a>
+  <div class="tasks">
+    {TOOL_GROUPS.map((g) => (
+      <section class="task" aria-labelledby={`t-${g.id}`}>
+        <h2 id={`t-${g.id}`}>{g.title}</h2>
+        <p class="note">{g.intro}</p>
+        <ul class="tool-list">
+          {g.tools.map((t) => (
+            <li>
+              <a href={t.href} data-tool="">
+                {t.title}
+              </a>
+              <span>{t.text}</span>
+            </li>
+          ))}
+        </ul>
+      </section>
     ))}
   </div>
+
+  <h2>A worked example</h2>
+  <p>
+    {`A 1,500 W space heater run 8 hours a day through a 5-month heating season, at the U.S. average of ${cents(ELECTRICITY.us.price)} per kWh (${month}), costs about ${dollars(eight!.loads[0]!.perYear, 0)} a year. Running it 5 hours instead saves about `}
+    <strong>{`${dollars(-five!.diffPerYear, 0)} a year`}</strong>
+    {'. '}
+    <a href="/tools/home-energy-savings-planner/">Try it with your own numbers</a>
+  </p>
 
   <h2>
     Biggest price increases, {prior} → {month}
@@ -118,6 +121,8 @@ const tools = [
 </Base>
 
 <script>
+  import { track } from '../analytics/client';
+
   // Picking a state shows its price at once, sends the button to that state's page and carries
   // the state into every calculator link. Without JavaScript the form opens the all-states list.
   const form = document.getElementById('start') as HTMLFormElement;
@@ -125,6 +130,7 @@ const tools = [
   const answer = form.querySelector('.start-answer') as HTMLElement;
   const button = form.querySelector('.go') as HTMLButtonElement;
   const links = [...document.querySelectorAll<HTMLAnchorElement>('a[data-tool]')];
+  links.forEach((a) => a.addEventListener('click', () => track('home-tool')));
   const base = links.map((a) => a.getAttribute('href')!);
 
   const apply = () => {

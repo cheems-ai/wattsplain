@@ -1,77 +1,277 @@
 ---
 import { APPLIANCE_SOURCE } from '../data/appliances';
-import { ELECTRICITY, HISTORY } from '../data/electricity';
-import { HEATING } from '../data/heating';
+import { ELECTRICITY, HISTORY, stateRow } from '../data/electricity';
+import { HEATING, heatingRow } from '../data/heating';
 import Base from '../layouts/Base.astro';
-import { monthLabel } from '../lib/format';
+import { applianceEnergy, cost } from '../lib/appliance';
+import { analyzeBills } from '../lib/energy';
+import { cents, dollars, monthLabel } from '../lib/format';
+import { breakEvenElectricity, costAt, effectiveHspf, perTherm } from '../lib/heating';
+import { blend } from '../lib/rate';
+
+const month = monthLabel(ELECTRICITY.monthly.period);
+const longDate = (d: string | undefined) =>
+  d
+    ? new Date(`${d}T00:00:00Z`).toLocaleDateString('en-US', {
+        month: 'long',
+        day: 'numeric',
+        year: 'numeric',
+        timeZone: 'UTC',
+      })
+    : '–';
+
+// Worked examples, computed by the same functions the calculators use.
+const pa = stateRow('PA')!;
+const heater = applianceEnergy({
+  watts: 1500,
+  hoursPerDay: 8,
+  dutyCycle: 1,
+  daysPerWeek: 7,
+  monthsPerYear: 5,
+  standbyWatts: 0,
+});
+const bills = analyzeBills(
+  { kwh: 720, total: 131.4, days: 29, fixed: 11 },
+  { kwh: 1010, total: 214.9, days: 33, fixed: 14 },
+);
+const partOf = (id: string) => bills.parts.find((p) => p.id === id)?.amount ?? 0;
+const mn = heatingRow('MN')!;
+const hpRated = costAt('heat-pump', 60, 15, 7.8);
+const hpCold = costAt('heat-pump', 60, 15, effectiveHspf(7.8, 0.15, 0.1));
+const repo = 'https://github.com/cheems-ai/wattsplain';
 ---
 
 <Base
   title="Data & methodology"
-  description="Where our electricity prices and appliance wattages come from, how often they are updated, and the limits of the estimates."
+  description="Every data source with its release and check dates, the formulas behind each calculator with worked examples you can reproduce, and the limits of the estimates."
   crumbs={[['Data & methodology', '/methodology/']]}
 >
   <h1>Data & methodology</h1>
-  <h2>Electricity prices</h2>
-  <ul>
-    <li>
-      Monthly residential price by state:{' '}
-      <a href={ELECTRICITY.monthly.source}>EIA Electric Power Monthly, Table 5.6.A</a>. Current
-      data: {monthLabel(ELECTRICITY.monthly.period)} (preliminary) and{' '}
-      {monthLabel(ELECTRICITY.monthly.priorPeriod)}.
-    </li>
-    <li>
-      Average monthly use and bill by state: <a href={ELECTRICITY.annual.source}>EIA Table 5A</a>,{' '}
-      {ELECTRICITY.annual.year}.
-    </li>
-    {HISTORY && (
-      <li>
-        {`Monthly price history (trend charts): EIA Open Data API, electricity retail sales, residential sector, ${monthLabel(HISTORY.periods[0]!)} to ${monthLabel(HISTORY.periods.at(-1)!)}. Year-to-date figures are simple averages of the monthly prices. `}
-        <a href={HISTORY.source}>EIA data browser</a>
-      </li>
-    )}
-    <li>
-      Last checked: {ELECTRICITY.fetchedAt}. We check for new EIA data every month; the update is
-      automatic and refuses to publish if any state is missing.
-    </li>
-    <li>
-      EIA's price is total residential revenue divided by kWh sold, so fixed charges are spread
-      across every kWh. Your utility's rate structure (tiers, time-of-use, fixed fees) can make your
-      own price higher or lower.
-    </li>
-  </ul>
-  <h2>Heating fuel prices and heat needs</h2>
-  <ul>
-    <li>
-      {`Natural gas: residential price by state from the `}
-      <a href={HEATING.gas.source}>EIA Natural Gas Monthly</a>
-      {` (Open Data API), averaged over the 12 months ${monthLabel(HEATING.gas.from)} to ${monthLabel(HEATING.gas.period)} and weighted by the gas each month delivered, so the heating season counts most. Months EIA withholds are skipped; a state with fewer than 9 published months uses its latest annual average instead.`}
-    </li>
-    <li>
-      {`Propane and No. 2 heating oil: residential prices from EIA's `}
-      <a href={HEATING.propane.source}>State Heating Oil and Propane Program</a>
-      {`, week of ${HEATING.propane.week}. EIA publishes them weekly from October to March for the states it surveys; other states use their region's average (PADD) or the U.S. average, and the calculator says so.`}
-    </li>
-    <li>
-      Electricity for heating: the simple average of the last 12 monthly prices, because a heating
-      season spans several months.
-    </li>
-    <li>
-      {`Heat a home needs: `}
-      <a href={HEATING.recs.source}>EIA RECS {HEATING.recs.survey}, Table CE8.15.M</a>
-      {`, the gas used for space heating by the average gas-heated home in each state, times an assumed 85% furnace efficiency. Hawaii, where EIA withholds the figure, uses the Pacific division average.`}
-    </li>
-    <li>
-      Heat content (EIA): 3,412 Btu per kWh, 1,036 Btu per cubic foot of natural gas, 91,452 per
-      gallon of propane, 138,500 per gallon of heating oil. Heat pump seasonal efficiency = HSPF2 ÷
-      3.412.
-    </li>
-  </ul>
-  <h2>Appliance wattages</h2>
-  <p>
-    Typical nameplate ranges from <a href={APPLIANCE_SOURCE.url}>{APPLIANCE_SOURCE.title}</a>. The
-    label on your appliance is more accurate.
+  <p class="lede">
+    Where every number comes from, how each calculator works, and what the estimates cannot tell
+    you. The worked examples below are computed by the same code the calculators run.
   </p>
+
+  <h2>Sources</h2>
+  <div class="table-scroll">
+    <table class="facts">
+      <thead>
+        <tr>
+          <th>Data</th>
+          <th>Period</th>
+          <th>Unit</th>
+          <th class="hide-sm">Released / checked</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <th scope="row">
+            <a href={ELECTRICITY.monthly.source}>EIA Electric Power Monthly, Table 5.6.A</a>:
+            average residential price by state
+          </th>
+          <td>{`${month} (preliminary) and ${monthLabel(ELECTRICITY.monthly.priorPeriod)}`}</td>
+          <td>¢/kWh</td>
+          <td class="hide-sm">
+            {`Released ${longDate(ELECTRICITY.monthly.released)}; next ${longDate(ELECTRICITY.monthly.nextRelease)}; checked ${ELECTRICITY.fetchedAt}`}
+          </td>
+        </tr>
+        <tr>
+          <th scope="row">
+            <a href={ELECTRICITY.annual.source}>EIA Table 5A</a>: average monthly use and bill by
+            state
+          </th>
+          <td>{ELECTRICITY.annual.year}</td>
+          <td>kWh, $</td>
+          <td class="hide-sm">{`Checked ${ELECTRICITY.fetchedAt}`}</td>
+        </tr>
+        {HISTORY && (
+          <tr>
+            <th scope="row">
+              <a href={HISTORY.source}>EIA Open Data API, retail sales</a>: monthly residential
+              price by state
+            </th>
+            <td>{`${monthLabel(HISTORY.periods[0]!)} – ${monthLabel(HISTORY.periods.at(-1)!)}`}</td>
+            <td>¢/kWh</td>
+            <td class="hide-sm">{`Checked ${ELECTRICITY.fetchedAt}`}</td>
+          </tr>
+        )}
+        <tr>
+          <th scope="row">
+            <a href={HEATING.gas.source}>EIA Natural Gas Monthly</a>: residential price by state
+          </th>
+          <td>{`12 months, ${monthLabel(HEATING.gas.from)} – ${monthLabel(HEATING.gas.period)}`}</td>
+          <td>$/Mcf (shown per therm)</td>
+          <td class="hide-sm">{`Checked ${HEATING.fetchedAt}`}</td>
+        </tr>
+        <tr>
+          <th scope="row">
+            <a href={HEATING.propane.source}>EIA State Heating Oil and Propane Program</a>
+          </th>
+          <td>{`Week of ${HEATING.propane.week}`}</td>
+          <td>$/gal</td>
+          <td class="hide-sm">{`Checked ${HEATING.fetchedAt}`}</td>
+        </tr>
+        <tr>
+          <th scope="row">
+            <a href={HEATING.recs.source}>EIA RECS {HEATING.recs.survey}, Table CE8.15.M</a>: gas
+            used for space heating per gas-heated home
+          </th>
+          <td>{HEATING.recs.survey}</td>
+          <td>million Btu</td>
+          <td class="hide-sm">Survey published 2023</td>
+        </tr>
+        <tr>
+          <th scope="row">
+            <a href={HEATING.area.source}>EIA RECS 2020, Table HC10.9</a>: average heated floor area
+          </th>
+          <td>2020</td>
+          <td>sq ft</td>
+          <td class="hide-sm">Survey published 2023</td>
+        </tr>
+        <tr>
+          <th scope="row">
+            <a href={APPLIANCE_SOURCE.url}>{APPLIANCE_SOURCE.title}</a>
+          </th>
+          <td>2020</td>
+          <td>watts</td>
+          <td class="hide-sm">Typical nameplate ranges</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2>How the data is updated</h2>
+  <ul>
+    <li>
+      A job checks EIA every day. New electricity data is published only after it passes checks:
+      every state and DC present, no state twice, prices between 3¢ and 100¢, no state moving more
+      than 60% in a year, no gap in the monthly history, and never older than what is already
+      published. Heating fuel prices must cover every state, fall in a plausible range and never be
+      older than the published week or month. If a check fails, nothing is replaced and the site
+      keeps the last verified data.
+    </li>
+    <li>
+      “Latest” on this site means the latest month EIA has published, with EIA's release date. EIA
+      revises recent months; we take the revised figures when they appear.
+    </li>
+    <li>
+      Every change to the data files is a public commit:{' '}
+      <a href={`${repo}/commits/main/src/data/electricity.json`}>electricity price history</a> ·{' '}
+      <a href={`${repo}/commits/main/src/data/heating.json`}>heating fuel price history</a>.
+    </li>
+  </ul>
+
+  <h2>Which electricity price</h2>
+  <p>
+    EIA's state figure is total residential revenue ÷ kWh sold, so fixed monthly charges are spread
+    over every kWh. It is a fair yardstick for a state, but the price of one more kWh on your own
+    plan can be higher or lower (tiers, time-of-use, fixed charges). Every calculator therefore lets
+    you choose:
+  </p>
+  <ul>
+    <li>the state average (EIA);</li>
+    <li>
+      your own price, in ¢ or $ per kWh (a value under 1 in ¢ mode is read as dollars, and we say
+      so);
+    </li>
+    <li>
+      a price from your bill: (bill total − fixed monthly charges) ÷ kWh. Taxes and per-kWh riders
+      stay in, because they grow with use;
+    </li>
+    <li>
+      {`time-of-use: peak price × peak share + off-peak price × (1 − peak share). Example: 30% at 32¢ and 70% at 12¢ = ${cents(blend(32, 12, 0.3))}.`}
+    </li>
+  </ul>
+
+  <h2>Appliance cost</h2>
+  <p>
+    kWh a year = watts × running share × hours a day × days used a year ÷ 1,000 + standby watts ×
+    the other hours of the year ÷ 1,000. Days used a year = 365 × days a week ÷ 7 × months a year ÷
+    12. Cost = kWh × price. “Per month” is a 30-day month in which the appliance is used.
+  </p>
+  <p class="note">
+    {`Example: a 1,500 W heater, 8 hours a day, every day for 5 months: ${heater.daysPerYear.toFixed(1)} days, ${Math.round(heater.kwhPerYear).toLocaleString('en-US')} kWh a year; at Pennsylvania's ${cents(pa.price)} that is ${dollars(cost(heater.kwhPerYear, pa.price), 0)} a year and ${dollars(cost(heater.kwhPerMonthInUse, pa.price))} in a month it is used.`}
+  </p>
+  <p>
+    Thermostat appliances (heaters) are counted at full power for every hour entered unless you
+    lower the running share, so the default is an upper bound. With the EnergyGuide figure, we use
+    the label's kWh a year directly.
+  </p>
+
+  <h2>Bill checker</h2>
+  <p>
+    Energy charges = total − fixed charges − taxes and fees + credits. Energy price per kWh = energy
+    charges ÷ kWh. The change in energy charges is split with the Shapley rule into a price part,
+    (p₁ − p₀) × (kWh₀ + kWh₁) ÷ 2, and a usage part, (kWh₁ − kWh₀) × (p₀ + p₁) ÷ 2, which add up
+    exactly. With both billing periods, kWh = days × kWh per day is split the same way into a
+    period-length part and a daily-use part. Fixed charges, taxes and credits are their own parts.
+  </p>
+  <p class="note">
+    {`Example: 720 kWh, $131.40, 29 days, $11 fixed → 1,010 kWh, $214.90, 33 days, $14 fixed: daily use ${dollars(partOf('daily-use'))}, period length ${dollars(partOf('days'))}, price per kWh ${dollars(partOf('price'))}, fixed ${dollars(partOf('fixed'))}; total ${dollars(bills.change)}.`}
+  </p>
+  <p>
+    These are arithmetic parts, not proven causes: a higher price per kWh can be a rate change, a
+    higher tier or more peak-hour use. The{' '}
+    <a href="/tools/electric-bill-diagnosis/">bill diagnosis</a> labels each possible cause as shown
+    by the numbers, likely from your answers, or worth checking.
+  </p>
+
+  <h2>Heating cost</h2>
+  <ul>
+    <li>
+      Heat a typical home needs (million Btu) = RECS gas used for space heating × 85% (the assumed
+      efficiency of the furnaces in that survey). Hawaii, where EIA withholds the figure, uses the
+      Pacific division.
+    </li>
+    <li>
+      With a floor area, heat is scaled by your area ÷ the typical gas-heated home's area. RECS
+      gives heated area by census division for all homes and nationally for gas-heated homes (1,837
+      vs 1,614 sq ft), so the typical gas-heated area = division area × 1,837 ÷ 1,614. The
+      insulation choice is a ±20% sensitivity step, not a measured factor.
+    </li>
+    <li>
+      Fuel needed = heat ÷ (heat content × efficiency). Heat content (EIA): 3,412 Btu/kWh, 1,036 Btu
+      per cubic foot of gas, 91,452 Btu/gal propane, 138,500 Btu/gal heating oil. Heat pump seasonal
+      COP = HSPF2 ÷ 3.412.
+    </li>
+    <li>
+      {`Cold weather and backup heat: COP × (1 − derate), then 1 ÷ ((1 − backup share) ÷ COP + backup share). Example at 15¢/kWh and 60 million Btu: HSPF2 7.8 as rated costs ${dollars(hpRated, 0)} a year; 15% below rating with 10% strip heat costs ${dollars(hpCold, 0)}.`}
+    </li>
+    <li>
+      {`Break-even electricity price vs gas = gas $ per million Btu delivered × 3,412 × COP ÷ 10⁶. At Minnesota's gas price of ${dollars(perTherm(mn.prices.gas))}/therm, a 7.8 HSPF2 heat pump beats a 95% furnace below ${cents(breakEvenElectricity(mn.prices.gas, 0.95, 7.8))}/kWh.`}
+    </li>
+    <li>
+      Long-term total (only with costs you enter) = installation + years × (running + upkeep + fixed
+      charges such as a gas customer charge). No discounting, rebates or future price changes.
+    </li>
+  </ul>
+
+  <h2>Savings planner</h2>
+  <p>
+    Your monthly kWh × 12 is the whole household. The appliances and electric heating in the first
+    scenario are part of it; the remainder (“everything else”) is held the same in every scenario,
+    so differences come only from what you change. Each scenario's cost = its loads + its heating +
+    everything else at that scenario's price + fixed charges. The range shown moves every price 20%
+    down and up.
+  </p>
+
+  <h2>State pages</h2>
+  <ul>
+    <li>
+      “Same use at recent prices” = the latest annual average use × the average monthly price over
+      the last 12 months. It mixes two periods and is an estimate, not an actual bill.
+    </li>
+    <li>
+      Neighbouring states are those sharing a land border (Alaska and Hawaii list their census
+      division).
+    </li>
+    <li>Year-to-date figures are simple averages of the monthly prices.</li>
+  </ul>
+
   <h2>Limits</h2>
-  <p>All results are estimates for planning. Your utility bill is the final word.</p>
+  <p>
+    All results are estimates for planning, not quotes or guaranteed savings. They do not know your
+    utility's exact tariff, the weather in a given year, or the condition of your equipment. Your
+    utility bill is the final word. Spot a mistake? <a href="/contact/">Tell us</a>.
+  </p>
 </Base>

@@ -58,7 +58,55 @@ export function parseMonthlyTable(html) {
       result.rows.set(r[0], { price, pricePrior });
     }
   }
+  // EIA prints when this table was released and when the next one is due.
+  const date = (label) => {
+    const m = new RegExp(
+      `${label}:</span>\\s*<span class="date">\\s*(\\w+) (\\d{1,2}), (\\d{4})`,
+    ).exec(html);
+    const month = m ? MONTHS.indexOf(m[1]) + 1 : 0;
+    return month ? `${m[3]}-${String(month).padStart(2, '0')}-${m[2].padStart(2, '0')}` : null;
+  };
+  result.released = date('(?<!Next )Release Date');
+  result.nextRelease = date('Next Release Date');
   return result;
+}
+
+/**
+ * Sanity checks before a new dataset replaces the published one. Throws (and nothing is
+ * written) when the new data is older than what is published, or a state price is outside
+ * any plausible range or moved implausibly, so a bad fetch never overwrites good data.
+ */
+export function validateDataset(next, published) {
+  const problems = [];
+  if (published?.monthly?.period && next.monthly.period < published.monthly.period)
+    problems.push(
+      `new data is for ${next.monthly.period}, older than the published ${published.monthly.period}`,
+    );
+  const codes = new Set();
+  for (const s of next.states) {
+    if (codes.has(s.code)) problems.push(`${s.code} appears twice`);
+    codes.add(s.code);
+    if (!(s.price >= 3 && s.price <= 100))
+      problems.push(`${s.code} price ${s.price}¢ out of range`);
+    if (!(s.pricePrior >= 3 && s.pricePrior <= 100))
+      problems.push(`${s.code} prior price ${s.pricePrior}¢ out of range`);
+    if (Math.abs(s.price / s.pricePrior - 1) > 0.6)
+      problems.push(`${s.code} changed ${s.pricePrior}¢ → ${s.price}¢ in a year; check by hand`);
+    if (!(s.avgKwh >= 200 && s.avgKwh <= 2500)) problems.push(`${s.code} avgKwh ${s.avgKwh}`);
+  }
+  if (next.history) {
+    const { periods, byState } = next.history;
+    for (let i = 1; i < periods.length; i++) {
+      const [y0, m0] = periods[i - 1].split('-').map(Number);
+      const [y1, m1] = periods[i].split('-').map(Number);
+      if (y1 * 12 + m1 - (y0 * 12 + m0) !== 1)
+        problems.push(`history gap ${periods[i - 1]} → ${periods[i]}`);
+    }
+    for (const [code, values] of Object.entries(byState))
+      if (values.some((v) => !(v >= 3 && v <= 100)))
+        problems.push(`${code} history has an out-of-range value`);
+  }
+  if (problems.length) throw new Error(`EIA data failed validation:\n- ${problems.join('\n- ')}`);
 }
 
 /** Table 5A → { year, rows: Map<label, { customers, avgKwh, avgPrice, avgBill }> } */
@@ -146,7 +194,13 @@ export function buildDataset(monthly, annual, states, fetchedAt, history = null)
   };
   return {
     fetchedAt,
-    monthly: { period: monthly.period, priorPeriod: monthly.priorPeriod, source: MONTHLY_URL },
+    monthly: {
+      period: monthly.period,
+      priorPeriod: monthly.priorPeriod,
+      source: MONTHLY_URL,
+      ...(monthly.released ? { released: monthly.released } : {}),
+      ...(monthly.nextRelease ? { nextRelease: monthly.nextRelease } : {}),
+    },
     annual: { year: annual.year, source: ANNUAL_URL },
     us: pick('U.S. Total'),
     states: states.map((s) => ({ code: s.code, ...pick(s.name) })),

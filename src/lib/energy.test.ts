@@ -1,6 +1,13 @@
 import { describe, expect, it } from 'vitest';
 
-import { compareBills, parseRate, pctChange, runningCost } from './energy';
+import {
+  analyzeBills,
+  compareBills,
+  energyCharges,
+  parseRate,
+  pctChange,
+  runningCost,
+} from './energy';
 
 describe('runningCost', () => {
   it('matches the DOE worked example (window fan, 200 W, 4 h/day, 8.5 ¢/kWh)', () => {
@@ -83,5 +90,62 @@ describe('parseRate', () => {
     expect(parseRate('  ')).toBeNull();
     expect(parseRate('abc')).toBeNull();
     expect(parseRate('0')).toBeNull();
+  });
+});
+
+describe('analyzeBills', () => {
+  const sum = (parts: { amount: number }[]) => parts.reduce((s, p) => s + p.amount, 0);
+
+  it('with only kWh and totals, matches the simple two-part split', () => {
+    const a = analyzeBills({ kwh: 800, total: 140 }, { kwh: 950, total: 200 });
+    const b = compareBills({ kwh: 800, dollars: 140 }, { kwh: 950, dollars: 200 });
+    expect(a.parts.find((p) => p.id === 'usage')!.amount).toBeCloseTo(b.usageEffect, 10);
+    expect(a.parts.find((p) => p.id === 'price')!.amount).toBeCloseTo(b.rateEffect, 10);
+    expect(sum(a.parts)).toBeCloseTo(60, 10);
+  });
+
+  it('a higher fixed charge is not reported as a higher price per kWh', () => {
+    // Same 900 kWh at 15¢; the customer charge went from $10 to $25.
+    const a = analyzeBills(
+      { kwh: 900, total: 145, fixed: 10 },
+      { kwh: 900, total: 160, fixed: 25 },
+    );
+    expect(a.energyPrev).toBeCloseTo(15, 10);
+    expect(a.energyNow).toBeCloseTo(15, 10);
+    expect(a.parts).toEqual([{ id: 'fixed', amount: 15 }]);
+    expect(a.main).toBe('fixed');
+    // The all-in average did rise, which is what misleads people.
+    expect(a.allInNow).toBeGreaterThan(a.allInPrev);
+  });
+
+  it('separates a longer billing period from higher daily use', () => {
+    // 30 days × 30 kWh = 900 kWh → 35 days × 30 kWh = 1,050 kWh, both at 15¢ with no other lines.
+    const a = analyzeBills(
+      { kwh: 900, total: 135, days: 30 },
+      { kwh: 1050, total: 157.5, days: 35 },
+    );
+    expect(a.dailyPrev).toBeCloseTo(30, 10);
+    expect(a.dailyNow).toBeCloseTo(30, 10);
+    expect(a.parts).toEqual([{ id: 'days', amount: expect.closeTo(22.5, 10) }]);
+    expect(a.main).toBe('days');
+  });
+
+  it('every part adds up exactly to the change, whatever changed', () => {
+    const prev = { kwh: 720, total: 131.4, days: 29, fixed: 11, taxes: 7.2, credits: 4 };
+    const now = { kwh: 1010, total: 214.9, days: 33, fixed: 14, taxes: 11.6, credits: 0 };
+    const a = analyzeBills(prev, now);
+    expect(sum(a.parts)).toBeCloseTo(now.total - prev.total, 10);
+    // A lost credit raises the bill.
+    expect(a.parts.find((p) => p.id === 'credits')!.amount).toBe(4);
+    expect(a.energyPrev).toBeCloseTo((energyCharges(prev) / prev.kwh) * 100, 10);
+  });
+
+  it('rejects bills whose fixed lines exceed the total', () => {
+    expect(() => analyzeBills({ kwh: 10, total: 20, fixed: 25 }, { kwh: 500, total: 90 })).toThrow(
+      RangeError,
+    );
+    expect(() => analyzeBills({ kwh: 500, total: 90, days: 90 }, { kwh: 500, total: 90 })).toThrow(
+      /billing period/,
+    );
   });
 });

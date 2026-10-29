@@ -1,0 +1,55 @@
+---
+import { ELECTRICITY, RATE_OPTIONS, STATE_ROWS } from '../../data/electricity';
+import BillDiagnosis from '../../islands/BillDiagnosis';
+import Base from '../../layouts/Base.astro';
+import { cents, monthLabel, signedPct } from '../../lib/format';
+
+const month = monthLabel(ELECTRICITY.monthly.period);
+const prior = monthLabel(ELECTRICITY.monthly.priorPeriod);
+const stateChange = Object.fromEntries(STATE_ROWS.map((s) => [s.code, s.change]));
+const title = 'Why did my electric bill go up? A step-by-step diagnosis';
+const description =
+  'Answer four short questions about your bills, the season and your home, and see the possible causes of a higher electric bill, sorted by evidence, with how to check each one.';
+---
+
+<Base
+  title={title}
+  description={description}
+  crumbs={[['Bill diagnosis', '/tools/electric-bill-diagnosis/']]}
+>
+  <h1>Why did my electric bill go up?</h1>
+  <p class="lede">
+    Four short steps: your two bills (optional), the season, changes at home and the bill itself.
+    You get the possible causes, sorted by how strong the evidence is, and a way to check each one.
+  </p>
+
+  <BillDiagnosis client:load rates={RATE_OPTIONS} stateChange={stateChange} />
+
+  <h2>The usual reasons a bill rises</h2>
+  <ul>
+    <li>
+      <strong>More use.</strong> Heating and cooling are the largest loads in most homes, so a cold
+      or hot month shows up on the bill. Compare with the same month last year.
+    </li>
+    <li>
+      <strong>A longer billing period.</strong> A 35-day bill covers 5 more days than a 30-day one;
+      compare kWh per day.
+    </li>
+    <li>
+      <strong>Higher prices.</strong>
+      {` Across the U.S. the average residential price was ${cents(ELECTRICITY.us.price)} in ${month}, ${signedPct(ELECTRICITY.us.change)} from ${prior} (EIA). Your own price also depends on your plan, tiers and time-of-use hours.`}
+    </li>
+    <li>
+      <strong>Fixed charges, taxes and credits.</strong> A new customer charge or the end of a
+      credit raises the bill without any change in use.
+    </li>
+    <li>
+      <strong>An estimated reading.</strong> The next actual reading corrects it.
+    </li>
+  </ul>
+  <p>
+    Have two bills? The <a href="/tools/why-is-my-electric-bill-high/">bill checker</a> splits the
+    change into exact dollar amounts. To size up one appliance, use the{' '}
+    <a href="/tools/appliance-electricity-cost/">appliance cost calculator</a>.
+  </p>
+</Base>

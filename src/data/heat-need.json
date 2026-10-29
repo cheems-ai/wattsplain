@@ -157,5 +157,21 @@
       "mmbtu": 23.6,
       "area": "Pacific"
     }
+  },
+  "area": {
+    "source": "https://www.eia.gov/consumption/residential/data/2020/hc/xls/HC%2010.9.xlsx",
+    "usAll": 1614,
+    "usGas": 1837,
+    "byDivision": {
+      "New England": 1645,
+      "Middle Atlantic": 1584,
+      "East North Central": 1851,
+      "West North Central": 1891,
+      "South Atlantic": 1558,
+      "East South Central": 1673,
+      "West South Central": 1539,
+      "Mountain": 1736,
+      "Pacific": 1313
+    }
   }
 }
