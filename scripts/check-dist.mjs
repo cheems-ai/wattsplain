@@ -15,7 +15,7 @@ const files = [];
 })('dist');
 
 const GLUED =
-  /[a-z]{2,}\$\d|\d¢[a-z]|[,;:][A-Za-z]{2,}|\)[A-Za-z]{2,}|[a-z]—|—[A-Za-z$]|·[A-Za-z]|[A-Za-z]·/;
+  /[a-z]{2,}\$\d|\d¢[a-z]|[,;:][A-Za-z]{2,}|\)[A-Za-z]{2,}|[a-z]—|—[A-Za-z$]|·[A-Za-z]|[A-Za-z]·|[a-z]{2,}[.!?][A-Z][a-z]/;
 // Empty elements (colour keys like <i class="key"></i>) carry no text and are skipped.
 const EMPTY = /<(i|span)\b[^>]*><\/\1>/g;
 const INLINE =

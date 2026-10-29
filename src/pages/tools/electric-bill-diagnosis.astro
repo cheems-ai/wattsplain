@@ -7,9 +7,9 @@ import { cents, monthLabel, signedPct } from '../../lib/format';
 const month = monthLabel(ELECTRICITY.monthly.period);
 const prior = monthLabel(ELECTRICITY.monthly.priorPeriod);
 const stateChange = Object.fromEntries(STATE_ROWS.map((s) => [s.code, s.change]));
-const title = 'Why did my electric bill go up? A step-by-step diagnosis';
+const title = 'Why did my electric bill go up? Step-by-step diagnosis';
 const description =
-  'Answer four short questions about your bills, the season and your home, and see the possible causes of a higher electric bill, sorted by evidence, with how to check each one.';
+  'Answer four short questions about your bills, the season and your home to see the likely causes of a higher electric bill, sorted by evidence, and how to check each.';
 ---
 
 <Base
@@ -47,6 +47,16 @@ const description =
       <strong>An estimated reading.</strong> The next actual reading corrects it.
     </li>
   </ul>
+  <h2>If your bill doubled in one month</h2>
+  <p>
+    A bill that doubles almost always has a cause you can find on the bill itself. If the kWh
+    doubled, look for heat: electric heat in the first cold month, a heat pump on backup ("aux" or
+    "emergency") heat, or a space heater. If the kWh stayed about the same, look at the price per
+    kWh, a new fixed charge or the end of a credit. If the bill covers more days or was estimated
+    last time, compare kWh per day. In winter, see{' '}
+    <a href="/guides/why-is-my-electric-bill-so-high-in-winter/">why bills jump in winter</a>, with
+    what electric heat and backup strips cost in your state.
+  </p>
   <p>
     Have two bills? The <a href="/tools/why-is-my-electric-bill-high/">bill checker</a> splits the
     change into exact dollar amounts. To size up one appliance, use the{' '}

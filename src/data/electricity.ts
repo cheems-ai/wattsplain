@@ -115,3 +115,74 @@ export const RATE_OPTIONS = STATE_ROWS.map((s) => ({
   avgKwh: s.avgKwh,
 })).sort((a, b) => a.name.localeCompare(b.name));
 export type RateOption = (typeof RATE_OPTIONS)[number];
+
+export interface PriceChange {
+  code: string;
+  /** Average of the last 12 monthly prices and of the 12 before them, cents/kWh. */
+  avg12: number;
+  avgPrior12: number;
+  change12: number;
+  /** Latest month vs the same month a year earlier, percent. */
+  changeMonth: number;
+  /** What the 12-month change means for a month of `avgKwh` use, dollars. */
+  billEffect: number;
+}
+
+/**
+ * Twelve-month average price vs the twelve months before, per state: steadier than one month
+ * against the same month a year earlier, which swings with fuel costs and billing adjustments.
+ * Needs 24 months of history; sorted from the largest rise to the largest fall.
+ */
+export function computeChanges(
+  history: Omit<History, 'source'>,
+  avgKwh: Record<string, number>,
+): PriceChange[] {
+  const n = history.periods.length;
+  if (n < 24) throw new Error(`price changes need 24 months of history, got ${n}`);
+  const row = (code: string, values: number[]): PriceChange => {
+    const avg12 = mean(values.slice(n - 12));
+    const avgPrior12 = mean(values.slice(n - 24, n - 12));
+    return {
+      code,
+      avg12,
+      avgPrior12,
+      change12: pctChange(avg12, avgPrior12),
+      changeMonth: pctChange(values[n - 1]!, values[n - 13]!),
+      billEffect: ((avg12 - avgPrior12) * (avgKwh[code] ?? 0)) / 100,
+    };
+  };
+  return Object.entries(history.byState)
+    .map(([code, values]) => row(code, values))
+    .sort((a, b) => b.change12 - a.change12);
+}
+
+/** Every state's 12-month price change (empty without the 24-month history). */
+export const PRICE_CHANGES: readonly PriceChange[] = HISTORY
+  ? computeChanges(HISTORY, Object.fromEntries(STATE_ROWS.map((s) => [s.code, s.avgKwh])))
+  : [];
+
+/** The same comparison for the U.S. average, at U.S. average use. */
+export const US_PRICE_CHANGE: PriceChange | undefined = HISTORY
+  ? computeChanges({ ...HISTORY, byState: { US: HISTORY.us } }, { US: raw.us.avgKwh })[0]
+  : undefined;
+
+/**
+ * States served wholly or partly by PJM Interconnection, the grid operator for 13 states and DC
+ * (https://www.pjm.com/about-pjm/who-we-are/territory-served).
+ */
+export const PJM_STATES: ReadonlySet<string> = new Set([
+  'DE',
+  'IL',
+  'IN',
+  'KY',
+  'MD',
+  'MI',
+  'NJ',
+  'NC',
+  'OH',
+  'PA',
+  'TN',
+  'VA',
+  'WV',
+  'DC',
+]);

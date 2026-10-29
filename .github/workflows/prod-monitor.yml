@@ -1,0 +1,65 @@
+# Every six hours: is production healthy for visitors and search engines? Runs the crawl audit
+# (robots, sitemap, every page's status / canonical / noindex / JSON-LD, links, assets, redirects,
+# 404, analytics endpoint), checks the EIA data is not stale (the data job would have failed) and
+# runs the browser tests against https://wattsplain.com. On failure it opens (or comments on) one
+# issue labelled prod-monitor, which notifies the repository owner; the next green run closes it.
+name: Production monitor
+on:
+  schedule:
+    - cron: '41 */6 * * *'
+  workflow_dispatch:
+permissions:
+  contents: read
+  issues: write
+concurrency:
+  group: prod-monitor
+  cancel-in-progress: true
+jobs:
+  monitor:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .node-version
+          cache: npm
+      - run: npm ci
+      - name: Crawl audit
+        id: audit
+        run: node scripts/ops/site-audit.mjs --out audit.md
+      - name: Data freshness
+        id: data
+        if: always()
+        run: node scripts/ops/data-freshness.mjs
+      - if: always()
+        run: npx playwright install --with-deps chromium
+      - name: Browser tests against production
+        id: e2e
+        if: always()
+        env:
+          BASE_URL: https://wattsplain.com
+        run: npx playwright test --reporter=line --retries=1
+      - name: Summary
+        if: always()
+        run: '[ -f audit.md ] && cat audit.md >> "$GITHUB_STEP_SUMMARY" || true'
+      - name: Open or update the alert issue
+        if: failure()
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RUN: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          RESULTS: 'audit ${{ steps.audit.outcome }}, data ${{ steps.data.outcome }}, browser tests ${{ steps.e2e.outcome }}'
+        run: |
+          gh label create prod-monitor --color B60205 --description "Production monitor alert" 2>/dev/null || true
+          body="$(printf 'Production monitor failed: %s.\n\nRun: %s\n' "$RESULTS" "$RUN")"
+          n=$(gh issue list --label prod-monitor --state open --json number --jq '.[0].number')
+          if [ -n "$n" ]; then gh issue comment "$n" --body "$body"
+          else gh issue create --title "Production monitor failing" --label prod-monitor --body "$body"; fi
+      - name: Close the alert issue
+        if: success()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          for n in $(gh issue list --label prod-monitor --state open --json number --jq '.[].number'); do
+            gh issue close "$n" --comment "Production monitor passed again: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          done

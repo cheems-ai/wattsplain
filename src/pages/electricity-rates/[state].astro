@@ -4,7 +4,13 @@ import type { GetStaticPaths } from 'astro';
 import { APPLIANCES, defaultProfile } from '../../data/appliances';
 import { BORDERS } from '../../data/borders';
 import PriceTrend from '../../components/PriceTrend.astro';
-import { ELECTRICITY, STATE_ROWS, stateTrend, type StateRow } from '../../data/electricity';
+import {
+  ELECTRICITY,
+  PRICE_CHANGES,
+  STATE_ROWS,
+  stateTrend,
+  type StateRow,
+} from '../../data/electricity';
 import { ELECTRIC_BASIS, heatingRow } from '../../data/heating';
 import Base from '../../layouts/Base.astro';
 import { applianceEnergy, cost } from '../../lib/appliance';
@@ -36,6 +42,8 @@ const examples = [
   .map((id) => APPLIANCES.find((a) => a.id === id)!)
   .map((a) => ({ a, p: defaultProfile(a), e: applianceEnergy(defaultProfile(a)) }));
 const trend = stateTrend(s.code);
+const changeRank = PRICE_CHANGES.findIndex((c) => c.code === s.code);
+const change12 = PRICE_CHANGES[changeRank];
 // A typical month's bill needs a price for the whole year, not one month: use the 12-month
 // average when the history is there. Use is EIA's latest annual average (an earlier year).
 const last12 = trend ? trend.values.slice(-12) : [];
@@ -113,6 +121,12 @@ const description = `${s.name} homes paid ${cents(s.price)} per kWh in ${month},
         <span class={trend.ytd.change > 0 ? 'up' : 'down'}>{signedPct(trend.ytd.change)}</span>
         {` compared with the same months of ${Number(trend.ytd.year) - 1} (${cents(trend.ytd.avgPrior)}). Over the last 12 months the price was highest in ${monthLabel(trend.high.period)} (${cents(trend.high.price)}) and lowest in ${monthLabel(trend.low.period)} (${cents(trend.low.price)}).`}
       </p>
+      {change12 && (
+        <p>
+          {`Averaged over the 12 months to ${month}, the ${s.name} price was ${Math.abs(change12.change12).toFixed(1)}% ${change12.change12 >= 0 ? 'higher' : 'lower'} than in the 12 months before (${changeRank + 1} of 51, from the largest rise), about ${dollars(Math.abs(change12.billEffect))} a month ${change12.billEffect >= 0 ? 'more' : 'less'} at typical use.`}{' '}
+          <a href="/electricity-rates/price-changes/">Price changes in every state →</a>
+        </p>
+      )}
     </>
   )}
 
@@ -133,7 +147,8 @@ const description = `${s.name} homes paid ${cents(s.price)} per kWh in ${month},
   <p>
     <a href={`/tools/why-is-my-electric-bill-high/?state=${s.code}`}>
       Enter two of your bills to see how much is price and how much is use →
-    </a>
+    </a>{' '}
+    · <a href="/guides/why-is-my-electric-bill-so-high-in-winter/">Why bills jump in winter →</a>
   </p>
 
   <h2>Average electric bill in {s.name}</h2>
@@ -240,6 +255,10 @@ const description = `${s.name} homes paid ${cents(s.price)} per kWh in ${month},
   <p>
     <a href={`/tools/heating-cost-calculator/?state=${s.code}`}>
       Compare with your own fuel use and prices →
+    </a>{' '}
+    ·{' '}
+    <a href={`/tools/space-heater-vs-central-heat/?state=${s.code}`}>
+      Would a space heater in one room save money? →
     </a>
   </p>
 

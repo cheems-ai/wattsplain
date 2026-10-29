@@ -51,7 +51,11 @@ const description = `Average residential electricity price in every U.S. state f
       {signedPct(ELECTRICITY.us.change)}
     </span>{' '}
     from {prior}. Prices rose in {up} states and fell in {down}. Pick your state for details and
-    calculators.
+    calculators, or see{' '}
+    <a href="/electricity-rates/price-changes/">
+      how much prices rose in each state over 12 months
+    </a>
+    .
   </p>
   <p class="updated">
     {`Residential prices: EIA Electric Power Monthly, Table 5.6.A (${month} is preliminary), released ${releasedLabel}${nextLabel ? `; next release ${nextLabel}` : ''}. Average use and bill: EIA, ${year}. Checked ${ELECTRICITY.fetchedAt}.`}{' '}

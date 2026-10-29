@@ -1,0 +1,180 @@
+---
+import {
+  ELECTRICITY,
+  HISTORY,
+  PJM_STATES,
+  PRICE_CHANGES,
+  STATE_ROWS,
+  US_PRICE_CHANGE,
+} from '../../data/electricity';
+import Base from '../../layouts/Base.astro';
+import { cents, dollars, monthLabel, signedPct } from '../../lib/format';
+
+if (!HISTORY || !US_PRICE_CHANGE) throw new Error('price-changes needs the 24-month EIA history');
+const periods = HISTORY.periods;
+const last = monthLabel(periods.at(-1)!);
+const first12 = monthLabel(periods.at(-12)!);
+const prev12 = `${monthLabel(periods[0]!)} – ${monthLabel(periods[11]!)}`;
+const now12 = `${first12} – ${last}`;
+const us = US_PRICE_CHANGE;
+const rows = PRICE_CHANGES.map((c) => ({ ...c, s: STATE_ROWS.find((s) => s.code === c.code)! }));
+const up = rows.filter((r) => r.change12 > 0).length;
+const top10 = rows.slice(0, 10);
+const pjmTop10 = top10.filter((r) => PJM_STATES.has(r.code)).length;
+const pjmRows = rows.filter((r) => PJM_STATES.has(r.code));
+const otherRows = rows.filter((r) => !PJM_STATES.has(r.code));
+const median = (xs: number[]) => {
+  const a = [...xs].sort((x, y) => x - y);
+  const m = Math.floor(a.length / 2);
+  return a.length % 2 ? a[m]! : (a[m - 1]! + a[m]!) / 2;
+};
+const pjmMedian = median(pjmRows.map((r) => r.change12));
+const otherMedian = median(otherRows.map((r) => r.change12));
+// Where one month and the 12-month average disagree by a lot, the single month misleads.
+const swings = rows
+  .filter((r) => Math.abs(r.changeMonth - r.change12) >= 8)
+  .sort((a, b) => Math.abs(b.changeMonth - b.change12) - Math.abs(a.changeMonth - a.change12))
+  .slice(0, 3);
+const biggest = rows[0]!;
+const fell = rows.filter((r) => r.change12 < 0).reverse();
+const fellText =
+  fell.length === 0
+    ? ' None fell.'
+    : ` Prices fell in ${fell.length === 1 ? 'one' : fell.length}: ${fell.map((r) => `${r.s.name} (${signedPct(r.change12)})`).join(', ')}.`;
+const pct = (n: number) => `${n.toFixed(1)}%`;
+const title = 'Electricity price increases by state';
+const description = `How much residential electricity prices rose in every state over the 12 months to ${last} vs the 12 months before, and what that adds to a typical monthly bill. EIA data.`;
+---
+
+<Base
+  title={title}
+  description={description}
+  crumbs={[
+    ['Electricity rates', '/electricity-rates/'],
+    ['Price changes', '/electricity-rates/price-changes/'],
+  ]}
+  jsonLd={[
+    {
+      '@context': 'https://schema.org',
+      '@type': 'Dataset',
+      name: `Change in average residential electricity price by U.S. state, 12 months to ${last}`,
+      description: `Average residential electricity price (cents per kWh) in each U.S. state and DC over ${now12} and ${prev12}, the percentage change, the change for the latest month alone, and the effect on a month of typical use. Computed from U.S. Energy Information Administration monthly data.`,
+      url: 'https://wattsplain.com/electricity-rates/price-changes/',
+      isBasedOn: [HISTORY.source, ELECTRICITY.annual.source],
+      temporalCoverage: `${periods[0]}/${periods.at(-1)}`,
+      spatialCoverage: 'United States',
+      dateModified: ELECTRICITY.fetchedAt,
+      variableMeasured: 'Average residential retail price of electricity (cents per kWh)',
+      distribution: {
+        '@type': 'DataDownload',
+        encodingFormat: 'text/csv',
+        contentUrl: 'https://wattsplain.com/data/electricity-price-changes.csv',
+      },
+      license: 'https://wattsplain.com/terms/',
+      creator: { '@type': 'Organization', name: 'Wattsplain', url: 'https://wattsplain.com/' },
+    },
+  ]}
+>
+  <h1>Electricity price increases by state, 12 months to {last}</h1>
+  <p class="lede">
+    {`The U.S. average residential price was ${cents(us.avg12)} per kWh over the last 12 months, `}
+    <span class={us.change12 > 0 ? 'up' : 'down'}>{signedPct(us.change12)}</span>
+    {` from ${cents(us.avgPrior12)} the 12 months before. That adds about ${dollars(us.billEffect)} to a month of average use. Prices rose in ${up} of the 50 states and DC, most in ${biggest.s.name === 'District of Columbia' ? 'Washington, DC' : biggest.s.name} (${signedPct(biggest.change12)}).${fellText}`}
+  </p>
+  <p class="updated">
+    {`Monthly residential prices: EIA (${periods[0]} to ${periods.at(-1)}; recent months are preliminary). Typical use: EIA, ${ELECTRICITY.annual.year}. Checked ${ELECTRICITY.fetchedAt}; updated automatically when EIA publishes a new month.`}{' '}
+    <a href="/data/electricity-price-changes.csv">Download the table (CSV)</a> ·{' '}
+    <a href="/methodology/">Methodology</a>
+  </p>
+
+  <h2>Where the increases are concentrated</h2>
+  <p>
+    {`${pjmTop10} of the 10 largest increases are in states served wholly or partly by PJM, the grid operator for 13 Mid-Atlantic and Midwest states and DC. The middle (median) PJM state rose ${pct(pjmMedian)}; the middle state elsewhere rose ${pct(otherMedian)}.`}
+  </p>
+  <p>
+    Grid region is not the only cause: a state's price also moves with its utilities' delivery
+    charges, fuel costs and state policy. PJM's independent market monitor has linked much of the
+    region's higher capacity costs to forecast demand from data centers (
+    <a href="https://www.monitoringanalytics.com/reports/PJM_State_of_the_Market/2026.shtml">
+      State of the Market reports
+    </a>
+    ). EIA's <a href="https://www.eia.gov/outlooks/steo/">Short-Term Energy Outlook</a> forecasts
+    prices nationally each month. We report the price change; we do not attribute it to one cause.
+  </p>
+
+  <div class="table-scroll" tabindex="0" role="region" aria-label="Price change by state">
+    <table>
+      <caption>{`Sorted from the largest rise. 12-month average = simple average of the monthly prices. Bill effect = change in the 12-month average × the state's typical monthly use (${ELECTRICITY.annual.year}). PJM = served wholly or partly by PJM.`}</caption>
+      <thead>
+        <tr>
+          <th>State</th>
+          <th>{now12}</th>
+          <th>{prev12}</th>
+          <th>12-month change</th>
+          <th>Bill effect / month</th>
+          <th>{last} vs a year earlier</th>
+        </tr>
+      </thead>
+      <tbody>
+        {rows.map((r) => (
+          <tr>
+            <td>
+              <a href={`/electricity-rates/${r.s.slug}/`}>{r.s.name}</a>
+              {PJM_STATES.has(r.code) && <small> PJM</small>}
+            </td>
+            <td>{cents(r.avg12)}</td>
+            <td>{cents(r.avgPrior12)}</td>
+            <td class={r.change12 > 0 ? 'up' : 'down'}>{signedPct(r.change12)}</td>
+            <td>{`${r.billEffect >= 0 ? '+' : ''}${dollars(r.billEffect)}`}</td>
+            <td>{signedPct(r.changeMonth)}</td>
+          </tr>
+        ))}
+        <tr>
+          <td>
+            <strong>U.S. average</strong>
+          </td>
+          <td>
+            <strong>{cents(us.avg12)}</strong>
+          </td>
+          <td>{cents(us.avgPrior12)}</td>
+          <td>{signedPct(us.change12)}</td>
+          <td>{`+${dollars(us.billEffect)}`}</td>
+          <td>{signedPct(us.changeMonth)}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2>Why a 12-month average and not one month</h2>
+  <p>
+    News stories often compare one month with the same month a year earlier. That figure swings with
+    a single fuel-cost adjustment or a billing change, and with how much air conditioning or heating
+    happened to fall in that month.
+    {swings.length > 0 &&
+      ` In this data, ${swings.map((r) => `${r.s.name} was ${signedPct(r.changeMonth)} for ${last} alone but ${signedPct(r.change12)} over 12 months`).join('; ')}.`}{' '}
+    Averaging a full year of prices on both sides compares like with like.
+  </p>
+  <p>
+    The bill effect assumes your use stays at your state's typical level. A home with electric heat
+    uses far more in winter, so its dollar change is larger.
+  </p>
+
+  <h2>What this means for your bill</h2>
+  <ul>
+    <li>
+      <a href="/tools/why-is-my-electric-bill-high/">Bill checker</a>: enter last year's bill and
+      this year's to see how much of your increase is price and how much is use.
+    </li>
+    <li>
+      <a href="/tools/electric-bill-diagnosis/">Bill diagnosis</a>: four questions to find the
+      likely cause of a higher bill.
+    </li>
+    <li>
+      <a href="/tools/home-energy-savings-planner/">Savings planner</a>: what changes to your
+      appliances or heating would save at your state's price.
+    </li>
+  </ul>
+  <p>
+    <a href="/electricity-rates/">Current price in every state →</a>
+  </p>
+</Base>

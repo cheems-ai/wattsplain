@@ -502,7 +502,10 @@ test('no Content-Security-Policy violations or console errors on the main pages'
 }) => {
   const problems: string[] = [];
   page.on('console', (m) => {
-    if (m.type() === 'error') problems.push(`${page.url()}: ${m.text()}`);
+    // Cloudflare's edge injects its Web Analytics beacon on production; the policy blocks it on
+    // purpose (the privacy page promises no third-party scripts). Anything else is a failure.
+    if (m.type() === 'error' && !m.text().includes('static.cloudflareinsights.com/beacon'))
+      problems.push(`${page.url()}: ${m.text()}`);
   });
   page.on('pageerror', (e) => problems.push(`${page.url()}: ${e.message}`));
   // Analytics beacons have no backend under `astro preview`.
@@ -518,6 +521,9 @@ test('no Content-Security-Policy violations or console errors on the main pages'
     '/tools/why-is-my-electric-bill-high/',
     '/tools/electric-bill-diagnosis/',
     '/tools/home-energy-savings-planner/?state=TX',
+    '/tools/space-heater-vs-central-heat/?state=ME',
+    '/electricity-rates/price-changes/',
+    '/guides/why-is-my-electric-bill-so-high-in-winter/',
     '/methodology/',
   ]) {
     await page.goto(path);
@@ -584,4 +590,64 @@ test('bill diagnosis: start over clears every answer', async ({ page }) => {
   await expect(
     page.getByLabel('Electric heat (heat pump, baseboard, electric furnace)'),
   ).not.toBeChecked();
+});
+
+test('space heater vs central heat: one room vs turning the whole home down', async ({ page }) => {
+  const errors: string[] = [];
+  page.on('pageerror', (e) => errors.push(e.message));
+  await page.goto('/tools/space-heater-vs-central-heat/?state=PA');
+  await expect(page.getByLabel('Your state')).toHaveValue('PA');
+  await expect(page.locator('astro-island[ssr]')).toHaveCount(0);
+  await page.getByLabel('Your central heat', { exact: true }).selectOption('electric');
+  await page.getByLabel('Heated area of the home (sq ft)').fill('2000');
+  await page.locator('summary', { hasText: 'Your own numbers' }).click();
+  await page.getByLabel('What your central heat costs a year ($)').fill('2000');
+  await page.getByLabel('Electricity (¢ or $ per kWh)').fill('20');
+  // Same price and efficiency both ways: the 200 sq ft room is 10% of the home for 8 of 24 hours,
+  // plus 25% → $83.33 of heat; the 6°F turn-down for 8 hours saves 6% of $2,000 = $120.
+  const result = page.locator('.result');
+  await expect(result.locator('.big')).toHaveText('The space heater saves about $37 a winter');
+  await expect(result).toContainText('$120 (6% of $2,000 a year)');
+  await expect(result).toContainText('$83 (417 kWh at 20.00¢)');
+  // Blanket: 100 W × 8 h × 150 nights = 120 kWh = $24 against the same $120.
+  await expect(result).toContainText('Net: about $96 saved a winter.');
+  await page.getByLabel('Your central heat', { exact: true }).selectOption('heat-pump');
+  await expect(result).toContainText('rarely saves money next to a heat pump');
+  await page.getByLabel('The room you heat (sq ft)').fill('3000');
+  await expect(result.locator('.error')).toContainText('smaller than the whole home');
+  expect(errors).toEqual([]);
+});
+
+test('price changes page ranks every state and offers the CSV', async ({ page, request }) => {
+  await page.goto('/electricity-rates/price-changes/');
+  await expect(page.locator('h1')).toContainText(
+    `12 months to ${monthLabel(data.history.periods.at(-1)!)}`,
+  );
+  // 50 states, DC and the U.S. row.
+  await expect(page.locator('table tbody tr')).toHaveCount(52);
+  const csv = await request.get('/data/electricity-price-changes.csv');
+  expect(csv.status()).toBe(200);
+  const lines = (await csv.text()).trim().split('\n');
+  expect(lines[1]).toMatch(/^state,code,/);
+  expect(lines).toHaveLength(2 + 52);
+  await page.goto('/electricity-rates/ohio/');
+  await expect(page.getByRole('link', { name: 'Price changes in every state →' })).toHaveAttribute(
+    'href',
+    '/electricity-rates/price-changes/',
+  );
+});
+
+test('winter bill guide gives each state its heating numbers', async ({ page }) => {
+  await page.goto('/guides/why-is-my-electric-bill-so-high-in-winter/');
+  await expect(page.locator('h1')).toHaveText('Why is my electric bill so high in winter?');
+  const rows = page.locator('table tbody tr');
+  await expect(rows).toHaveCount(51);
+  // Hawaii's RECS figure is its census division's, so no heating estimate is shown for it.
+  await expect(rows.filter({ hasText: 'Hawaii' }).locator('td').nth(3)).toHaveText('–');
+  await expect(rows.filter({ hasText: 'Ohio' }).locator('td').nth(3)).toHaveText(/^\$\d/);
+  await page.goto('/electricity-rates/ohio/');
+  await expect(page.getByRole('link', { name: 'Why bills jump in winter →' })).toHaveAttribute(
+    'href',
+    '/guides/why-is-my-electric-bill-so-high-in-winter/',
+  );
 });

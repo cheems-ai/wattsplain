@@ -6,6 +6,7 @@ import { STATE_ROWS } from '../data/electricity';
 const paths = [
   '/',
   '/electricity-rates/',
+  '/electricity-rates/price-changes/',
   ...STATE_ROWS.map((s) => `/electricity-rates/${s.slug}/`),
   '/tools/',
   '/tools/home-energy-savings-planner/',
@@ -13,7 +14,9 @@ const paths = [
   '/tools/electric-bill-diagnosis/',
   '/tools/appliance-electricity-cost/',
   '/tools/space-heater-cost/',
+  '/tools/space-heater-vs-central-heat/',
   '/tools/heating-cost-calculator/',
+  '/guides/why-is-my-electric-bill-so-high-in-winter/',
   '/about/',
   '/methodology/',
   '/privacy/',
