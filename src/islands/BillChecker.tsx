@@ -191,7 +191,7 @@ export default function BillChecker({
               </tbody>
             </table>
             <p class="verdict">{verdict(r, b0!, b1!)}</p>
-            <h3>What this does and does not tell you</h3>
+            <h2 class="sub">What this does and does not tell you</h2>
             <ul>
               <li>
                 {`Energy price per kWh: ${cents(r.energyPrev)} → ${cents(r.energyNow)}${detailed ? ' (energy charges only)' : ' (whole bill ÷ kWh, so fixed charges and taxes are mixed in)'}. A change can be a rate increase, but also a higher usage tier, more use in peak hours, or a fuel or supply adjustment. The rate lines on the bill show which.`}

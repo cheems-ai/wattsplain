@@ -461,7 +461,7 @@ export default function HeatingCost({ options, electricLabel, propaneWeek, gasLa
               <p>{`Simple payback of the heat pump over the gas furnace: about ${payback.toFixed(1)} years (no interest, rebates or price changes counted).`}</p>
             )}
 
-            <h3>How sure is this?</h3>
+            <h2 class="sub">How sure is this?</h2>
             <p class="note">
               Heat pump minus gas furnace, running cost per year, if prices move. Negative means the
               heat pump is cheaper.

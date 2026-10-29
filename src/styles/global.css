@@ -995,3 +995,7 @@ table.compare td {
 .tool-group {
   max-width: 46rem;
 }
+.result h2.sub {
+  font-size: 1.1rem;
+  margin: 1.4em 0 0.4em;
+}
