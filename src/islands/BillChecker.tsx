@@ -1,9 +1,9 @@
-import { useEffect, useState } from 'preact/hooks';
+import { useState } from 'preact/hooks';
 
-import { track } from '../analytics/client';
 import type { RateOption } from '../data/electricity';
 import { analyzeBills, validateBill, type BillDetail, type BillPartId } from '../lib/energy';
 import { cents, dollars, kwh, signedPct } from '../lib/format';
+import { useFunnel } from './useFunnel';
 import { initial, num, useStateCode } from './useStateRate';
 
 interface Props {
@@ -87,11 +87,7 @@ export default function BillChecker({
   const error = b0 && b1 ? (validateBill(b0) ?? validateBill(b1) ?? pairError ?? null) : null;
   const r = b0 && b1 && !error ? analyzeBills(b0, b1) : null;
   const change = stateChange[code] ?? 0;
-  // Count the tool as used once the visitor has entered two complete bills.
-  const hasResult = r !== null;
-  useEffect(() => {
-    if (hasResult) track('tool');
-  }, [hasResult]);
+  const touch = useFunnel(r !== null, error !== null);
 
   const maxPart = r ? Math.max(...r.parts.map((p) => Math.abs(p.amount)), 0.01) : 1;
   const detailed = r && r.parts.some((p) => p.id !== 'usage' && p.id !== 'price');
@@ -120,7 +116,12 @@ export default function BillChecker({
 
   return (
     <div class="tool" data-ready={ready ? '' : undefined}>
-      <form class="card" onSubmit={(e) => e.preventDefault()} aria-label="Your two bills">
+      <form
+        class="card"
+        onSubmit={(e) => e.preventDefault()}
+        onInput={touch}
+        aria-label="Your two bills"
+      >
         <div class="field">
           <label for="bc-state">Your state</label>
           <select id="bc-state" value={code} onChange={(e) => setCode(e.currentTarget.value)}>

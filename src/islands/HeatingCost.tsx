@@ -1,6 +1,5 @@
 import { useState } from 'preact/hooks';
 
-import { track } from '../analytics/client';
 import type { HeatingOption } from '../data/heating';
 import { parseRate } from '../lib/energy';
 import { cents, dollars, signedPct } from '../lib/format';
@@ -22,6 +21,7 @@ import {
   type Insulation,
   type SystemId,
 } from '../lib/heating';
+import { useFunnel } from './useFunnel';
 import { initial, num, useStateCode } from './useStateRate';
 
 interface Props {
@@ -170,6 +170,8 @@ export default function HeatingCost({ options, electricLabel, propaneWeek, gasLa
         costAt('gas', heat, prices.gas, eff.gas, g)
       : 0;
 
+  const touch = useFunnel(Boolean(heat && best), !heat);
+
   const priceText = (id: SystemId, price: number) =>
     id === 'heat-pump' || id === 'electric'
       ? `${cents(price)}/kWh`
@@ -184,7 +186,7 @@ export default function HeatingCost({ options, electricLabel, propaneWeek, gasLa
       <form
         class="card"
         onSubmit={(e) => e.preventDefault()}
-        onInput={() => track('tool')}
+        onInput={touch}
         aria-label="Your home and fuel prices"
       >
         <div class="field">

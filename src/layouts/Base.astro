@@ -46,9 +46,10 @@ const ld = [...(breadcrumbLd ? [breadcrumbLd] : []), ...jsonLd];
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <script is:inline>
-      // A ?state=XX link is prerendered with the default state; calculators stay hidden until they
-      // have switched to XX (useStateCode sets data-ready), so nobody reads the wrong state's numbers.
-      if (/[?&]state=[A-Za-z]{2}(&|$)/.test(location.search))
+      // A ?state=XX (or shared ?p=) link is prerendered with the default state; calculators stay
+      // hidden until they have switched (useStateCode sets data-ready), so nobody reads the wrong
+      // state's numbers.
+      if (/[?&](state=[A-Za-z]{2}(&|$)|p=|appliance=)/.test(location.search))
         document.documentElement.setAttribute('data-qs', '');
     </script>
     <title>{fullTitle}</title>

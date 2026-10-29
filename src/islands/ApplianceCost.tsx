@@ -1,6 +1,5 @@
-import { useState } from 'preact/hooks';
+import { useEffect, useState } from 'preact/hooks';
 
-import { track } from '../analytics/client';
 import { KIND_HINT, defaultProfile, type Appliance } from '../data/appliances';
 import type { RateOption } from '../data/electricity';
 import {
@@ -14,6 +13,7 @@ import {
 import { cents, dollars } from '../lib/format';
 import { resolveRate } from '../lib/rate';
 import { RateField, useRateInput } from './RateField';
+import { useFunnel } from './useFunnel';
 import { initial, num, useStateCode } from './useStateRate';
 
 interface Props {
@@ -61,6 +61,13 @@ export default function ApplianceCost({ rates, appliances, fixed, monthLabel }: 
     if (!a.energyGuide) setBasis('watts');
   };
 
+  // ?appliance=id (from the bill diagnosis or the planner) preselects an appliance.
+  useEffect(() => {
+    if (fixed) return;
+    const a = new URLSearchParams(window.location.search).get('appliance');
+    if (a && a !== applianceId) pick(a);
+  }, []);
+
   const profile: UsageProfile = {
     watts: num(watts) ?? NaN,
     hoursPerDay: num(hours) ?? NaN,
@@ -87,6 +94,7 @@ export default function ApplianceCost({ rates, appliances, fixed, monthLabel }: 
 
   const perMonth = energy && price !== null ? cost(energy.kwhPerMonthInUse, price) : null;
   const seasonal = !useLabel && profile.monthsPerYear < 12;
+  const touch = useFunnel(perMonth !== null, Boolean(inputError ?? rate.error));
 
   return (
     <div class="tool" data-ready={ready ? '' : undefined}>
@@ -94,9 +102,9 @@ export default function ApplianceCost({ rates, appliances, fixed, monthLabel }: 
         class="card"
         onSubmit={(e) => e.preventDefault()}
         // Any change by the visitor counts as using the tool (once per page view).
-        onInput={() => track('tool')}
+        onInput={touch}
         onClick={(e) => {
-          if ((e.target as HTMLElement).closest('button')) track('tool');
+          if ((e.target as HTMLElement).closest('button')) touch();
         }}
         aria-label="Appliance and usage"
       >
@@ -392,6 +400,13 @@ export default function ApplianceCost({ rates, appliances, fixed, monthLabel }: 
             )}
             <p class="note">
               {`Same use in the cheapest state (${cheapest.name}, ${cents(cheapest.price)}): ${dollars(cost(energy.kwhPerMonthInUse, cheapest.price))}/month · most expensive (${priciest.name}, ${cents(priciest.price)}): ${dollars(cost(energy.kwhPerMonthInUse, priciest.price))}/month.`}
+            </p>
+            <p>
+              <a
+                href={`/tools/home-energy-savings-planner/?state=${code}&appliance=${applianceId}`}
+              >
+                Compare it with fewer hours or another appliance in the savings planner →
+              </a>
             </p>
             {!rate.marginal && (
               <p class="note">

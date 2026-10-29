@@ -1,12 +1,14 @@
 // Browser side of the first-party analytics (see event.ts). Imported by the layout script and by
-// the calculator islands; sends at most one "tool" event per tool per page view.
+// the calculator islands; funnel events (tool, result, error) are sent at most once per page view.
 import { classifyReferrer, type EventName } from './event';
 
 const sent = new Set<string>();
+/** Counted at most once per page view; compare and share count every use. */
+const ONCE = new Set<EventName>(['tool', 'result', 'error', 'home-tool']);
 
 export function track(event: EventName): void {
   const key = `${event} ${location.pathname}`;
-  if (event === 'tool' && sent.has(key)) return;
+  if (ONCE.has(event) && sent.has(key)) return;
   sent.add(key);
   const body = JSON.stringify({
     e: event,

@@ -30,4 +30,6 @@ test('capture', async ({ page }, info) => {
   await page.screenshot({ path: `${dir}-heating.png`, fullPage: true });
   await page.locator('summary', { hasText: 'Your prices' }).click();
   await page.screenshot({ path: `${dir}-heating-open.png` });
+  await page.goto('/tools/home-energy-savings-planner/?state=TX');
+  await page.screenshot({ path: `${dir}-planner.png`, fullPage: true });
 });

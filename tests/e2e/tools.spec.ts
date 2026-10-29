@@ -389,3 +389,110 @@ test('heating calculator: cold weather, backup heat and price sensitivity', asyn
   await page.getByLabel('Heated area (sq ft)').fill('1000');
   await expect(page.locator('.result > .note').first()).toContainText('million Btu of heat a year');
 });
+
+test('savings planner compares scenarios and restores a shared link', async ({ page, context }) => {
+  const errors: string[] = [];
+  page.on('pageerror', (e) => errors.push(e.message));
+  await page.goto('/tools/home-energy-savings-planner/?state=TX');
+  await expect(page.getByLabel('State', { exact: true })).toHaveValue('TX');
+  const tx = price('TX').price;
+  const rows = page.locator('table.compare tbody tr');
+  await expect(rows).toHaveCount(2);
+  // Example: 1,500 W, 8 h vs 5 h, 5 months a year → 3 h × 1.5 kW × 365 × 5/12 days saved.
+  const saved = (3 * 1.5 * 365 * (5 / 12) * tx) / 100;
+  await expect(rows.nth(1)).toContainText(`−${money(saved / 12)}/mo`);
+  // Add a scenario with a lower price; the comparison updates live.
+  await page.getByRole('button', { name: 'A price 2¢ lower' }).click();
+  await expect(rows).toHaveCount(3);
+  await expect(rows.nth(2)).toContainText('Lower price');
+  // Delete it again.
+  await page.getByRole('button', { name: 'Delete Lower price' }).click();
+  await expect(rows).toHaveCount(2);
+  // Edit hours in the second scenario.
+  await page.locator('fieldset.scenario').nth(1).getByLabel('Hours/day').fill('4');
+  const saved4 = (4 * 1.5 * 365 * (5 / 12) * tx) / 100;
+  await expect(rows.nth(1)).toContainText(`−${money(saved4 / 12)}/mo`);
+  // The bill amount is never put in the share link.
+  await page.locator('summary', { hasText: 'More about your home' }).click();
+  await page.getByLabel('Typical electric bill ($ a month)').fill('187.65');
+  await context.grantPermissions(['clipboard-read', 'clipboard-write']);
+  await page.getByRole('button', { name: 'Copy link' }).click();
+  await expect(page.locator('.planner')).toContainText('Link copied.');
+  const link = await page.evaluate(() => navigator.clipboard.readText());
+  expect(link).toContain('/tools/home-energy-savings-planner/?p=');
+  const decoded = Buffer.from(
+    new URL(link).searchParams.get('p')!.replace(/-/g, '+').replace(/_/g, '/'),
+    'base64',
+  ).toString('utf8');
+  expect(decoded).not.toContain('187.65');
+  // Opening the link restores the scenarios.
+  await page.goto(new URL(link).pathname + new URL(link).search);
+  await expect(page.locator('.planner')).toContainText('Opened from a shared link');
+  await expect(page.locator('table.compare tbody tr').nth(1)).toContainText(
+    `−${money(saved4 / 12)}/mo`,
+  );
+  expect(errors).toEqual([]);
+});
+
+test('savings planner: a damaged link falls back to the example', async ({ page }) => {
+  await page.goto('/tools/home-energy-savings-planner/?p=garbage');
+  await expect(page.getByRole('alert')).toContainText('incomplete or damaged');
+  await expect(page.locator('table.compare tbody tr')).toHaveCount(2);
+});
+
+test('savings planner: heat pump scenario and CSV download', async ({ page }) => {
+  await page.goto('/tools/home-energy-savings-planner/?state=PA');
+  await expect(page.locator('astro-island[ssr]')).toHaveCount(0);
+  await page.locator('summary', { hasText: 'More about your home' }).click();
+  await page.getByLabel('Main heating').selectOption('gas');
+  await page.getByRole('button', { name: 'Heat pump instead' }).click();
+  const rows = page.locator('table.compare tbody tr');
+  await expect(rows).toHaveCount(3);
+  await expect(page.locator('table.breakdown')).toContainText('Heating: natural gas furnace');
+  const download = page.waitForEvent('download');
+  await page.getByRole('button', { name: 'Download CSV' }).click();
+  const file = await download;
+  expect(file.suggestedFilename()).toBe('wattsplain-pa-scenarios.csv');
+});
+
+test('savings planner opens from the appliance calculator with that appliance', async ({
+  page,
+}) => {
+  await page.goto('/tools/appliance-electricity-cost/?state=OH');
+  await page.getByLabel('Appliance', { exact: true }).selectOption('dehumidifier');
+  await page.getByRole('link', { name: /savings planner/ }).click();
+  await expect(page).toHaveURL(/state=OH&appliance=dehumidifier/);
+  await expect(page.getByLabel('State', { exact: true })).toHaveValue('OH');
+  await expect(page.locator('fieldset.scenario').first()).toContainText('Dehumidifier');
+});
+
+test('bill diagnosis walks through four steps to evidence-sorted causes', async ({ page }) => {
+  const errors: string[] = [];
+  page.on('pageerror', (e) => errors.push(e.message));
+  await page.goto('/tools/electric-bill-diagnosis/?state=OH');
+  await expect(page.getByLabel('Your state')).toHaveValue('OH');
+  await page.locator('#dx-prev-kwh').fill('900');
+  await page.locator('#dx-prev-total').fill('135');
+  await page.locator('#dx-prev-days').fill('30');
+  await page.locator('#dx-now-kwh').fill('1050');
+  await page.locator('#dx-now-total').fill('157.50');
+  await page.locator('#dx-now-days').fill('35');
+  await page.getByRole('button', { name: 'Next' }).click();
+  await expect(page.getByRole('heading', { name: 'Step 2 of 4: Season' })).toBeFocused();
+  await page.getByLabel('The month before').check();
+  await page.getByLabel('Colder').check();
+  await page.getByRole('button', { name: 'Next' }).click();
+  await page.getByLabel('Started using a space heater').check();
+  await page.getByRole('button', { name: 'Next' }).click();
+  await page.getByLabel('Yes', { exact: true }).first().check();
+  await page.getByRole('button', { name: 'See possible causes' }).click();
+  const result = page.locator('.result');
+  const shown = result.locator('.causes.numbers');
+  await expect(shown).toContainText('The billing period was longer');
+  await expect(shown).not.toContainText('You used more electricity');
+  await expect(result.locator('.causes.likely')).toContainText('An estimated meter reading');
+  // kWh per day did not change, so the heater is only something to check.
+  await expect(result.locator('.causes.check')).toContainText('A space heater');
+  await expect(result).toContainText('Possible causes, not confirmed ones');
+  expect(errors).toEqual([]);
+});

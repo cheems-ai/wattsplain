@@ -611,7 +611,8 @@ fieldset legend {
 
 /* Calculators reached through ?state=XX: hidden until the island has switched state. If the
    JavaScript never runs, show them anyway after 4 s. */
-[data-qs] .tool:not([data-ready]) {
+[data-qs] .tool:not([data-ready]),
+[data-qs] .planner:not([data-ready]) {
   visibility: hidden;
   animation: qs-reveal 0s 4s forwards;
 }
@@ -698,4 +699,258 @@ table.facts td.src {
   font-weight: 400;
   color: var(--muted);
   font-size: 0.85rem;
+}
+
+/* Savings planner */
+.planner {
+  display: grid;
+  gap: 20px;
+}
+.step-h {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0 0 12px;
+  font-size: 1.2rem;
+}
+.step-n {
+  display: inline-grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--muted);
+}
+.scenarios {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 17rem), 1fr));
+  margin-block: 12px;
+}
+.scenario {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 12px;
+  background: var(--bg);
+  min-width: 0;
+}
+.scenario:first-child {
+  border-color: var(--fg);
+}
+.scn-head {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-bottom: 10px;
+}
+.scn-name {
+  font-weight: 700;
+  background: var(--surface);
+}
+.load {
+  border-top: 1px solid var(--border);
+  padding-top: 8px;
+  margin-bottom: 8px;
+}
+.load-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 8px;
+  margin-bottom: 6px;
+  font-size: 0.95rem;
+}
+.load-grid {
+  display: grid;
+  gap: 0 8px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+.load-grid .field {
+  margin-bottom: 8px;
+}
+.load-grid label {
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+.load-grid input {
+  padding: 6px 8px;
+}
+.link-btn {
+  font: inherit;
+  font-size: 0.9rem;
+  background: none;
+  border: 0;
+  color: var(--accent);
+  text-decoration: underline;
+  cursor: pointer;
+  padding: 8px 4px;
+  min-height: 40px;
+  white-space: nowrap;
+}
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.btn {
+  font: inherit;
+  font-size: 0.95rem;
+  min-height: 44px;
+  padding: 8px 14px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface);
+  color: var(--fg);
+  cursor: pointer;
+}
+.btn:hover {
+  border-color: var(--fg);
+}
+table.compare th[scope='row'],
+table.breakdown th[scope='row'] {
+  font-weight: 600;
+  text-align: left;
+  white-space: normal;
+}
+table.compare th[scope='row'] .hint {
+  display: block;
+  font-weight: 400;
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+table.compare td {
+  white-space: normal;
+}
+.hbars {
+  display: grid;
+  gap: 8px;
+  margin-block: 12px;
+  max-width: 44rem;
+}
+.hbar-row {
+  display: grid;
+  grid-template-columns: minmax(5rem, 9rem) minmax(0, 1fr) auto;
+  gap: 10px;
+  align-items: center;
+  font-size: 0.9rem;
+}
+.hbar-label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.hbar-track {
+  display: block;
+}
+.hbar {
+  display: block;
+  height: 16px;
+  border-radius: 3px;
+}
+.hbar.now {
+  background: var(--series-2);
+}
+.hbar.alt {
+  background: var(--series-1);
+}
+.hbar-value {
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+}
+@media print {
+  .site-header,
+  .site-footer,
+  .crumbs,
+  .no-print,
+  .planner form,
+  .planner section[aria-labelledby='pl-s2'] .actions,
+  .planner select[id^='pl-add'] {
+    display: none !important;
+  }
+  body {
+    background: #fff;
+    color: #000;
+  }
+  .card,
+  .result {
+    border: 0;
+    padding: 0;
+  }
+}
+
+/* Bill diagnosis wizard */
+.progress {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 12px;
+  list-style: none;
+  padding: 0;
+  margin: 0 0 8px;
+  font-size: 0.85rem;
+  color: var(--muted);
+  counter-reset: step;
+}
+.progress li {
+  counter-increment: step;
+}
+.progress li::before {
+  content: counter(step) '. ';
+}
+.progress li[aria-current='step'] {
+  color: var(--fg);
+  font-weight: 700;
+}
+.progress li.done {
+  text-decoration: line-through;
+}
+.step-title {
+  font-size: 1.15rem;
+  margin: 0 0 12px;
+}
+.step-title:focus {
+  outline: none;
+}
+.choices {
+  display: grid;
+  gap: 4px;
+}
+.choice {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  min-height: 44px;
+  font-weight: 400;
+  cursor: pointer;
+}
+.choice input {
+  width: 20px;
+  height: 20px;
+  min-height: 0;
+  flex: none;
+  accent-color: var(--accent);
+}
+.row3 {
+  display: grid;
+  gap: 8px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+.wizard-nav {
+  margin-top: 16px;
+}
+.causes ul {
+  padding-left: 1.1rem;
+}
+.causes li {
+  margin-bottom: 12px;
+}
+.causes li p {
+  margin: 4px 0;
+}
+.causes .amt {
+  font-variant-numeric: tabular-nums;
+  color: var(--up);
+  font-weight: 600;
 }

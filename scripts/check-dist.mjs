@@ -30,8 +30,9 @@ for (const f of files) {
   ];
   for (const [rx, what] of need) if (!rx.test(html)) problems.push(`${f}: missing ${what}`);
   // Text running straight into an inline element: Astro drops a line break between the two.
+  // Charts are SVG labels, not prose (each chart has a text alternative).
   const raw = html
-    .replace(/<script[\s\S]*?<\/script>|<style[\s\S]*?<\/style>/g, '')
+    .replace(/<script[\s\S]*?<\/script>|<style[\s\S]*?<\/style>|<svg[\s\S]*?<\/svg>/g, '')
     .replace(EMPTY, '');
   const inline = INLINE.exec(raw);
   if (inline)
@@ -43,7 +44,7 @@ for (const f of files) {
   // Visible text only: drop scripts, islands' serialized props and tags (tags become nothing, so
   // a missing space between two inline elements is caught too).
   const text = html
-    .replace(/<script[\s\S]*?<\/script>|<style[\s\S]*?<\/style>/g, ' ')
+    .replace(/<script[\s\S]*?<\/script>|<style[\s\S]*?<\/style>|<svg[\s\S]*?<\/svg>/g, ' ')
     .replace(/<astro-island[^>]*>/g, ' ')
     .replace(
       /<\/?(p|li|td|th|tr|h\d|div|caption|nav|header|footer|main|section|ul|table|tbody|thead|option|label|legend)[^>]*>/g,
@@ -56,6 +57,25 @@ for (const f of files) {
       `${f}: glued text "${text.slice(Math.max(0, m.index - 20), m.index + 20).trim()}"`,
     );
 }
+// Every page is in the sitemap and every sitemap URL is a page (404.html is neither).
+const sitemap = new Set(
+  [
+    ...readFileSync('dist/sitemap.xml', 'utf8').matchAll(/<loc>https:\/\/[^/]+(\/[^<]*)<\/loc>/g),
+  ].map((m) => m[1]),
+);
+const pages = new Set(
+  files
+    .map((f) =>
+      f
+        .replace(/\\/g, '/')
+        .replace(/^dist/, '')
+        .replace(/index\.html$/, ''),
+    )
+    .filter((p) => p !== '/404.html'),
+);
+for (const p of pages) if (!sitemap.has(p)) problems.push(`${p}: missing from sitemap.xml`);
+for (const p of sitemap)
+  if (!pages.has(p)) problems.push(`sitemap.xml lists ${p}, which is not a page`);
 if (problems.length) {
   console.error(problems.join('\n'));
   process.exit(1);
