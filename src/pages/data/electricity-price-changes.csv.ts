@@ -8,6 +8,7 @@ import {
   PRICE_CHANGES,
   STATE_ROWS,
   US_PRICE_CHANGE,
+  type PriceChange,
 } from '../../data/electricity';
 
 export const GET: APIRoute = () => {
@@ -24,7 +25,7 @@ export const GET: APIRoute = () => {
     `change_${p.at(-1)}_vs_${p.at(-13)}_pct`,
     'pjm',
   ];
-  const line = (name: string, code: string, kwh: number, c: typeof US_PRICE_CHANGE, pjm: string) =>
+  const line = (name: string, code: string, kwh: number, c: PriceChange, pjm: string) =>
     [
       `"${name}"`,
       code,

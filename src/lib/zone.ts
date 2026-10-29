@@ -37,7 +37,7 @@ export interface ZoneInput {
   /** Days in the heating season, for the sizing check. */
   seasonDays: number;
   /** The visitor's own estimate of the share saved (0–1), instead of the DOE rule. */
-  savingShare?: number;
+  savingShare?: number | undefined;
 }
 
 export interface ZoneResult {
@@ -96,7 +96,7 @@ export interface BlanketInput {
   watts: number;
   nights: number;
   centsPerKwh: number;
-  savingShare?: number;
+  savingShare?: number | undefined;
 }
 
 /** Electric blanket at its rated wattage all night (an upper bound) vs the night setback saved. */
