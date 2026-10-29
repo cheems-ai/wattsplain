@@ -7,6 +7,13 @@ test('capture', async ({ page }, info) => {
   const dir = `../screenshots/${info.project.name}`;
   await page.goto('/');
   await page.screenshot({ path: `${dir}-home.png`, fullPage: true });
+  await page.getByLabel('Start with your state').selectOption('texas');
+  await page.screenshot({ path: `${dir}-home-picked.png` });
+  await page.goto('/tools/space-heater-cost/?state=TX');
+  await page.getByLabel('Drag to try a different price').fill('24');
+  await page.screenshot({ path: `${dir}-space-heater-sliders.png`, fullPage: true });
+  await page.getByLabel('Drag to set the daily use').scrollIntoViewIfNeeded();
+  await page.screenshot({ path: `${dir}-space-heater-dragging.png` });
   await page.goto('/electricity-rates/pennsylvania/');
   await page.screenshot({ path: `${dir}-state-pennsylvania.png`, fullPage: true });
   await page.emulateMedia({ colorScheme: 'dark' });

@@ -7,6 +7,11 @@ import { cents, monthLabel, signedPct } from '../lib/format';
 const month = monthLabel(ELECTRICITY.monthly.period);
 const prior = monthLabel(ELECTRICITY.monthly.priorPeriod);
 const risers = [...STATE_ROWS].sort((a, b) => b.change - a.change).slice(0, 5);
+const byName = [...STATE_ROWS].sort((a, b) => a.name.localeCompare(b.name));
+// One line per state, shown under the picker as soon as a state is chosen.
+const summary = (s: (typeof STATE_ROWS)[number]) =>
+  `${s.name}: ${cents(s.price)} per kWh in ${month}, ${s.change >= 0 ? 'up' : 'down'} ` +
+  `${Math.abs(s.change).toFixed(1)}% from a year earlier (U.S. average ${cents(ELECTRICITY.us.price)}).`;
 const tools = [
   [
     '/tools/why-is-my-electric-bill-high/',
@@ -50,9 +55,32 @@ const tools = [
     Information Administration, refreshed every month.
   </p>
 
+  <form class="card start" id="start" action="/electricity-rates/" method="get">
+    <label for="home-state">Start with your state</label>
+    <div class="start-row">
+      <select id="home-state" name="state" required>
+        <option value="">Choose a state</option>
+        {byName.map((s) => (
+          <option value={s.slug} data-code={s.code} data-summary={summary(s)}>
+            {s.name}
+          </option>
+        ))}
+      </select>
+      <button type="submit" class="go">
+        See my state's prices
+      </button>
+    </div>
+    <p class="start-answer" aria-live="polite" hidden></p>
+  </form>
+
+  <h2 class="tools-heading">Or start with a question</h2>
   <div class="grid tool-grid">
     {tools.map(([href, title, text]) => (
-      <a class="card tool-card" href={href}>
+      <a
+        class="card tool-card"
+        href={href}
+        data-tool={href?.startsWith('/tools/') ? '' : undefined}
+      >
         <h3>{title}</h3>
         <p>{text}</p>
       </a>
@@ -88,3 +116,32 @@ const tools = [
     <a href="/electricity-rates/">See all states →</a>
   </p>
 </Base>
+
+<script>
+  // Picking a state shows its price at once, sends the button to that state's page and carries
+  // the state into every calculator link. Without JavaScript the form opens the all-states list.
+  const form = document.getElementById('start') as HTMLFormElement;
+  const select = document.getElementById('home-state') as HTMLSelectElement;
+  const answer = form.querySelector('.start-answer') as HTMLElement;
+  const button = form.querySelector('.go') as HTMLButtonElement;
+  const links = [...document.querySelectorAll<HTMLAnchorElement>('a[data-tool]')];
+  const base = links.map((a) => a.getAttribute('href')!);
+
+  const apply = () => {
+    const opt = select.selectedOptions[0];
+    const code = select.value ? opt?.dataset.code : undefined;
+    answer.hidden = !code;
+    answer.textContent = code ? (opt!.dataset.summary ?? '') : '';
+    button.textContent = code ? `See ${opt!.textContent!.trim()} prices` : "See my state's prices";
+    links.forEach((a, i) => a.setAttribute('href', code ? `${base[i]}?state=${code}` : base[i]!));
+  };
+  select.addEventListener('change', apply);
+  // The browser may restore the last choice on Back.
+  apply();
+  addEventListener('pageshow', apply);
+  form.addEventListener('submit', (e) => {
+    if (!select.value) return;
+    e.preventDefault();
+    location.href = `/electricity-rates/${select.value}/`;
+  });
+</script>

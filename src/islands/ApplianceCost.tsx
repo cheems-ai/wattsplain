@@ -39,6 +39,8 @@ export default function ApplianceCost({ rates, appliances, fixed, monthLabel }: 
   const sorted = [...rates].sort((a, b) => a.price - b.price);
   const cheapest = sorted[0]!;
   const priciest = sorted[sorted.length - 1]!;
+  const wattStep = appliance.max - appliance.min > 2000 ? 50 : 10;
+  const rateMax = Math.max(50, Math.ceil(priciest.price / 5) * 5 + 5);
 
   return (
     <div class="tool">
@@ -88,6 +90,17 @@ export default function ApplianceCost({ rates, appliances, fixed, monthLabel }: 
             value={watts}
             onInput={(e) => setWatts(e.currentTarget.value)}
           />
+          {appliance.max > appliance.min && (
+            <Slider
+              label="Drag to set the power"
+              min={appliance.min}
+              max={appliance.max}
+              step={wattStep}
+              value={w ?? appliance.watts}
+              onInput={(v) => setWatts(String(v))}
+              format={(v) => `${v.toLocaleString('en-US')} W`}
+            />
+          )}
           <span class="hint">
             Check the label on the appliance. Typical range (DOE):{' '}
             {appliance.min.toLocaleString('en-US')}
@@ -102,6 +115,15 @@ export default function ApplianceCost({ rates, appliances, fixed, monthLabel }: 
             inputMode="decimal"
             value={hours}
             onInput={(e) => setHours(e.currentTarget.value)}
+          />
+          <Slider
+            label="Drag to set the daily use"
+            min={0}
+            max={24}
+            step={0.5}
+            value={h ?? 0}
+            onInput={(v) => setHours(String(v))}
+            format={(v) => `${v} h`}
           />
         </div>
         <div class="field">
@@ -123,7 +145,27 @@ export default function ApplianceCost({ rates, appliances, fixed, monthLabel }: 
             onInput={(e) => setCustom(e.currentTarget.value)}
             placeholder="optional, from your bill"
           />
+          <Slider
+            label="Drag to try a different price"
+            min={5}
+            max={rateMax}
+            step={0.01}
+            value={rate}
+            onInput={(v) => setCustom(v.toFixed(2))}
+            format={(v) => `${v}¢`}
+          />
+          {useCustom && (
+            <button type="button" class="preset reset" onClick={() => setCustom('')}>
+              Back to the {state.name} average ({cents(state.price)})
+            </button>
+          )}
         </div>
+        {/* Phones show the result below the form; this keeps the total in view while dragging. */}
+        {c && (
+          <p class="live" aria-hidden="true">
+            {dollars(c.perMonth)} / month <span>at {cents(rate)}</span>
+          </p>
+        )}
       </form>
 
       <section class="result" aria-live="polite">
@@ -181,6 +223,37 @@ export default function ApplianceCost({ rates, appliances, fixed, monthLabel }: 
           </>
         )}
       </section>
+    </div>
+  );
+}
+
+interface SliderProps {
+  label: string;
+  min: number;
+  max: number;
+  step: number;
+  value: number;
+  onInput: (v: number) => void;
+  format: (v: number) => string;
+}
+
+/** A range control under a text field; both edit the same value. */
+function Slider({ label, min, max, step, value, onInput, format }: SliderProps) {
+  return (
+    <div class="slider">
+      <input
+        type="range"
+        aria-label={label}
+        min={min}
+        max={max}
+        step={step}
+        value={Math.min(max, Math.max(min, value))}
+        onInput={(e) => onInput(Number(e.currentTarget.value))}
+      />
+      <span class="hint" aria-hidden="true">
+        <span>{format(min)}</span>
+        <span>{format(max)}</span>
+      </span>
     </div>
   );
 }

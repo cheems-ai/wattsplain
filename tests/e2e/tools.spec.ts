@@ -244,3 +244,42 @@ test('heating page table fits a phone screen', async ({ page }, info) => {
     expect(overflow).toBeLessThanOrEqual(0);
   }
 });
+
+test('home page: picking a state shows its price and carries it into the tools', async ({
+  page,
+}) => {
+  await page.goto('/');
+  await expect(page.locator('astro-island[ssr]')).toHaveCount(0);
+  await page.getByLabel('Start with your state').selectOption('texas');
+  await expect(page.locator('.start-answer')).toContainText(
+    `Texas: ${cents(price('TX').price)} per kWh`,
+  );
+  await expect(page.getByRole('link', { name: /Why is my electric bill so high/ })).toHaveAttribute(
+    'href',
+    '/tools/why-is-my-electric-bill-high/?state=TX',
+  );
+  await page.getByRole('button', { name: 'See Texas prices' }).click();
+  await expect(page).toHaveURL(/\/electricity-rates\/texas\/$/);
+});
+
+test('appliance sliders move the result and the rate can go back to the state average', async ({
+  page,
+}) => {
+  await page.goto('/tools/space-heater-cost/?state=TX');
+  await expect(page.locator('astro-island[ssr]')).toHaveCount(0);
+  await expect(page.getByLabel('Your state')).toHaveValue('TX');
+  await page.getByLabel('Drag to set the daily use').fill('4');
+  await expect(page.locator('#ac-hours')).toHaveValue('4');
+  // 1,500 W × 4 h × 30 days = 180 kWh
+  await expect(page.locator('.result .big')).toHaveText(
+    `${money((180 * price('TX').price) / 100)} / month`,
+  );
+  await page.getByLabel('Drag to try a different price').fill('20');
+  await expect(page.locator('#ac-rate')).toHaveValue('20.00');
+  await expect(page.locator('.result .big')).toHaveText('$36.00 / month');
+  await page.getByRole('button', { name: /Back to the Texas average/ }).click();
+  await expect(page.locator('#ac-rate')).toHaveValue('');
+  await expect(page.locator('.result .big')).toHaveText(
+    `${money((180 * price('TX').price) / 100)} / month`,
+  );
+});

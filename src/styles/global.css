@@ -526,3 +526,85 @@ fieldset legend {
     display: none;
   }
 }
+
+.slider input[type='range'] {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  min-height: 36px;
+  accent-color: var(--accent);
+  cursor: pointer;
+}
+.slider .hint {
+  display: flex;
+  justify-content: space-between;
+  margin-top: -6px;
+}
+.preset.reset {
+  justify-self: start;
+  margin-top: 6px;
+  font-size: 0.9rem;
+}
+
+.start {
+  margin-block: 20px 8px;
+  max-width: 46rem;
+}
+.start label {
+  display: block;
+  font-weight: 700;
+  font-size: 1.1rem;
+  margin-bottom: 8px;
+}
+.start-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.start-row select {
+  flex: 1 1 14rem;
+  width: auto;
+}
+.go {
+  font: inherit;
+  font-weight: 700;
+  min-height: 44px;
+  padding: 0 18px;
+  border: 0;
+  border-radius: 8px;
+  background: var(--accent);
+  color: var(--accent-fg);
+  cursor: pointer;
+}
+.go:hover {
+  filter: brightness(1.08);
+}
+.start-answer {
+  margin: 12px 0 0;
+  font-variant-numeric: tabular-nums;
+}
+.tools-heading {
+  margin-top: 1.4em;
+}
+.live {
+  position: sticky;
+  bottom: 0;
+  margin: 0 -20px -20px;
+  padding: 10px 20px;
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+  border-radius: 0 0 var(--radius) var(--radius);
+  font-weight: 800;
+  font-size: 1.15rem;
+  font-variant-numeric: tabular-nums;
+}
+.live span {
+  font-weight: 400;
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+@media (min-width: 52rem) {
+  .live {
+    display: none;
+  }
+}
