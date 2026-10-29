@@ -104,14 +104,15 @@ const description = `Compare what a heat pump, gas furnace, propane, heating oil
       charge, which this comparison leaves out.
     </li>
     <li>
-      <strong>Equipment cost.</strong> This compares running costs only. Installation, rebates and
-      tax credits change the payback.
+      <strong>Equipment cost.</strong> The table compares running costs. Enter installation and
+      upkeep quotes in the calculator for a long-term total and a simple payback; rebates and tax
+      credits lower the installation figure.
     </li>
   </ul>
 
   <h2>How the comparison works</h2>
   <p>
-    {`We start from the heat a house needs, in million Btu (MMBtu). For the typical home we use EIA's Residential Energy Consumption Survey (${HEATING.recs.survey}): the gas burned for space heating by the average gas-heated home in your state, times 85% for the efficiency of its furnace. Each system then needs that heat divided by its efficiency, and the fuel is priced at your state's price. Heat content: 3,412 Btu per kWh, 103,600 Btu per 100 cubic feet of gas (1.036 therms), 91,452 Btu per gallon of propane and 138,500 per gallon of heating oil (EIA). A heat pump's seasonal efficiency is its HSPF2 divided by 3.412.`}
+    {`We start from the heat a house needs, in million Btu (MMBtu). For the typical home we use EIA's Residential Energy Consumption Survey (${HEATING.recs.survey}): the gas burned for space heating by the average gas-heated home in your state, times 85% for the efficiency of its furnace. With your floor area we scale it by your area ÷ the typical gas-heated home's area (RECS 2020 Table HC10.9); the insulation choice is a ±20% what-if, not a measurement. For the heat pump, the cold-weather choice lowers its seasonal efficiency by 15% or 30%, and backup strip heat supplies the share you enter at 100% efficiency. Each system then needs that heat divided by its efficiency, and the fuel is priced at your state's price. Heat content: 3,412 Btu per kWh, 103,600 Btu per 100 cubic feet of gas (1.036 therms), 91,452 Btu per gallon of propane and 138,500 per gallon of heating oil (EIA). A heat pump's seasonal efficiency is its HSPF2 divided by 3.412.`}
   </p>
   <p>
     <a href="/methodology/">Data & methodology</a> ·{' '}
