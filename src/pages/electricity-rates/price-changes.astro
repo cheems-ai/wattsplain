@@ -43,7 +43,7 @@ const fellText =
     : ` Prices fell in ${fell.length === 1 ? 'one' : fell.length}: ${fell.map((r) => `${r.s.name} (${signedPct(r.change12)})`).join(', ')}.`;
 const pct = (n: number) => `${n.toFixed(1)}%`;
 const title = 'Electricity price increases by state';
-const description = `How much residential electricity prices rose in every state over the 12 months to ${last} vs the 12 months before, and what that adds to a typical monthly bill. EIA data.`;
+const description = `How much home electricity prices rose in every state in the 12 months to ${last} vs the 12 before, and what that adds to a typical bill. EIA data.`;
 ---
 
 <Base
