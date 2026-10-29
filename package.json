@@ -26,7 +26,8 @@
     "deploy": "wrangler deploy",
     "indexnow": "node scripts/ops/indexnow.mjs",
     "metrics": "node scripts/ops/metrics-report.mjs",
-    "gsc": "node scripts/ops/gsc-report.mjs"
+    "gsc": "node scripts/ops/gsc-report.mjs",
+    "review": "node scripts/ops/monthly-review.mjs"
   },
   "dependencies": {
     "@astrojs/preact": "6.1.1",
