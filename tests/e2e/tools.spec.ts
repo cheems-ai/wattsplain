@@ -528,3 +528,60 @@ test('no Content-Security-Policy violations or console errors on the main pages'
   await expect(page.locator('html')).toHaveAttribute('data-qs', '');
   expect(problems).toEqual([]);
 });
+
+test('input mistakes show an error instead of a wrong result', async ({ page }) => {
+  // Heating: AFUE typed as a fraction, a price with a comma, an implausible HSPF2.
+  await page.goto('/tools/heating-cost-calculator/?state=PA');
+  await expect(page.locator('astro-island[ssr]')).toHaveCount(0);
+  await page.locator('summary', { hasText: 'Your prices' }).click();
+  await page.getByLabel('Gas or propane furnace AFUE (%)').fill('0.95');
+  await expect(page.locator('.result .error')).toContainText('AFUE as a percentage');
+  await expect(page.locator('.result table.systems')).toHaveCount(0);
+  await page.getByLabel('Gas or propane furnace AFUE (%)').fill('95');
+  await page.getByLabel('Electricity (¢ or $ per kWh)').fill('185');
+  await expect(page.locator('.result .error')).toContainText('outside the range');
+  await page.getByLabel('Electricity (¢ or $ per kWh)').fill('');
+  await page.getByLabel('HSPF2 rating').fill('78');
+  await expect(page.locator('.result .error')).toContainText('HSPF2');
+  // Payback needs both quotes.
+  await page.getByLabel('HSPF2 rating').fill('7.8');
+  await page.locator('summary', { hasText: 'Installation and upkeep' }).click();
+  await page.getByLabel('Heat pump: install ($)').fill('12000');
+  await expect(page.locator('.result')).toContainText('Enter both the heat pump and the gas');
+  await expect(page.locator('.result')).not.toContainText('Simple payback');
+
+  // Bill checker: an unreadable optional line.
+  await page.goto('/tools/why-is-my-electric-bill-high/');
+  await expect(page.locator('astro-island[ssr]')).toHaveCount(0);
+  await page.locator('#bc-pk').fill('800');
+  await page.locator('#bc-pd').fill('140');
+  await page.locator('#bc-nk').fill('950');
+  await page.locator('#bc-nd').fill('200');
+  await page.locator('summary', { hasText: 'More lines from the bills' }).click();
+  await page.locator('#bc-p-fixed').fill('12 dollars');
+  await page.locator('#bc-n-fixed').fill('12');
+  await expect(page.locator('.result .error')).toContainText('fixed charges as a number');
+
+  // Planner: a value the share link could not carry.
+  await page.goto('/tools/home-energy-savings-planner/');
+  await expect(page.locator('astro-island[ssr]')).toHaveCount(0);
+  await page.getByLabel('Electricity use (kWh a month)').fill('0.5');
+  await expect(page.locator('.planner .error')).toContainText('between 1 and 20,000 kWh');
+});
+
+test('bill diagnosis: start over clears every answer', async ({ page }) => {
+  await page.goto('/tools/electric-bill-diagnosis/');
+  await expect(page.locator('astro-island[ssr]')).toHaveCount(0);
+  await page.getByRole('button', { name: 'Next' }).click();
+  await page.getByLabel('Colder').check();
+  await page.getByLabel('Electric heat (heat pump, baseboard, electric furnace)').check();
+  for (let i = 0; i < 3; i++)
+    await page.getByRole('button', { name: i === 2 ? 'See possible causes' : 'Next' }).click();
+  await expect(page.locator('.result')).toContainText('Colder weather and electric heating');
+  await page.getByRole('button', { name: 'Start over' }).click();
+  await page.getByRole('button', { name: 'Next' }).click();
+  await expect(page.getByLabel('Not sure')).toBeChecked();
+  await expect(
+    page.getByLabel('Electric heat (heat pump, baseboard, electric furnace)'),
+  ).not.toBeChecked();
+});

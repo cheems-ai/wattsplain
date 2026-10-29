@@ -84,7 +84,16 @@ export default function BillChecker({
       ? `Enter ${OPTIONAL_NAME[key]} on both bills, or on neither.`
       : null;
   const pairError = (['days', 'fixed', 'taxes', 'credits'] as const).map(pair).find(Boolean);
-  const error = b0 && b1 ? (validateBill(b0) ?? validateBill(b1) ?? pairError ?? null) : null;
+  // An optional line that does not read as a number must not silently count as empty.
+  const unreadable = (['days', 'fixed', 'taxes', 'credits'] as const).find((k) =>
+    [prev, now].some((f) => f[k].trim() !== '' && num(f[k]) === null),
+  );
+  const error =
+    b0 && b1
+      ? unreadable
+        ? `Enter ${OPTIONAL_NAME[unreadable]} as a number, e.g. ${unreadable === 'days' ? '30' : '12.50'}.`
+        : (validateBill(b0) ?? validateBill(b1) ?? pairError ?? null)
+      : null;
   const r = b0 && b1 && !error ? analyzeBills(b0, b1) : null;
   const change = stateChange[code] ?? 0;
   const touch = useFunnel(r !== null, error !== null);

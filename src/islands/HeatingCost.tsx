@@ -1,7 +1,7 @@
 import { useState } from 'preact/hooks';
 
 import type { HeatingOption } from '../data/heating';
-import { parseRate } from '../lib/energy';
+import { parsePrice } from '../lib/rate';
 import { cents, dollars, signedPct } from '../lib/format';
 import {
   BTU,
@@ -95,9 +95,23 @@ export default function HeatingCost({ options, electricLabel, propaneWeek, gasLa
     const n = num(s);
     return n !== null && n > 0 ? n : fallback;
   };
+  // Same price parsing and plausibility checks as the other calculators.
+  const elecPrice = parsePrice(elec, 'cents');
+  const hspfIn = num(hspf);
+  const afueIn = num(afue);
+  const backupIn = num(backup);
+  const inputError =
+    elecPrice.error ??
+    (hspf.trim() !== '' && (hspfIn === null || hspfIn < 3 || hspfIn > 20)
+      ? 'HSPF2 is usually between 6 and 13. Enter a value between 3 and 20.'
+      : afue.trim() !== '' && (afueIn === null || afueIn < 50 || afueIn > 100)
+        ? 'Enter the furnace AFUE as a percentage between 50 and 100, e.g. 95.'
+        : backup.trim() !== '' && (backupIn === null || backupIn > 100)
+          ? 'Backup strip heat must be 0–100% of the heat.'
+          : null);
   const prices: Record<SystemId, number> = {
-    'heat-pump': parseRate(elec) ?? state.prices['heat-pump'],
-    electric: parseRate(elec) ?? state.prices.electric,
+    'heat-pump': elecPrice.cents ?? state.prices['heat-pump'],
+    electric: elecPrice.cents ?? state.prices.electric,
     // Gas is entered per therm (like the bill) and stored per Mcf.
     gas: num(gas) ? num(gas)! * (BTU.mcf / BTU.therm) : state.prices.gas,
     propane: or(propane, state.prices.propane),
@@ -150,8 +164,10 @@ export default function HeatingCost({ options, electricLabel, propaneWeek, gasLa
     );
   const hpCost = costs.find((c) => c.system.id === 'heat-pump');
   const gasCost = costs.find((c) => c.system.id === 'gas');
+  // Payback needs both quotes: a missing gas quote is not a free furnace.
+  const bothQuotes = num(install['heat-pump'] ?? '') !== null && num(install.gas ?? '') !== null;
   const payback =
-    hpCost && gasCost
+    hpCost && gasCost && bothQuotes
       ? simplePayback(
           (num(install['heat-pump'] ?? '') ?? 0) - (num(install.gas ?? '') ?? 0),
           gasCost.perYear +
@@ -170,7 +186,7 @@ export default function HeatingCost({ options, electricLabel, propaneWeek, gasLa
         costAt('gas', heat, prices.gas, eff.gas, g)
       : 0;
 
-  const touch = useFunnel(Boolean(heat && best), !heat);
+  const touch = useFunnel(Boolean(heat && best && !inputError), !heat || Boolean(inputError));
 
   const priceText = (id: SystemId, price: number) =>
     id === 'heat-pump' || id === 'electric'
@@ -409,8 +425,11 @@ export default function HeatingCost({ options, electricLabel, propaneWeek, gasLa
       </form>
 
       <section class="result" aria-live="polite">
-        {!heat && <p class="error">Enter how much fuel you used for heating in a year.</p>}
-        {heat && best && (
+        {inputError && <p class="error">{inputError}</p>}
+        {!inputError && !heat && (
+          <p class="error">Enter how much fuel you used for heating in a year.</p>
+        )}
+        {!inputError && heat && best && (
           <>
             <p class="note">{`${state.name}, ${Math.round(heat)} million Btu of heat a year`}</p>
             <p class="big">{`${best.system.name}: ${dollars(best.perYear, 0)}/yr`}</p>
@@ -457,6 +476,11 @@ export default function HeatingCost({ options, electricLabel, propaneWeek, gasLa
               {(COLD[cold].derate > 0 || backupShare > 0) &&
                 ` This counts the heat pump at an effective HSPF2 of ${eff['heat-pump'].toFixed(1)} after cold weather and backup heat.`}
             </p>
+            {owning && !bothQuotes && (
+              <p class="note">
+                Enter both the heat pump and the gas furnace quotes to see a payback period.
+              </p>
+            )}
             {owning && payback !== undefined && (
               <p>{`Simple payback of the heat pump over the gas furnace: about ${payback.toFixed(1)} years (no interest, rebates or price changes counted).`}</p>
             )}

@@ -280,6 +280,12 @@ export default function BillDiagnosis({ rates, stateChange }: Props) {
                 setPrev(emptyBill);
                 setNow(emptyBill);
                 setChanges([]);
+                setCompare('last-month');
+                setWeather('unsure');
+                setHeat(false);
+                setCool(false);
+                setEstimated('unsure');
+                setPlan('unsure');
               }}
             >
               Start over

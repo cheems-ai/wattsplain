@@ -135,6 +135,7 @@ function toScenario(s: UiScenario, planCents: number | null): Scenario | string 
     };
     const bad = validateProfile(load);
     if (bad) return `${s.name || 'Scenario'}, ${l.name}: ${bad}`;
+    if (load.watts > 100_000) return `${s.name || 'Scenario'}, ${l.name}: enter at most 100,000 W.`;
     loads.push(load);
   }
   let heatingEfficiency: number | undefined;
@@ -215,12 +216,22 @@ export default function Planner({ states, appliances, monthLabel, fuelNote }: Pr
   }, []);
 
   const planCents = rate.cents;
-  const converted = scenarios.map((s) => toScenario(s, planCents));
-  const firstError = converted.find((c): c is string => typeof c === 'string');
-  const valid = firstError ? null : (converted as Scenario[]);
-
   const kwhIn = num(monthly);
   const monthlyKwh = kwhIn !== null && kwhIn > 0 ? kwhIn : state.avgKwh;
+  // The same bounds the share link accepts (lib/share.ts), so every link copied here reopens.
+  const homeError =
+    monthly.trim() !== '' && (kwhIn === null || kwhIn < 1 || kwhIn > 20_000)
+      ? 'Monthly use must be between 1 and 20,000 kWh.'
+      : fixed.trim() !== '' && (num(fixed) === null || num(fixed)! > 500)
+        ? 'The fixed charge must be between $0 and $500 a month.'
+        : heatSys &&
+            sqft.trim() !== '' &&
+            (num(sqft) === null || num(sqft)! < 100 || num(sqft)! > 20_000)
+          ? 'Heated area must be between 100 and 20,000 sq ft.'
+          : null;
+  const converted = scenarios.map((s) => toScenario(s, planCents));
+  const firstError = homeError ?? converted.find((c): c is string => typeof c === 'string');
+  const valid = firstError ? null : (converted as Scenario[]);
   const household: Household = {
     monthlyKwh,
     fixedMonthly: num(fixed) ?? 0,
@@ -574,7 +585,9 @@ export default function Planner({ states, appliances, monthLabel, fuelNote }: Pr
                 add(current, {
                   name: 'Lower price',
                   price:
-                    planCents !== null ? (Math.round((planCents - 2) * 100) / 100).toFixed(2) : '',
+                    planCents !== null
+                      ? Math.max(1, Math.round((planCents - 2) * 100) / 100).toFixed(2)
+                      : '',
                 })
               }
             >

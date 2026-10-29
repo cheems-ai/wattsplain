@@ -75,6 +75,15 @@ const text = (x: unknown): x is string => typeof x === 'string' && x.length <= L
 
 /** Parses a ?p= value; null when it is not a valid plan. `states` lists the valid state codes. */
 export function decodePlan(s: string, states: readonly string[]): PlanState | null {
+  // Any shape we did not write (null entries, wrong types) must give null, never throw.
+  try {
+    return decodeChecked(s, states);
+  } catch {
+    return null;
+  }
+}
+
+function decodeChecked(s: string, states: readonly string[]): PlanState | null {
   let raw: Packed;
   try {
     raw = JSON.parse(fromBase64Url(s)) as Packed;

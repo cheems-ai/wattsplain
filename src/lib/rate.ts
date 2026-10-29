@@ -137,6 +137,8 @@ export function billRate(input: Pick<RateInput, 'billTotal' | 'billKwh' | 'billF
   const kwh = toNumber(input.billKwh);
   const fixed = toNumber(input.billFixed) ?? 0;
   if (total === null || kwh === null) return { cents: null };
+  if (input.billFixed.trim() !== '' && toNumber(input.billFixed) === null)
+    return { cents: null, error: 'Enter the fixed charge as a number of dollars, e.g. 12.50.' };
   if (kwh <= 0) return { cents: null, error: 'kWh must be more than 0.' };
   if (total <= 0) return { cents: null, error: 'Enter the bill total in dollars.' };
   if (fixed < 0 || fixed >= total)

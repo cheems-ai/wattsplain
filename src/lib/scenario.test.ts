@@ -108,6 +108,16 @@ describe('share link', () => {
     expect(encodePlan(plan)).toMatch(/^[A-Za-z0-9_-]+$/);
   });
 
+  it('returns null for malformed JSON shapes instead of throwing', () => {
+    const enc = (o: unknown) =>
+      btoa(JSON.stringify(o)).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+    const c = [{ n: 'A', p: 20, l: [] }];
+    expect(decodePlan(enc({ v: 1, s: 'TX', c, h: null }), ['TX'])).toBeNull();
+    expect(decodePlan(enc({ v: 1, s: 'TX', c: [null] }), ['TX'])).toBeNull();
+    expect(decodePlan(enc({ v: 1, s: 'TX', c: [{ n: 'A', p: 20, l: [5] }] }), ['TX'])).toBeNull();
+    expect(decodePlan(enc({ v: 1, s: 'TX', c }), ['TX'])).not.toBeNull();
+  });
+
   it('rejects tampered or impossible plans', () => {
     expect(decodePlan('not-base64!', ['TX'])).toBeNull();
     expect(decodePlan(encodePlan(plan), ['PA'])).toBeNull();
