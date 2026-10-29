@@ -9,6 +9,7 @@ import {
   parseAnnualTable,
   parseHistory,
   parseMonthlyTable,
+  validateDataset,
 } from './eia.mjs';
 
 // Saved copies of the real EIA files (public domain): Table 5.6.A for August 2026 and Table 5A for 2024.
@@ -27,6 +28,11 @@ describe('parseMonthlyTable', () => {
     expect(monthly.rows.get('Hawaii')).toEqual({ price: 47.18, pricePrior: 38.53 });
     expect(monthly.rows.get('U.S. Total')).toEqual({ price: 18.16, pricePrior: 17.57 });
     expect(monthly.rows.get('New England')).toEqual({ price: 28.31, pricePrior: 29.01 });
+  });
+
+  it('reads the release date and the next release date', () => {
+    expect(monthly.released).toBe('2026-10-23');
+    expect(monthly.nextRelease).toBe('2026-11-24');
   });
 
   it('rejects a page without the table header', () => {
@@ -141,5 +147,35 @@ describe('dataChanged', () => {
     );
     const states = base.states.map((s) => (s.code === 'PA' ? { ...s, price: 21.8 } : s));
     expect(dataChanged(base, { ...base, states })).toBe(true);
+  });
+});
+
+describe('validateDataset', () => {
+  const good = buildDataset(monthly, annual, STATES, '2026-10-29');
+
+  it('accepts the real August 2026 data', () => {
+    expect(() => validateDataset(good, good)).not.toThrow();
+    expect(good.monthly.released).toBe('2026-10-23');
+  });
+
+  it('refuses to replace newer published data with older data', () => {
+    const older = { ...good, monthly: { ...good.monthly, period: '2026-07' } };
+    expect(() => validateDataset(older, good)).toThrow(/older than the published/);
+  });
+
+  it('refuses impossible prices and duplicate states', () => {
+    const bad = {
+      ...good,
+      states: [...good.states.slice(1), { ...good.states[0], price: 0.21 }, good.states[1]],
+    };
+    expect(() => validateDataset(bad, good)).toThrow(/out of range[\s\S]*appears twice/);
+  });
+
+  it('refuses a history with a missing month', () => {
+    const gap = {
+      ...good,
+      history: { periods: ['2026-05', '2026-07'], us: [17, 18], byState: {} },
+    };
+    expect(() => validateDataset(gap, good)).toThrow(/history gap/);
   });
 });

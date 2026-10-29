@@ -10,4 +10,11 @@ export default defineConfig({
   trailingSlash: 'always',
   build: { format: 'directory', inlineStylesheets: 'never' },
   integrations: [preact()],
+  // Content-Security-Policy as a <meta> tag with hashes of every script Astro emits, so only
+  // our own scripts run. Inline style attributes (chart bar widths) need 'unsafe-inline' styles.
+  security: {
+    csp: {
+      styleDirective: { resources: ["'self'", "'unsafe-inline'"] },
+    },
+  },
 });

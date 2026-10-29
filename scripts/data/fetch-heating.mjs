@@ -5,7 +5,7 @@
 // if any state is missing.
 //
 //   npm run data:heating
-import { writeFileSync } from 'node:fs';
+import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 
 import { STATES } from '../../src/data/states.ts';
 import {
@@ -17,6 +17,7 @@ import {
   parseGas,
   parseShopp,
   shoppUrl,
+  validateHeating,
 } from '../lib/heating.mjs';
 
 const key = process.env['EIA_API_KEY'];
@@ -51,10 +52,10 @@ const dataset = {
   propane: { ...propane, unit: '$/gal', source: SHOPP_SOURCE },
   oil: { ...oil, unit: '$/gal', source: SHOPP_SOURCE },
 };
-writeFileSync(
-  new URL('../../src/data/heating.json', import.meta.url),
-  `${JSON.stringify(dataset, null, 2)}\n`,
-);
+const out = new URL('../../src/data/heating.json', import.meta.url);
+// Throws before writing if the new prices are older than, or implausible next to, the published ones.
+validateHeating(dataset, existsSync(out) ? JSON.parse(readFileSync(out, 'utf8')) : null);
+writeFileSync(out, `${JSON.stringify(dataset, null, 2)}\n`);
 console.log(
   `heating.json: gas ${gas.from}–${gas.period} (U.S. $${gas.us.price}/Mcf), propane week ${propane.week} ($${propane.us}/gal), heating oil week ${oil.week} ($${oil.us}/gal)`,
 );

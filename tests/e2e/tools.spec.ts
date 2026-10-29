@@ -496,3 +496,35 @@ test('bill diagnosis walks through four steps to evidence-sorted causes', async 
   await expect(result).toContainText('Possible causes, not confirmed ones');
   expect(errors).toEqual([]);
 });
+
+test('no Content-Security-Policy violations or console errors on the main pages', async ({
+  page,
+}) => {
+  const problems: string[] = [];
+  page.on('console', (m) => {
+    if (m.type() === 'error') problems.push(`${page.url()}: ${m.text()}`);
+  });
+  page.on('pageerror', (e) => problems.push(`${page.url()}: ${e.message}`));
+  // Analytics beacons have no backend under `astro preview`.
+  await page.route('**/api/e', (route) => route.fulfill({ status: 204 }));
+  for (const path of [
+    '/',
+    '/tools/',
+    '/electricity-rates/',
+    '/electricity-rates/texas/',
+    '/tools/appliance-electricity-cost/?state=TX',
+    '/tools/space-heater-cost/',
+    '/tools/heating-cost-calculator/?state=MN',
+    '/tools/why-is-my-electric-bill-high/',
+    '/tools/electric-bill-diagnosis/',
+    '/tools/home-energy-savings-planner/?state=TX',
+    '/methodology/',
+  ]) {
+    await page.goto(path);
+    await expect(page.locator('astro-island[ssr]')).toHaveCount(0);
+  }
+  // The pre-hydration guard (an inline script) must have run under the policy.
+  await page.goto('/tools/appliance-electricity-cost/?state=TX');
+  await expect(page.locator('html')).toHaveAttribute('data-qs', '');
+  expect(problems).toEqual([]);
+});

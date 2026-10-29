@@ -222,3 +222,25 @@ export function parseRecsArea(buf) {
   }
   return { source: RECS_AREA_URL, usAll: heated(all), usGas: heated(gas), byDivision };
 }
+
+/**
+ * Sanity checks before new fuel prices replace the published ones: never older periods, and
+ * every state's price inside a plausible range. Throws, so nothing is written.
+ */
+export function validateHeating(next, published) {
+  const problems = [];
+  if (published?.gas?.period && next.gas.period < published.gas.period)
+    problems.push(
+      `gas data ${next.gas.period} is older than the published ${published.gas.period}`,
+    );
+  for (const fuel of ['propane', 'oil'])
+    if (published?.[fuel]?.week && next[fuel].week < published[fuel].week)
+      problems.push(`${fuel} week ${next[fuel].week} is older than ${published[fuel].week}`);
+  const ranges = { gas: [3, 80], propane: [0.5, 10], oil: [1, 10] };
+  for (const [fuel, [lo, hi]] of Object.entries(ranges))
+    for (const [code, v] of Object.entries(next[fuel].byState))
+      if (!(v.price >= lo && v.price <= hi))
+        problems.push(`${fuel} ${code} ${v.price} out of range`);
+  if (problems.length)
+    throw new Error(`Heating data failed validation:\n- ${problems.join('\n- ')}`);
+}

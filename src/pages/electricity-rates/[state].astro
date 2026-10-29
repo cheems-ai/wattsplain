@@ -50,8 +50,9 @@ const comparison = direction === 'about the same' ? 'about the same as' : `${dir
 const heating = heatingRow(s.code)!;
 const heatPump = heating.costs.find((c) => c.system.id === 'heat-pump')!;
 const breakEven = breakEvenElectricity(heating.prices.gas, 0.95, 7.8);
-const title = `${s.name} electricity rates and average bill (${month})`;
-const description = `${s.name} homes paid ${cents(s.price)} per kWh in ${month} (${signedPct(s.change)} vs ${prior}). Typical monthly bill, how it compares with the U.S., and what appliances cost to run.`;
+const shortMonth = month.replace(/^(\w{3})\w*/, '$1');
+const title = `${s.name} electricity rates: ${cents(s.price)}/kWh (${shortMonth})`;
+const description = `${s.name} homes paid ${cents(s.price)} per kWh in ${month}, ${signedPct(s.change)} vs a year earlier (EIA). Typical bill, 24-month trend, heating and appliance costs.`;
 ---
 
 <Base
