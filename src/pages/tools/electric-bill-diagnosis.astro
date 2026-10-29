@@ -7,9 +7,9 @@ import { cents, monthLabel, signedPct } from '../../lib/format';
 const month = monthLabel(ELECTRICITY.monthly.period);
 const prior = monthLabel(ELECTRICITY.monthly.priorPeriod);
 const stateChange = Object.fromEntries(STATE_ROWS.map((s) => [s.code, s.change]));
-const title = 'Why did my electric bill go up? A step-by-step diagnosis';
+const title = 'Why did my electric bill go up? Step-by-step diagnosis';
 const description =
-  'Answer four short questions about your bills, the season and your home, and see the possible causes of a higher electric bill, sorted by evidence, with how to check each one.';
+  'Answer four short questions about your bills, the season and your home to see the likely causes of a higher electric bill, sorted by evidence, and how to check each.';
 ---
 
 <Base

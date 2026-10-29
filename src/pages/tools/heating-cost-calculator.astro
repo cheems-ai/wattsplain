@@ -19,8 +19,8 @@ const cost = (r: (typeof HEATING_ROWS)[number], id: SystemId) =>
 const rows = [...HEATING_ROWS].sort((a, b) => a.name.localeCompare(b.name));
 const hpWins = HEATING_ROWS.filter((r) => cost(r, 'heat-pump') < cost(r, 'gas'));
 const usBreakEven = breakEvenElectricity(HEATING.gas.us.price, 0.95, 7.8);
-const title = 'Heating cost calculator: heat pump vs gas, propane and oil';
-const description = `Compare what a heat pump, gas furnace, propane, heating oil and electric heat cost to run a year in your state, with EIA fuel prices from the week of ${week}.`;
+const title = 'Heating cost calculator: heat pump vs gas, propane, oil';
+const description = `What a heat pump, gas furnace, propane, heating oil or electric heat costs to run a year in your state, at EIA fuel prices for the week of ${week}.`;
 ---
 
 <Base

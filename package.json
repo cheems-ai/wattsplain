@@ -25,7 +25,8 @@
     "check:dist": "node scripts/check-dist.mjs",
     "deploy": "wrangler deploy",
     "indexnow": "node scripts/ops/indexnow.mjs",
-    "metrics": "node scripts/ops/metrics-report.mjs"
+    "metrics": "node scripts/ops/metrics-report.mjs",
+    "gsc": "node scripts/ops/gsc-report.mjs"
   },
   "dependencies": {
     "@astrojs/preact": "6.1.1",
