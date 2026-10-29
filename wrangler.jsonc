@@ -17,5 +17,14 @@
   "routes": [{ "pattern": "wattsplain.com", "custom_domain": true }],
   "workers_dev": false,
   "preview_urls": false,
+  // Daily aggregate analytics counts (migrations/, worker/index.ts). Created by the owner 2026-10-29.
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "wattsplain-db",
+      "database_id": "009bffcc-db04-4c44-b199-9b04846ddc93",
+      "migrations_dir": "migrations",
+    },
+  ],
   "observability": { "enabled": true },
 }
