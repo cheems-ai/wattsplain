@@ -1,0 +1,88 @@
+# Daily check for new EIA electricity data (EIA publishes the Electric Power Monthly late each
+# month). When the data changed: gates + browser tests → commit → deploy → production check →
+# IndexNow. When it did not change, the job stops after the fetch.
+#
+# Secrets: EIA_API_KEY, CLOUDFLARE_API_TOKEN (Workers deploy for wattsplain only),
+# CLOUDFLARE_ACCOUNT_ID.
+name: EIA data update
+on:
+  schedule:
+    - cron: '23 14 * * *'
+  workflow_dispatch:
+    inputs:
+      force:
+        description: Deploy even if the data did not change
+        type: boolean
+        default: false
+permissions:
+  contents: write
+concurrency:
+  group: production
+  cancel-in-progress: false
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .node-version
+          cache: npm
+      - name: Secrets are set
+        env:
+          EIA_API_KEY: ${{ secrets.EIA_API_KEY }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          for name in EIA_API_KEY CLOUDFLARE_API_TOKEN CLOUDFLARE_ACCOUNT_ID; do
+            [ -n "${!name}" ] || { echo "::error::repository secret $name is not set"; exit 1; }
+          done
+      - run: npm ci
+      - name: Fetch EIA data
+        env:
+          EIA_API_KEY: ${{ secrets.EIA_API_KEY }}
+        run: npm run data:eia
+      - name: Did the data change?
+        id: diff
+        run: node scripts/data/changed.mjs >> "$GITHUB_OUTPUT"
+      - name: Decide
+        if: steps.diff.outputs.changed == 'true' || inputs.force
+        run: echo "GO=true" >> "$GITHUB_ENV"
+
+      - if: env.GO == 'true'
+        run: npx playwright install --with-deps chromium
+      - if: env.GO == 'true'
+        run: npm run check
+      - if: env.GO == 'true'
+        run: npx playwright test
+      - name: Commit the new data
+        if: env.GO == 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add src/data/electricity.json
+          git diff --cached --quiet || git commit -m "chore(data): EIA electricity data $(node -p "require('./src/data/electricity.json').monthly.period")"
+          git push
+      - name: Deploy
+        if: env.GO == 'true'
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: npx wrangler deploy
+      - name: Check production
+        if: env.GO == 'true'
+        run: |
+          period=$(node -p "require('./src/data/electricity.json').monthly.period")
+          label=$(node -e "const [y,m]='$period'.split('-');console.log(new Date(Date.UTC(y,m-1)).toLocaleString('en-US',{month:'long',timeZone:'UTC'})+' '+y)")
+          for path in / /electricity-rates/ /electricity-rates/pennsylvania/ /tools/why-is-my-electric-bill-high/; do
+            curl -fsS --retry 5 --retry-delay 10 -o page.html "https://wattsplain.com$path"
+            grep -q "$label" page.html || { echo "::error::$path does not show $label"; exit 1; }
+          done
+          echo "production shows $label"
+      - name: IndexNow
+        if: env.GO == 'true'
+        run: |
+          npm run indexnow
+          git add scripts/ops/indexnow-state.json
+          git diff --cached --quiet || { git commit -m "chore(seo): record IndexNow submission" && git push; }

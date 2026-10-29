@@ -153,3 +153,9 @@ export function buildDataset(monthly, annual, states, fetchedAt, history = null)
     ...(history ? { history: { ...history, source: HISTORY_SOURCE } } : {}),
   };
 }
+
+/** True when two datasets differ in anything but the date they were fetched. */
+export function dataChanged(before, after) {
+  const strip = (d) => JSON.stringify({ ...d, fetchedAt: undefined });
+  return strip(before) !== strip(after);
+}

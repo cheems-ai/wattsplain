@@ -3,7 +3,13 @@ import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 
 import { STATES } from '../../src/data/states.ts';
-import { buildDataset, parseAnnualTable, parseHistory, parseMonthlyTable } from './eia.mjs';
+import {
+  buildDataset,
+  dataChanged,
+  parseAnnualTable,
+  parseHistory,
+  parseMonthlyTable,
+} from './eia.mjs';
 
 // Saved copies of the real EIA files (public domain): Table 5.6.A for August 2026 and Table 5A for 2024.
 const fixture = (name) => readFileSync(new URL(`./fixtures/${name}`, import.meta.url));
@@ -119,5 +125,21 @@ describe('parseHistory on a real EIA API response (residential, Jun 2025 – Aug
     expect(h.byState.PA.at(-1)).toBe(21.77);
     expect(h.us.at(-1)).toBe(18.16);
     expect(h.byState.HI.at(-1)).toBe(monthly.rows.get('Hawaii').price);
+  });
+});
+
+describe('dataChanged', () => {
+  const base = buildDataset(monthly, annual, STATES, '2026-10-29');
+
+  it('ignores the fetch date', () => {
+    expect(dataChanged(base, { ...base, fetchedAt: '2026-11-02' })).toBe(false);
+  });
+
+  it('notices a new month or a revised price', () => {
+    expect(dataChanged(base, { ...base, monthly: { ...base.monthly, period: '2026-09' } })).toBe(
+      true,
+    );
+    const states = base.states.map((s) => (s.code === 'PA' ? { ...s, price: 21.8 } : s));
+    expect(dataChanged(base, { ...base, states })).toBe(true);
   });
 });

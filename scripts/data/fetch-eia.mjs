@@ -5,7 +5,7 @@
 // prices per state for the trend charts.
 //
 //   npm run data:eia
-import { writeFileSync } from 'node:fs';
+import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 
 import { STATES } from '../../src/data/states.ts';
 import {
@@ -35,6 +35,12 @@ if (key) {
   const body = await download(historyUrl(key, start), 'EIA API retail-sales');
   history = parseHistory(JSON.parse(body.toString('utf8')), STATES);
 } else {
+  // Never drop a history we already publish: that would silently remove every trend chart.
+  const out = new URL('../../src/data/electricity.json', import.meta.url);
+  const existing = existsSync(out) ? JSON.parse(readFileSync(out, 'utf8')) : {};
+  if (existing.history) {
+    throw new Error('EIA_API_KEY is not set; refusing to drop the published price history');
+  }
   console.warn('EIA_API_KEY not set: skipping the monthly price history (trend charts)');
 }
 
