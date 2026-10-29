@@ -63,6 +63,9 @@ test('appliance calculator uses the state price and a custom rate', async ({ pag
 
 test('space heater page offers wattage presets', async ({ page }) => {
   await page.goto('/tools/space-heater-cost/?state=TX');
+  // A button does nothing until the island hydrates (inputs keep what was typed; clicks are lost),
+  // which on production can come after the load event.
+  await expect(page.locator('astro-island[ssr]')).toHaveCount(0);
   await page.getByRole('button', { name: '750 W' }).click();
   await expect(page.getByRole('button', { name: '750 W' })).toHaveAttribute('aria-pressed', 'true');
   // 750 W × 8 h × 30 = 180 kWh at the Texas price
