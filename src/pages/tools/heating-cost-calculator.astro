@@ -2,7 +2,7 @@
 import { ELECTRIC_BASIS, HEATING, HEATING_OPTIONS, HEATING_ROWS } from '../../data/heating';
 import HeatingCost from '../../islands/HeatingCost';
 import Base from '../../layouts/Base.astro';
-import { breakEvenElectricity, perTherm, type SystemId } from '../../lib/heating';
+import { BTU, breakEvenElectricity, heatPumpCop, perTherm, type SystemId } from '../../lib/heating';
 import { cents, dollars, monthLabel } from '../../lib/format';
 
 const short = (p: string) => monthLabel(p).replace(/^(\w{3})\w*/, '$1');
@@ -19,6 +19,18 @@ const cost = (r: (typeof HEATING_ROWS)[number], id: SystemId) =>
 const rows = [...HEATING_ROWS].sort((a, b) => a.name.localeCompare(b.name));
 const hpWins = HEATING_ROWS.filter((r) => cost(r, 'heat-pump') < cost(r, 'gas'));
 const usBreakEven = breakEvenElectricity(HEATING.gas.us.price, 0.95, 7.8);
+const propaneWins = (other: SystemId) =>
+  HEATING_ROWS.filter((r) => cost(r, 'propane') < cost(r, other)).length;
+// Prices at which two systems cost the same per million Btu of heat (default efficiencies).
+const propaneHeat = (BTU.propaneGal * 0.95) / 1e6;
+const oilHeat = (BTU.oilGal * 0.85) / 1e6;
+const usPropane = HEATING.propane.us;
+const usOil = HEATING.oil.us;
+const hpCentsPerMmbtu = (centsPerKwh: number) =>
+  (centsPerKwh / 100 / (BTU.kwh * heatPumpCop(7.8))) * 1e6;
+const usElectric = HEATING_ROWS.reduce((a, r) => a + r.prices.electric, 0) / HEATING_ROWS.length;
+const propaneVsHeatPump = hpCentsPerMmbtu(usElectric) * propaneHeat;
+const propaneVsOil = (usOil / oilHeat) * propaneHeat;
 const title = 'Heating cost calculator: heat pump vs gas, propane, oil';
 const description = `What a heat pump, gas furnace, propane, heating oil or electric heat costs to run a year in your state, at EIA fuel prices for the week of ${week}.`;
 ---
@@ -84,6 +96,23 @@ const description = `What a heat pump, gas furnace, propane, heating oil or elec
     Propane and heating oil prices come from the state where EIA surveys it, otherwise from the
     region. * U.S. average: EIA has no price for the state or its region, so that fuel is not
     counted as the cheapest. Homes in warm states need little heat, so every option is cheap there.
+  </p>
+
+  <h2>Propane vs electric heat, and propane vs heating oil</h2>
+  <ul>
+    <li>
+      {`Propane vs electric baseboard or furnace: propane is cheaper to run in ${propaneWins('electric')} of 51 states. Resistance heat turns each kWh into ${BTU.kwh.toLocaleString('en-US')} Btu; a 95% propane furnace gets about ${Math.round(propaneHeat * 1e6).toLocaleString('en-US')} Btu from a gallon.`}
+    </li>
+    <li>
+      {`Propane vs a heat pump: the heat pump is cheaper in ${51 - propaneWins('heat-pump')} of 51 states. At the average state electricity price (${cents(usElectric)}), propane would have to cost less than about ${dollars(propaneVsHeatPump)} a gallon to match an HSPF2 7.8 heat pump; the U.S. average was ${dollars(usPropane)} in the week of ${week}.`}
+    </li>
+    <li>
+      {`Propane vs heating oil: propane is cheaper in ${propaneWins('oil')} of 51 states. At the U.S. average oil price of ${dollars(usOil)} a gallon (85% furnace), propane in a 95% furnace matches it at about ${dollars(propaneVsOil)} a gallon.`}
+    </li>
+  </ul>
+  <p>
+    Prices for propane and oil are weekly from October to March, and many households buy on a
+    contract or a fill-up price that differs. Enter your own price in the calculator above.
   </p>
 
   <h2>When is a heat pump cheaper than gas?</h2>
