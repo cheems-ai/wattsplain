@@ -8,7 +8,7 @@ import type { RateOption } from '../data/electricity';
  */
 export function useStateRate(rates: readonly RateOption[], fallback = 'PA') {
   const [code, setCode] = useState(fallback);
-  const [custom, setCustom] = useState('');
+  const [custom, setCustom] = useState(() => initial('ac-rate', ''));
   useEffect(() => {
     const q = new URLSearchParams(window.location.search).get('state')?.toUpperCase();
     if (q && rates.some((r) => r.code === q)) setCode(q);
@@ -25,6 +25,17 @@ export function useStateRate(rates: readonly RateOption[], fallback = 'PA') {
     rate: useCustom ? customNum : state.price,
     useCustom,
   };
+}
+
+/**
+ * Initial value for a controlled field: what is already in the server-rendered input when the
+ * island hydrates (a visitor on a slow connection may type before the JavaScript arrives), else
+ * the default. Without this, hydration would reset the field and lose what they typed.
+ */
+export function initial(id: string, fallback: string): string {
+  if (typeof document === 'undefined') return fallback;
+  const el = document.getElementById(id) as HTMLInputElement | HTMLSelectElement | null;
+  return el && el.value !== '' && el.value !== fallback ? el.value : fallback;
 }
 
 export const num = (s: string): number | null => {

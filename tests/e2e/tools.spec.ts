@@ -137,3 +137,23 @@ test('sends a cookieless page view and one tool event, with no visitor details',
   expect(await context.cookies()).toEqual([]);
   expect(await page.evaluate(() => localStorage.length + sessionStorage.length)).toBe(0);
 });
+
+test('keeps what the visitor typed before the calculator finished loading', async ({ page }) => {
+  // Hold the island scripts back, type into the server-rendered inputs, then let them load.
+  let release: () => void = () => {};
+  const gate = new Promise<void>((r) => (release = r));
+  await page.route('**/_astro/*.js', async (route) => {
+    await gate;
+    await route.continue();
+  });
+  // Module scripts hold back DOMContentLoaded, so wait only for the server-rendered input.
+  await page.goto('/tools/why-is-my-electric-bill-high/?state=PA', { waitUntil: 'commit' });
+  await page.locator('#bc-pk').waitFor();
+  await page.locator('#bc-pk').fill('800');
+  await page.locator('#bc-pd').fill('140');
+  await page.locator('#bc-nk').fill('950');
+  await page.locator('#bc-nd').fill('200');
+  release();
+  await expect(page.locator('.result')).toContainText('+$60.00 (+42.9%)');
+  await expect(page.locator('#bc-nd')).toHaveValue('200');
+});

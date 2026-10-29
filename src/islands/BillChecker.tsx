@@ -4,7 +4,7 @@ import { track } from '../analytics/client';
 import type { RateOption } from '../data/electricity';
 import { compareBills } from '../lib/energy';
 import { cents, dollars, kwh, signedPct } from '../lib/format';
-import { num, useStateRate } from './useStateRate';
+import { initial, num, useStateRate } from './useStateRate';
 
 interface Props {
   rates: RateOption[];
@@ -23,10 +23,10 @@ export default function BillChecker({
   annualYear,
 }: Props) {
   const { code, setCode, state } = useStateRate(rates);
-  const [prevKwh, setPrevKwh] = useState('');
-  const [prevDollars, setPrevDollars] = useState('');
-  const [nowKwh, setNowKwh] = useState('');
-  const [nowDollars, setNowDollars] = useState('');
+  const [prevKwh, setPrevKwh] = useState(() => initial('bc-pk', ''));
+  const [prevDollars, setPrevDollars] = useState(() => initial('bc-pd', ''));
+  const [nowKwh, setNowKwh] = useState(() => initial('bc-nk', ''));
+  const [nowDollars, setNowDollars] = useState(() => initial('bc-nd', ''));
 
   const values = [prevKwh, prevDollars, nowKwh, nowDollars].map(num);
   const complete = values.every((v) => v !== null);

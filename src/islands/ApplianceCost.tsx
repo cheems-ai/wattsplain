@@ -5,7 +5,7 @@ import type { Appliance } from '../data/appliances';
 import type { RateOption } from '../data/electricity';
 import { runningCost } from '../lib/energy';
 import { cents, dollars } from '../lib/format';
-import { num, useStateRate } from './useStateRate';
+import { initial, num, useStateRate } from './useStateRate';
 
 interface Props {
   rates: RateOption[];
@@ -19,8 +19,8 @@ export default function ApplianceCost({ rates, appliances, fixed, monthLabel }: 
   const { code, setCode, custom, setCustom, state, rate, useCustom } = useStateRate(rates);
   const first = appliances.find((a) => a.id === (fixed?.id ?? 'space-heater')) ?? appliances[0]!;
   const [applianceId, setApplianceId] = useState(first.id);
-  const [watts, setWatts] = useState(String(first.watts));
-  const [hours, setHours] = useState(String(first.hours));
+  const [watts, setWatts] = useState(() => initial('ac-watts', String(first.watts)));
+  const [hours, setHours] = useState(() => initial('ac-hours', String(first.hours)));
   const appliance = appliances.find((a) => a.id === applianceId) ?? first;
 
   const pick = (id: string) => {
