@@ -6,6 +6,7 @@ import { STATE_ROWS } from '../data/electricity';
 const paths = [
   '/',
   '/electricity-rates/',
+  '/electricity-rates/price-changes/',
   ...STATE_ROWS.map((s) => `/electricity-rates/${s.slug}/`),
   '/tools/',
   '/tools/home-energy-savings-planner/',
