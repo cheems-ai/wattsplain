@@ -1,0 +1,168 @@
+---
+import { ELECTRICITY, HISTORY } from '../../data/electricity';
+import { HEATING_ROWS } from '../../data/heating';
+import Base from '../../layouts/Base.astro';
+import { cents, dollars, monthLabel, signedPct } from '../../lib/format';
+import { BTU, heatPumpCop } from '../../lib/heating';
+
+if (!HISTORY) throw new Error('the winter guide needs the EIA price history');
+const history = HISTORY;
+// The most recent full winter in the history: December, January and February.
+const decIndex = history.periods.findLastIndex(
+  (p, i) => p.endsWith('-12') && i + 2 < history.periods.length,
+);
+const winter = history.periods.slice(decIndex, decIndex + 3);
+const winterLabel = `${monthLabel(winter[0]!)} – ${monthLabel(winter[2]!)}`;
+const mean = (xs: number[]) => xs.reduce((a, b) => a + b, 0) / xs.length;
+/** Heating months the year's heat is spread over (November to March). */
+const MONTHS = 5;
+const HSPF2 = 7.8;
+const rows = HEATING_ROWS.map((h) => {
+  const series = history.byState[h.code]!;
+  const year = mean(series.slice(-12));
+  const winterPrice = mean(series.slice(decIndex, decIndex + 3));
+  const price = h.prices.electric;
+  const resistanceKwh = (h.heat * 1e6) / BTU.kwh / MONTHS;
+  const heatPumpKwh = resistanceKwh / heatPumpCop(HSPF2);
+  return {
+    h,
+    price,
+    winterVsYear: ((winterPrice - year) / year) * 100,
+    resistance: (resistanceKwh * price) / 100,
+    heatPump: (heatPumpKwh * price) / 100,
+    resistanceKwh,
+    heatPumpKwh,
+    // 1,500 W space heater, 8 hours a day, 30 days.
+    heater: (1.5 * 8 * 30 * price) / 100,
+    // A 10 kW backup strip for one hour.
+    strip: (10 * price) / 100,
+  };
+}).sort((a, b) => a.h.name.localeCompare(b.h.name));
+const us = (() => {
+  const price = mean(history.us.slice(-12));
+  const winterPrice = mean(history.us.slice(decIndex, decIndex + 3));
+  return { price, winterVsYear: ((winterPrice - price) / price) * 100 };
+})();
+const higherInWinter = rows.filter((r) => r.winterVsYear > 1).length;
+const lowerInWinter = rows.filter((r) => r.winterVsYear < -1).length;
+const median = (xs: number[]) => [...xs].sort((a, b) => a - b)[Math.floor(xs.length / 2)]!;
+// States whose RECS figure is their census division's (Hawaii) are left out of heating numbers.
+const measured = rows.filter((r) => !r.h.heatFromDivision);
+const medResistance = median(measured.map((r) => r.resistance));
+const medHeatPump = median(measured.map((r) => r.heatPump));
+const ratio = heatPumpCop(HSPF2);
+const title = 'Why is my electric bill so high in winter?';
+const description =
+  'The usual reasons a winter electric bill jumps (electric heat, heat pump backup strips, space heaters, longer billing periods, winter prices) with what each costs in your state.';
+---
+
+<Base
+  title={title}
+  description={description}
+  crumbs={[['Winter electric bill', '/guides/why-is-my-electric-bill-so-high-in-winter/']]}
+  jsonLd={[
+    {
+      '@context': 'https://schema.org',
+      '@type': 'Article',
+      headline: title,
+      description,
+      url: 'https://wattsplain.com/guides/why-is-my-electric-bill-so-high-in-winter/',
+      dateModified: ELECTRICITY.fetchedAt,
+      author: { '@type': 'Organization', name: 'Wattsplain', url: 'https://wattsplain.com/' },
+      publisher: { '@type': 'Organization', name: 'Wattsplain', url: 'https://wattsplain.com/' },
+    },
+  ]}
+>
+  <h1>Why is my electric bill so high in winter?</h1>
+  <p class="lede">
+    {`In most homes a winter jump comes from heat: electric heat, a heat pump running its backup strips, or space heaters. Price matters less than people expect: in ${winterLabel}, the average residential price was ${signedPct(us.winterVsYear)} against its 12-month average nationally. The numbers below are for your state.`}
+  </p>
+  <p>
+    <a href="/tools/why-is-my-electric-bill-high/">Compare two of your bills</a> to see how much of
+    the change is price and how much is use, or answer{' '}
+    <a href="/tools/electric-bill-diagnosis/">four questions</a> to find the likely cause.
+  </p>
+
+  <h2>1. Electric heat uses a lot of kWh</h2>
+  <p>
+    {`Baseboard heaters, an electric furnace and plug-in heaters turn one kWh into ${BTU.kwh.toLocaleString('en-US')} Btu of heat. Spread over November to March, the heat a typical home in the middle state needs comes to about ${dollars(medResistance, 0)} a month with resistance heat. The same home with a heat pump (HSPF2 ${HSPF2}, about ${ratio.toFixed(1)} units of heat per unit of electricity) pays about ${dollars(medHeatPump, 0)}. If your home heats with electricity, a winter bill several times your summer bill can be normal.`}
+  </p>
+
+  <h2>2. A heat pump on backup (aux or emergency) heat</h2>
+  <p>
+    Most heat pumps have electric resistance strips for very cold days, defrost and quick recovery
+    after a big thermostat setback. While they run, the heat pump costs as much per unit of heat as
+    baseboard heat. A thermostat showing "aux" or "emergency heat" for hours at a time, or a setting
+    left on "emergency heat", can double or triple a bill. Turn the thermostat up in small steps
+    (2°F at a time) and ask a technician to check the outdoor unit if aux runs on mild days.
+  </p>
+
+  <h2>3. Space heaters add up</h2>
+  <p>
+    {`A 1,500 W heater on high for 8 hours a day uses 360 kWh a month: about ${dollars(median(rows.map((r) => r.heater)), 0)} in the middle state. Two of them double it.`}{' '}
+    <a href="/tools/space-heater-vs-central-heat/">
+      Check whether a heater saves money with your central heat
+    </a>
+    .
+  </p>
+
+  <h2>4. Longer billing periods and estimated readings</h2>
+  <p>
+    A bill for 33 days uses more than one for 28. Holidays and weather delay meter reads, and a bill
+    based on an estimate can be followed by a catch-up bill. Compare kWh per day, not the total.
+  </p>
+
+  <h2>5. Winter prices</h2>
+  <p>
+    {`Prices move through the year. Comparing ${winterLabel} with the 12-month average, the price was higher in winter in ${higherInWinter} states and lower in ${lowerInWinter} (the rest within 1%). Where it is lower, winter bills are high because of use, not price.`}
+  </p>
+
+  <h2>Winter heating costs by state</h2>
+  <div class="table-scroll" tabindex="0" role="region" aria-label="Winter heating costs by state">
+    <table>
+      <caption>{`Typical home in each state: the heat EIA's RECS 2020 measured for a gas-heated home, spread evenly over November to March. Electric homes are often smaller or in milder places, and the coldest month costs more than this average. Price: ${cents(us.price)} U.S. 12-month average; each state's own 12-month average. Strip: one hour of a 10 kW backup strip. –: RECS has no heating figure for the state itself.`}</caption>
+      <thead>
+        <tr>
+          <th>State</th>
+          <th>Price</th>
+          <th>Winter vs year</th>
+          <th>Resistance heat / month</th>
+          <th>Heat pump / month</th>
+          <th>Space heater / month</th>
+          <th>Strip / hour</th>
+        </tr>
+      </thead>
+      <tbody>
+        {rows.map((r) => (
+          <tr>
+            <td>
+              <a href={`/electricity-rates/${r.h.slug}/`}>{r.h.name}</a>
+            </td>
+            <td>{cents(r.price)}</td>
+            <td>{signedPct(r.winterVsYear)}</td>
+            <td>{r.h.heatFromDivision ? '–' : dollars(r.resistance, 0)}</td>
+            <td>{r.h.heatFromDivision ? '–' : dollars(r.heatPump, 0)}</td>
+            <td>{dollars(r.heater, 0)}</td>
+            <td>{dollars(r.strip)}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+
+  <h2>What to check first</h2>
+  <ol>
+    <li>kWh on this bill vs the same month last year (not last month).</li>
+    <li>Days in the billing period, and whether the reading was estimated.</li>
+    <li>Thermostat: is it set to "emergency heat"? How often does it show "aux"?</li>
+    <li>
+      Space heaters, heated blankets, an electric water heater (colder incoming water in winter).
+    </li>
+    <li>The price per kWh on the bill: has the supply or delivery rate changed?</li>
+  </ol>
+  <p>
+    Related: <a href="/tools/heating-cost-calculator/">heat pump vs gas, propane and oil</a> ·{' '}
+    <a href="/electricity-rates/price-changes/">price increases by state</a> ·{' '}
+    <a href="/methodology/">how we calculate</a>
+  </p>
+</Base>

@@ -523,6 +523,7 @@ test('no Content-Security-Policy violations or console errors on the main pages'
     '/tools/home-energy-savings-planner/?state=TX',
     '/tools/space-heater-vs-central-heat/?state=ME',
     '/electricity-rates/price-changes/',
+    '/guides/why-is-my-electric-bill-so-high-in-winter/',
     '/methodology/',
   ]) {
     await page.goto(path);
@@ -633,5 +634,20 @@ test('price changes page ranks every state and offers the CSV', async ({ page, r
   await expect(page.getByRole('link', { name: 'Price changes in every state →' })).toHaveAttribute(
     'href',
     '/electricity-rates/price-changes/',
+  );
+});
+
+test('winter bill guide gives each state its heating numbers', async ({ page }) => {
+  await page.goto('/guides/why-is-my-electric-bill-so-high-in-winter/');
+  await expect(page.locator('h1')).toHaveText('Why is my electric bill so high in winter?');
+  const rows = page.locator('table tbody tr');
+  await expect(rows).toHaveCount(51);
+  // Hawaii's RECS figure is its census division's, so no heating estimate is shown for it.
+  await expect(rows.filter({ hasText: 'Hawaii' }).locator('td').nth(3)).toHaveText('–');
+  await expect(rows.filter({ hasText: 'Ohio' }).locator('td').nth(3)).toHaveText(/^\$\d/);
+  await page.goto('/electricity-rates/ohio/');
+  await expect(page.getByRole('link', { name: 'Why bills jump in winter →' })).toHaveAttribute(
+    'href',
+    '/guides/why-is-my-electric-bill-so-high-in-winter/',
   );
 });
