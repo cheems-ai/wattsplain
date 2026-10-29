@@ -1,0 +1,38 @@
+---
+import { ELECTRICITY } from '../../data/electricity';
+import { TOOL_GROUPS } from '../../data/tools';
+import Base from '../../layouts/Base.astro';
+import { monthLabel } from '../../lib/format';
+
+const month = monthLabel(ELECTRICITY.monthly.period);
+---
+
+<Base
+  title="Home energy calculators and tools"
+  description={`Every Wattsplain tool in one place: bill checker, bill diagnosis, appliance, space heater and heating cost calculators, and the savings planner. State prices from the EIA, ${month}.`}
+  crumbs={[['All tools', '/tools/']]}
+>
+  <h1>Home energy calculators and tools</h1>
+  <p class="lede">
+    {`All of them use your state's electricity price from the U.S. Energy Information Administration (${month}), or a price you enter. They run in your browser; nothing you type is sent to us.`}
+  </p>
+  {TOOL_GROUPS.map((g) => (
+    <section class="tool-group" aria-labelledby={`g-${g.id}`}>
+      <h2 id={`g-${g.id}`}>{g.title}</h2>
+      <p class="note">{g.intro}</p>
+      <ul class="tool-list">
+        {g.tools.map((t) => (
+          <li>
+            <a href={t.href}>{t.title}</a>
+            <span>{t.text}</span>
+          </li>
+        ))}
+      </ul>
+    </section>
+  ))}
+  <h2>Data behind them</h2>
+  <p>
+    <a href="/electricity-rates/">Electricity rates in all 50 states and DC</a> ·{' '}
+    <a href="/methodology/">Data & methodology</a>
+  </p>
+</Base>

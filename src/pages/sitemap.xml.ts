@@ -7,6 +7,7 @@ const paths = [
   '/',
   '/electricity-rates/',
   ...STATE_ROWS.map((s) => `/electricity-rates/${s.slug}/`),
+  '/tools/',
   '/tools/home-energy-savings-planner/',
   '/tools/why-is-my-electric-bill-high/',
   '/tools/electric-bill-diagnosis/',

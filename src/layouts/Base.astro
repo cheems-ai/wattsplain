@@ -17,13 +17,34 @@ const { title, description, crumbs = [], jsonLd = [] } = Astro.props;
 const canonical = new URL(Astro.url.pathname, SITE.origin).href;
 const fullTitle = Astro.url.pathname === '/' ? title : `${title} | ${SITE.name}`;
 const path = Astro.url.pathname;
-const nav: [string, string][] = [
-  ['Electricity rates', '/electricity-rates/'],
-  ['Bill checker', '/tools/why-is-my-electric-bill-high/'],
-  ['Appliance cost', '/tools/appliance-electricity-cost/'],
-  ['Heating cost', '/tools/heating-cost-calculator/'],
-  ['Space heater cost', '/tools/space-heater-cost/'],
+// [label, href, paths that count as this section]
+const nav: [string, string, string[]][] = [
+  ['Rates by state', '/electricity-rates/', ['/electricity-rates/']],
+  [
+    'My bill',
+    '/tools/why-is-my-electric-bill-high/',
+    ['/tools/why-is-my-electric-bill-high/', '/tools/electric-bill-diagnosis/'],
+  ],
+  [
+    'Calculators',
+    '/tools/',
+    [
+      '/tools/',
+      '/tools/appliance-electricity-cost/',
+      '/tools/space-heater-cost/',
+      '/tools/heating-cost-calculator/',
+    ],
+  ],
+  [
+    'Savings planner',
+    '/tools/home-energy-savings-planner/',
+    ['/tools/home-energy-savings-planner/'],
+  ],
 ];
+const section = nav.find(([, , paths]) =>
+  paths.some((p) => (p === '/electricity-rates/' ? path.startsWith(p) : path === p)),
+)?.[1];
+const report = `mailto:${SITE.contactEmail}?subject=${encodeURIComponent(`Problem on ${path}`)}&body=${encodeURIComponent('What looks wrong (and your state, if it matters):\n\n')}`;
 const breadcrumbLd =
   crumbs.length > 0
     ? {
@@ -77,7 +98,10 @@ const ld = [...(breadcrumbLd ? [breadcrumbLd] : []), ...jsonLd];
         </a>
         <nav class="nav" aria-label="Main">
           {nav.map(([label, href]) => (
-            <a href={href} aria-current={path === href ? 'page' : undefined}>
+            <a
+              href={href}
+              aria-current={path === href ? 'page' : section === href ? 'true' : undefined}
+            >
               {label}
             </a>
           ))}
@@ -109,7 +133,12 @@ const ld = [...(breadcrumbLd ? [breadcrumbLd] : []), ...jsonLd];
           {monthLabel(ELECTRICITY.monthly.period)} (preliminary), checked {ELECTRICITY.fetchedAt}.
           Estimates only; your utility bill is the final word.
         </p>
+        <p>
+          <a href={report}>Report a problem with this page</a> or suggest a tool: we read every
+          message.
+        </p>
         <nav aria-label="Site">
+          <a href="/tools/">All tools</a>
           <a href="/about/">About</a>
           <a href="/methodology/">Data & methodology</a>
           <a href="/privacy/">Privacy</a>

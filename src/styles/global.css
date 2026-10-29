@@ -99,7 +99,7 @@ select:focus-visible {
   text-decoration: none;
 }
 .nav a:hover,
-.nav a[aria-current='page'] {
+.nav a[aria-current] {
   color: var(--fg);
   text-decoration: underline;
 }
@@ -953,4 +953,45 @@ table.compare td {
   font-variant-numeric: tabular-nums;
   color: var(--up);
   font-weight: 600;
+}
+
+/* Home page: the three jobs; /tools/ hub */
+.tasks {
+  display: grid;
+  gap: 16px 32px;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 17rem), 1fr));
+  margin-top: 28px;
+}
+.task {
+  border-top: 3px solid var(--fg);
+  padding-top: 8px;
+}
+.task h2 {
+  margin: 0;
+  font-size: 1.2rem;
+}
+.task .note {
+  margin: 4px 0 8px;
+}
+.tool-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.tool-list li {
+  padding: 8px 0;
+  border-bottom: 1px solid var(--border);
+}
+.tool-list a {
+  font-weight: 700;
+  display: inline-block;
+  padding: 2px 0;
+}
+.tool-list span {
+  display: block;
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+.tool-group {
+  max-width: 46rem;
 }

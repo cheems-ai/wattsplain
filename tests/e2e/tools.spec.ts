@@ -261,7 +261,7 @@ test('home page: picking a state shows its price and carries it into the tools',
   await expect(page.locator('.start-answer')).toContainText(
     `Texas: ${cents(price('TX').price)} per kWh`,
   );
-  await expect(page.getByRole('link', { name: /Why is my electric bill so high/ })).toHaveAttribute(
+  await expect(page.locator('main').getByRole('link', { name: 'Bill checker' })).toHaveAttribute(
     'href',
     '/tools/why-is-my-electric-bill-high/?state=TX',
   );
