@@ -39,6 +39,21 @@ for (const f of files) {
     problems.push(
       `${f}: text glued to an inline tag near "${raw.slice(inline.index - 30, inline.index + 30)}"`,
     );
+  // JSON-LD must parse, and a Dataset needs the fields Search Console flags when they are missing.
+  for (const [, json] of html.matchAll(
+    /<script type="application\/ld\+json">([\s\S]*?)<\/script>/g,
+  )) {
+    let item;
+    try {
+      item = JSON.parse(json);
+    } catch {
+      problems.push(`${f}: JSON-LD does not parse`);
+      continue;
+    }
+    if (item['@type'] === 'Dataset')
+      for (const k of ['name', 'description', 'license', 'creator'])
+        if (!item[k]) problems.push(`${f}: Dataset JSON-LD missing ${k}`);
+  }
   const h1 = html.match(/<h1[\s>]/g)?.length ?? 0;
   if (h1 !== 1) problems.push(`${f}: ${h1} h1 elements`);
   // Visible text only: drop scripts, islands' serialized props and tags (tags become nothing, so
