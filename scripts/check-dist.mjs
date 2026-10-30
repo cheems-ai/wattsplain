@@ -27,6 +27,7 @@ for (const f of files) {
     [/<title>[^<]+<\/title>/, 'title'],
     [/<meta name="description" content="[^"]+"/, 'description'],
     [/<link rel="canonical" href="[^"]+"/, 'canonical'],
+    [/<meta property="og:image" content="https:\/\/[^"]+"/, 'og:image'],
   ];
   for (const [rx, what] of need) if (!rx.test(html)) problems.push(`${f}: missing ${what}`);
   // Text running straight into an inline element: Astro drops a line break between the two.
@@ -89,6 +90,12 @@ const pages = new Set(
     .filter((p) => p !== '/404.html'),
 );
 for (const p of pages) if (!sitemap.has(p)) problems.push(`${p}: missing from sitemap.xml`);
+const undated = (
+  readFileSync('dist/sitemap.xml', 'utf8').match(
+    /<\/loc>(?!<lastmod>\d{4}-\d\d-\d\d<\/lastmod>)/g,
+  ) ?? []
+).length;
+if (undated) problems.push(`sitemap.xml: ${undated} URL(s) without <lastmod>`);
 for (const p of sitemap)
   if (!pages.has(p)) problems.push(`sitemap.xml lists ${p}, which is not a page`);
 if (problems.length) {

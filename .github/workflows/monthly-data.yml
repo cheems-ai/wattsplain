@@ -93,5 +93,5 @@ jobs:
         if: env.GO == 'true'
         run: |
           npm run indexnow
-          git add scripts/ops/indexnow-state.json
-          git diff --cached --quiet || { git commit -m "chore(seo): record IndexNow submission" && git push; }
+          git add scripts/ops/indexnow-state.json scripts/ops/lastmod-state.json
+          git diff --cached --quiet || { git commit -m "chore(seo): record IndexNow submission and sitemap dates" && git push; }
