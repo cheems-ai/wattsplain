@@ -1,10 +1,10 @@
 {
-  "fetchedAt": "2026-10-29",
+  "fetchedAt": "2026-10-30",
   "gas": {
-    "period": "2026-07",
-    "from": "2025-08",
+    "period": "2026-08",
+    "from": "2025-09",
     "us": {
-      "price": 16.34,
+      "price": 16.35,
       "months": 12
     },
     "byState": {
@@ -13,91 +13,91 @@
         "year": 2024
       },
       "ME": {
-        "price": 20.62,
+        "price": 20.6,
         "months": 9
       },
       "MA": {
-        "price": 26.33,
+        "price": 26.39,
         "months": 12
       },
       "NH": {
-        "price": 20.4,
-        "months": 11
+        "price": 20.25,
+        "months": 10
       },
       "RI": {
-        "price": 20.7,
+        "price": 20.57,
         "months": 11
       },
       "VT": {
-        "price": 18.35,
+        "price": 18.38,
         "months": 12
       },
       "NJ": {
-        "price": 14.78,
+        "price": 14.8,
         "months": 12
       },
       "NY": {
-        "price": 18.72,
+        "price": 18.76,
         "months": 12
       },
       "PA": {
-        "price": 15.97,
+        "price": 15.96,
         "months": 12
       },
       "IL": {
-        "price": 11.92,
+        "price": 11.89,
         "months": 12
       },
       "IN": {
-        "price": 12.2,
+        "price": 12.19,
         "months": 12
       },
       "MI": {
-        "price": 11.5,
+        "price": 11.52,
         "months": 12
       },
       "OH": {
-        "price": 14.47,
-        "months": 10
+        "price": 13.9,
+        "months": 9
       },
       "WI": {
-        "price": 11.83,
+        "price": 11.86,
         "months": 11
       },
       "IA": {
-        "price": 11.58,
+        "price": 11.6,
         "months": 12
       },
       "KS": {
-        "price": 14.88,
-        "months": 9
+        "price": 14.81,
+        "year": 2025
       },
       "MN": {
-        "price": 11.28,
+        "price": 11.29,
         "months": 12
       },
       "MO": {
-        "price": 17,
+        "price": 16.99,
         "months": 12
       },
       "NE": {
-        "price": 12.93,
+        "price": 12.85,
         "months": 12
       },
       "ND": {
-        "price": 10.17,
+        "price": 10.19,
         "months": 12
       },
       "SD": {
-        "price": 10.62,
+        "price": 10.61,
         "months": 12
       },
       "DE": {
-        "price": 18.4,
+        "price": 18.45,
         "months": 12
       },
       "DC": {
-        "price": 17.71,
+        "price": 17.82,
         "months": 12
       },
       "FL": {
@@ -105,39 +105,39 @@
         "year": 2025
       },
       "GA": {
-        "price": 22.1,
+        "price": 22.17,
         "months": 12
       },
       "MD": {
-        "price": 17.35,
-        "months": 10
-      },
-      "NC": {
-        "price": 20.08,
+        "price": 17.53,
         "months": 11
       },
-      "SC": {
-        "price": 18.37,
+      "NC": {
+        "price": 19.92,
         "months": 10
       },
+      "SC": {
+        "price": 18.6,
+        "months": 11
+      },
       "VA": {
-        "price": 17.99,
+        "price": 18.05,
         "months": 12
       },
       "WV": {
-        "price": 14.72,
-        "months": 10
+        "price": 14.44,
+        "months": 9
       },
       "AL": {
         "price": 18.42,
         "months": 12
       },
       "KY": {
-        "price": 16.36,
+        "price": 16.39,
         "months": 12
       },
       "MS": {
-        "price": 17.62,
+        "price": 17.79,
         "months": 12
       },
       "TN": {
@@ -145,19 +145,19 @@
         "months": 12
       },
       "AR": {
-        "price": 22.66,
-        "months": 12
+        "price": 22.38,
+        "months": 11
       },
       "LA": {
         "price": 17.39,
         "year": 2025
       },
       "OK": {
-        "price": 18.54,
+        "price": 18.46,
         "months": 11
       },
       "TX": {
-        "price": 22.72,
+        "price": 22.83,
         "months": 12
       },
       "AZ": {
@@ -165,51 +165,51 @@
         "months": 12
       },
       "CO": {
-        "price": 11.62,
+        "price": 11.6,
         "months": 12
       },
       "ID": {
-        "price": 8,
+        "price": 8.03,
         "months": 12
       },
       "MT": {
-        "price": 9.24,
+        "price": 9.21,
         "months": 12
       },
       "NV": {
-        "price": 11.24,
+        "price": 11.22,
         "months": 12
       },
       "NM": {
-        "price": 10.88,
-        "months": 10
+        "price": 9.83,
+        "year": 2025
       },
       "UT": {
-        "price": 11.07,
+        "price": 11.09,
         "months": 12
       },
       "WY": {
-        "price": 13.04,
-        "months": 12
+        "price": 12.67,
+        "months": 11
       },
       "CA": {
-        "price": 22.26,
+        "price": 22.21,
         "months": 10
       },
       "OR": {
-        "price": 17.42,
+        "price": 17.44,
         "months": 12
       },
       "WA": {
-        "price": 18.13,
+        "price": 18.12,
         "months": 11
       },
       "AK": {
-        "price": 13.63,
+        "price": 13.64,
         "months": 12
       },
       "HI": {
-        "price": 59.78,
+        "price": 60.75,
         "months": 11
       }
     },
