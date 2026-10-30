@@ -59,7 +59,9 @@ const heating = heatingRow(s.code)!;
 const heatPump = heating.costs.find((c) => c.system.id === 'heat-pump')!;
 const breakEven = breakEvenElectricity(heating.prices.gas, 0.95, 7.8);
 const shortMonth = month.replace(/^(\w{3})\w*/, '$1');
-const title = `${s.name} electricity rates: ${cents(s.price)}/kWh (${shortMonth})`;
+// "District of Columbia" pushes the title past what search results show; people search "DC".
+const titleName = s.code === 'DC' ? 'Washington, DC' : s.name;
+const title = `${titleName} electricity rates: ${cents(s.price)}/kWh (${shortMonth})`;
 const description = `${s.name} homes paid ${cents(s.price)} per kWh in ${month}, ${signedPct(s.change)} vs a year earlier (EIA). Typical bill, 24-month trend, heating and appliance costs.`;
 ---
 
