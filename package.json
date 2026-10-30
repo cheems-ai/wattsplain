@@ -11,7 +11,7 @@
   "packageManager": "npm@11.19.1",
   "scripts": {
     "dev": "astro dev",
-    "build": "astro build",
+    "build": "astro build && node scripts/sitemap-lastmod.mjs",
     "preview": "astro preview",
     "typecheck": "astro check && tsc --noEmit",
     "format": "prettier --write .",
@@ -24,10 +24,11 @@
     "test:e2e": "playwright test",
     "check:dist": "node scripts/check-dist.mjs",
     "deploy": "wrangler deploy",
-    "indexnow": "node scripts/ops/indexnow.mjs",
+    "indexnow": "node scripts/ops/indexnow.mjs && node scripts/sitemap-lastmod.mjs --save",
     "metrics": "node scripts/ops/metrics-report.mjs",
     "gsc": "node scripts/ops/gsc-report.mjs",
-    "review": "node scripts/ops/monthly-review.mjs"
+    "review": "node scripts/ops/monthly-review.mjs",
+    "og-image": "node scripts/og-image.mjs"
   },
   "dependencies": {
     "@astrojs/preact": "6.1.1",

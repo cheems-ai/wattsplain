@@ -1,7 +1,7 @@
 ---
 import '../styles/global.css';
 
-import { SITE } from '../config/site';
+import { OG_IMAGE, SITE } from '../config/site';
 import { ELECTRICITY } from '../data/electricity';
 import { monthLabel } from '../lib/format';
 
@@ -82,6 +82,11 @@ const ld = [...(breadcrumbLd ? [breadcrumbLd] : []), ...jsonLd];
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={OG_IMAGE.url} />
+    <meta property="og:image:width" content={String(OG_IMAGE.width)} />
+    <meta property="og:image:height" content={String(OG_IMAGE.height)} />
+    <meta property="og:image:alt" content={OG_IMAGE.alt} />
+    <meta name="twitter:card" content="summary_large_image" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     {ld.map((item) => (
       <script type="application/ld+json" set:html={JSON.stringify(item)} />

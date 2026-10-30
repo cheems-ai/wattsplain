@@ -1,4 +1,5 @@
 ---
+import { OG_IMAGE } from '../../config/site';
 import { ELECTRICITY, HISTORY } from '../../data/electricity';
 import { HEATING_ROWS } from '../../data/heating';
 import Base from '../../layouts/Base.astro';
@@ -67,6 +68,7 @@ const description =
       headline: title,
       description,
       url: 'https://wattsplain.com/guides/why-is-my-electric-bill-so-high-in-winter/',
+      image: OG_IMAGE.url,
       datePublished: '2026-10-29',
       dateModified: ELECTRICITY.fetchedAt,
       author: { '@type': 'Organization', name: 'Wattsplain', url: 'https://wattsplain.com/' },
