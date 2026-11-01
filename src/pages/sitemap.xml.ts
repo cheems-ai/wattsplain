@@ -17,6 +17,7 @@ const paths = [
   '/tools/space-heater-vs-central-heat/',
   '/tools/heating-cost-calculator/',
   '/guides/why-is-my-electric-bill-so-high-in-winter/',
+  '/guides/how-much-propane-to-heat-a-house/',
   '/about/',
   '/methodology/',
   '/privacy/',

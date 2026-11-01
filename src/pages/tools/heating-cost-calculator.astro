@@ -1,8 +1,23 @@
 ---
-import { ELECTRIC_BASIS, HEATING, HEATING_OPTIONS, HEATING_ROWS } from '../../data/heating';
+import { HISTORY, ELECTRICITY } from '../../data/electricity';
+import {
+  ELECTRIC_BASIS,
+  HEATING,
+  HEATING_OPTIONS,
+  HEATING_ROWS,
+  US_TYPICAL,
+  heatForSqft,
+} from '../../data/heating';
 import HeatingCost from '../../islands/HeatingCost';
 import Base from '../../layouts/Base.astro';
-import { BTU, breakEvenElectricity, heatPumpCop, perTherm, type SystemId } from '../../lib/heating';
+import {
+  BTU,
+  breakEvenElectricity,
+  compareSystems,
+  heatPumpCop,
+  perTherm,
+  type SystemId,
+} from '../../lib/heating';
 import { cents, dollars, monthLabel } from '../../lib/format';
 
 const short = (p: string) => monthLabel(p).replace(/^(\w{3})\w*/, '$1');
@@ -31,8 +46,41 @@ const hpCentsPerMmbtu = (centsPerKwh: number) =>
 const usElectric = HEATING_ROWS.reduce((a, r) => a + r.prices.electric, 0) / HEATING_ROWS.length;
 const propaneVsHeatPump = hpCentsPerMmbtu(usElectric) * propaneHeat;
 const propaneVsOil = (usOil / oilHeat) * propaneHeat;
+// Fuel and cost by floor area for the U.S. typical climate, at U.S. average prices.
+const usElectric12 = HISTORY
+  ? HISTORY.us.slice(-12).reduce((a, b) => a + b, 0) / Math.min(12, HISTORY.us.length)
+  : ELECTRICITY.us.price;
+const usPrices: Record<SystemId, number> = {
+  'heat-pump': usElectric12,
+  electric: usElectric12,
+  gas: HEATING.gas.us.price,
+  propane: HEATING.propane.us,
+  oil: HEATING.oil.us,
+};
+const SIZE_SYSTEMS: SystemId[] = ['gas', 'propane', 'oil', 'heat-pump', 'electric'];
+/** Heating months the year's heat is spread over (November to March), as in the winter guide. */
+const MONTHS = 5;
+const bySize = [1000, 1500, 2000, 2500, 3000].map((sqft) => {
+  const costs = compareSystems(heatForSqft(US_TYPICAL, sqft), usPrices);
+  return { sqft, cost: (id: SystemId) => costs.find((c) => c.system.id === id)! };
+});
+const size2000 = bySize.find((s) => s.sqft === 2000)!;
+const quantity = (id: SystemId, units: number) =>
+  id === 'gas'
+    ? `${Math.round((units * BTU.mcf) / BTU.therm / 10) * 10} therms`
+    : id === 'propane' || id === 'oil'
+      ? `${Math.round(units / 10) * 10} gal`
+      : `${(Math.round(units / 100) * 100).toLocaleString('en-US')} kWh`;
+const sizeHeader: Record<SystemId, string> = {
+  gas: 'Natural gas',
+  propane: 'Propane',
+  oil: 'Heating oil',
+  'heat-pump': 'Heat pump',
+  electric: 'Electric baseboard',
+};
+const monthly = (id: SystemId) => dollars(size2000.cost(id).perYear / MONTHS, 0);
 const title = 'Heating cost calculator: heat pump vs gas, propane, oil';
-const description = `What a heat pump, gas furnace, propane, heating oil or electric heat costs to run a year in your state, at EIA fuel prices for the week of ${week}.`;
+const description = `What a heat pump, gas, propane, oil or electric heat costs a year for your state and home size, at EIA fuel prices for the week of ${week}.`;
 ---
 
 <Base
@@ -98,6 +146,59 @@ const description = `What a heat pump, gas furnace, propane, heating oil or elec
     counted as the cheapest. Homes in warm states need little heat, so every option is cheap there.
   </p>
 
+  <h2>Heating fuel and cost by home size</h2>
+  <div
+    class="table-scroll"
+    tabindex="0"
+    role="region"
+    aria-label="Heating fuel and cost by home size"
+  >
+    <table>
+      <caption>
+        {`Fuel a year to heat a house in a typical U.S. climate: the heat the average gas-heated home in RECS ${HEATING.recs.survey} needed (${US_TYPICAL.typicalSqft.toLocaleString('en-US')} sq ft), scaled by floor area. New equipment as above; cost at U.S. average prices (electricity ${cents(usElectric12)}, ${ELECTRIC_BASIS.label}).`}
+      </caption>
+      <thead>
+        <tr>
+          <th>Home size</th>
+          {SIZE_SYSTEMS.map((id) => (
+            <th class={id === 'oil' || id === 'electric' ? 'hide-sm' : undefined}>
+              {sizeHeader[id]}
+            </th>
+          ))}
+        </tr>
+      </thead>
+      <tbody>
+        {bySize.map((s) => (
+          <tr>
+            <td>{`${s.sqft.toLocaleString('en-US')} sq ft`}</td>
+            {SIZE_SYSTEMS.map((id) => (
+              <td class={id === 'oil' || id === 'electric' ? 'hide-sm' : undefined}>
+                {quantity(id, s.cost(id).units)}{' '}
+                <span class="hint">{`${dollars(s.cost(id).perYear, 0)} / yr`}</span>
+              </td>
+            ))}
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+  <p class="note">
+    Space heating only. Colder states need more heat and warmer ones less: use the calculator with
+    your floor area for your state, or see{' '}
+    <a href="/guides/how-much-propane-to-heat-a-house/">propane by house size in every state</a>.
+  </p>
+
+  <h3>How much does it cost to heat a house per month?</h3>
+  <p>
+    {`For a 2,000 sq ft house in a typical U.S. climate, spread over November to March: about ${monthly('gas')} a month with a new gas furnace, ${monthly('heat-pump')} with a heat pump, ${monthly('propane')} with propane, ${monthly('oil')} with heating oil and ${monthly('electric')} with electric baseboard heat. January runs higher than the average month, and gas bills add a fixed monthly charge.`}
+  </p>
+
+  <h3>How much propane does it take to heat a 2,000 sq ft house?</h3>
+  <p>
+    {`About ${Math.round(size2000.cost('propane').units / 10) * 10} gallons a year with a 95% furnace in a typical U.S. climate, more in the northern states.`}{' '}
+    <a href="/guides/how-much-propane-to-heat-a-house/">Gallons by house size and state</a>.
+  </p>
+
   <h2>Propane vs electric heat, and propane vs heating oil</h2>
   <ul>
     <li>
@@ -146,6 +247,7 @@ const description = `What a heat pump, gas furnace, propane, heating oil or elec
   <p>
     <a href="/methodology/">Data & methodology</a> ·{' '}
     <a href="/tools/space-heater-cost/">Space heater cost</a> ·{' '}
-    <a href="/tools/space-heater-vs-central-heat/">Space heater vs central heat</a>
+    <a href="/tools/space-heater-vs-central-heat/">Space heater vs central heat</a> ·{' '}
+    <a href="/guides/how-much-propane-to-heat-a-house/">Propane to heat a house</a>
   </p>
 </Base>

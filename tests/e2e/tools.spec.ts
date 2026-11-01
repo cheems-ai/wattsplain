@@ -524,6 +524,7 @@ test('no Content-Security-Policy violations or console errors on the main pages'
     '/tools/space-heater-vs-central-heat/?state=ME',
     '/electricity-rates/price-changes/',
     '/guides/why-is-my-electric-bill-so-high-in-winter/',
+    '/guides/how-much-propane-to-heat-a-house/',
     '/methodology/',
   ]) {
     await page.goto(path);
@@ -634,6 +635,35 @@ test('price changes page ranks every state and offers the CSV', async ({ page, r
   await expect(page.getByRole('link', { name: 'Price changes in every state →' })).toHaveAttribute(
     'href',
     '/electricity-rates/price-changes/',
+  );
+});
+
+test('propane guide answers by house size and by state', async ({ page }) => {
+  await page.goto('/guides/how-much-propane-to-heat-a-house/');
+  await expect(page.locator('h1')).toHaveText('How much propane does it take to heat a house?');
+  await expect(page.locator('.lede')).toContainText(
+    /A 2,000 sq ft house .* burns about [\d,]+ gallons a year/,
+  );
+  const sizes = page.getByRole('table', { name: /^Typical U.S. climate/ }).locator('tbody tr');
+  await expect(sizes).toHaveCount(6);
+  // Bigger houses need more propane.
+  const yearly = await sizes.locator('td:nth-child(2)').allTextContents();
+  const gallons = yearly.map((t) => Number(t.replace(/,/g, '')));
+  expect(gallons).toEqual([...gallons].sort((a, b) => a - b));
+  const states = page
+    .getByRole('table', { name: /^A 2,000 sq ft house with a 95% furnace/ })
+    .locator('tbody tr');
+  await expect(states).toHaveCount(51);
+  await expect(states.filter({ hasText: 'Hawaii' }).locator('td').nth(1)).toHaveText('–');
+  await expect(states.filter({ hasText: 'Maine' }).locator('td').nth(4)).toHaveText(/^\$[\d,]+$/);
+  await page.goto('/tools/heating-cost-calculator/');
+  const bySize = page.getByRole('table', { name: /^Fuel a year to heat a house/ });
+  await expect(bySize.locator('tbody tr')).toHaveCount(5);
+  await expect(bySize.locator('tbody tr').first()).toContainText(/therms\s*\$[\d,]+ \/ yr/);
+  await page.goto('/electricity-rates/maine/');
+  await expect(page.getByRole('link', { name: 'Propane by house size →' })).toHaveAttribute(
+    'href',
+    '/guides/how-much-propane-to-heat-a-house/',
   );
 });
 
