@@ -1,0 +1,167 @@
+---
+import { OG_IMAGE } from '../../config/site';
+import { HEATING, HEATING_ROWS, US_TYPICAL, heatForSqft } from '../../data/heating';
+import Base from '../../layouts/Base.astro';
+import { dollars } from '../../lib/format';
+import { BTU, SYSTEMS, fuelUnits } from '../../lib/heating';
+
+const propane = SYSTEMS.find((s) => s.id === 'propane')!;
+/** A new condensing furnace and an older non-condensing one (AFUE). */
+const NEW = 0.95;
+const OLD = 0.8;
+/** The heating season the year's heat is spread over: November to March. */
+const MONTHS = 5;
+const DAYS = 151;
+const SQFT = 2000;
+const SIZES = [1000, 1500, 2000, 2500, 3000, 3500];
+/** A 500-gallon tank is filled to 80%, leaving room for the gas to expand. */
+const TANK = 500;
+const USABLE = TANK * 0.8;
+
+const gallons = (home: { heat: number; typicalSqft: number }, sqft: number, afue = NEW) =>
+  fuelUnits(propane, heatForSqft(home, sqft), afue);
+const round10 = (n: number) => (Math.round(n / 10) * 10).toLocaleString('en-US');
+const whole = (n: number) => Math.round(n).toLocaleString('en-US');
+
+const week = new Date(`${HEATING.propane.week}T00:00:00Z`).toLocaleDateString('en-US', {
+  month: 'long',
+  day: 'numeric',
+  year: 'numeric',
+  timeZone: 'UTC',
+});
+const usPrice = HEATING.propane.us;
+const us = gallons(US_TYPICAL, SQFT);
+const usOld = gallons(US_TYPICAL, SQFT, OLD);
+const sizes = SIZES.map((sqft) => {
+  const g = gallons(US_TYPICAL, sqft);
+  return { sqft, g, old: gallons(US_TYPICAL, sqft, OLD), month: g / MONTHS, cost: g * usPrice };
+});
+const rows = HEATING_ROWS.map((h) => {
+  const g = gallons(h, SQFT);
+  return { h, g, month: g / MONTHS, cost: g * h.prices.propane };
+}).sort((a, b) => a.h.name.localeCompare(b.h.name));
+// Hawaii's RECS figure is its census division's, so it is left out of the range.
+const measured = rows.filter((r) => !r.h.heatFromDivision).sort((a, b) => a.g - b.g);
+const least = measured[0]!;
+const most = measured.at(-1)!;
+const mostLower48 = measured.filter((r) => r.h.code !== 'AK').at(-1)!;
+const tankDays = (g: number) => USABLE / (g / DAYS);
+const extraOld = (NEW / OLD - 1) * 100;
+
+const title = 'How much propane does it take to heat a house? By size and state';
+const description = `Gallons of propane a year and a month to heat a 1,000 to 3,500 sq ft house, by state, with a 95% or 80% furnace, at EIA prices for the week of ${week}.`;
+---
+
+<Base
+  title={title}
+  description={description}
+  crumbs={[['Propane to heat a house', '/guides/how-much-propane-to-heat-a-house/']]}
+  jsonLd={[
+    {
+      '@context': 'https://schema.org',
+      '@type': 'Article',
+      headline: title,
+      description,
+      url: 'https://wattsplain.com/guides/how-much-propane-to-heat-a-house/',
+      image: OG_IMAGE.url,
+      datePublished: '2026-11-01',
+      dateModified: HEATING.fetchedAt,
+      author: { '@type': 'Organization', name: 'Wattsplain', url: 'https://wattsplain.com/' },
+      publisher: { '@type': 'Organization', name: 'Wattsplain', url: 'https://wattsplain.com/' },
+    },
+  ]}
+>
+  <h1>How much propane does it take to heat a house?</h1>
+  <p class="lede">
+    {`A 2,000 sq ft house with a new 95% propane furnace burns about ${round10(us)} gallons a year for heat in a typical U.S. climate: about ${whole(us / MONTHS)} gallons a month from November to March. That ranges from about ${round10(least.g)} gallons in ${least.h.name} to ${round10(most.g)} in ${most.h.name}; the most in the lower 48 is ${round10(mostLower48.g)} in ${mostLower48.h.name}. An older 80% furnace burns ${Math.round(extraOld)}% more, about ${round10(usOld)} gallons.`}
+  </p>
+  <p class="updated">
+    {`Heat need: EIA Residential Energy Consumption Survey (RECS ${HEATING.recs.survey}). Propane prices: EIA, week of ${week}. Checked ${HEATING.fetchedAt}.`}
+  </p>
+  <p>
+    <a href="/tools/heating-cost-calculator/">Enter your state, floor area and propane price</a> for
+    your own estimate, and compare it with a heat pump, gas or oil.
+  </p>
+
+  <h2>Propane for heat by house size</h2>
+  <div class="table-scroll" tabindex="0" role="region" aria-label="Propane by house size">
+    <table>
+      <caption>{`Typical U.S. climate: the heat the average gas-heated home in RECS ${HEATING.recs.survey} needed (${whole(US_TYPICAL.typicalSqft)} sq ft), scaled by floor area. Per month: the year spread evenly over November to March; January takes more. Cost at the U.S. average of ${dollars(usPrice)} a gallon.`}</caption>
+      <thead>
+        <tr>
+          <th>House size</th>
+          <th>Gallons / year (95%)</th>
+          <th>Gallons / year (80%)</th>
+          <th>Gallons / heating month</th>
+          <th>Cost / year (95%)</th>
+        </tr>
+      </thead>
+      <tbody>
+        {sizes.map((s) => (
+          <tr>
+            <td>{`${s.sqft.toLocaleString('en-US')} sq ft`}</td>
+            <td>{round10(s.g)}</td>
+            <td>{round10(s.old)}</td>
+            <td>{whole(s.month)}</td>
+            <td>{dollars(s.cost, 0)}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+  <p class="note">
+    Space heating only. A propane water heater, range or dryer adds to the total. A drafty house or
+    a cold winter can use 20% or more above these figures; a well-insulated one less.
+  </p>
+
+  <h2>How long does a 500-gallon propane tank last?</h2>
+  <p>
+    {`A 500-gallon tank is filled to about 80%, so it holds about ${USABLE} gallons. Heating the 2,000 sq ft house above in a typical climate burns about ${(us / DAYS).toFixed(1)} gallons a day on average from November to March, so a full tank lasts about ${Math.round(tankDays(us))} days. In ${mostLower48.h.name} it is about ${Math.round(tankDays(mostLower48.g))} days, and in ${most.h.name} about ${Math.round(tankDays(most.g))}. On the coldest days a furnace can burn about twice the average, so schedule deliveries by the gauge (refill at 20–30%), not the calendar.`}
+  </p>
+
+  <h2>Propane for a 2,000 sq ft house in each state</h2>
+  <div
+    class="table-scroll"
+    tabindex="0"
+    role="region"
+    aria-label="Propane for a 2,000 sq ft house by state"
+  >
+    <table>
+      <caption>{`A 2,000 sq ft house with a 95% furnace. Heat need: the average gas-heated home in each state (RECS ${HEATING.recs.survey}), scaled from the typical floor area in its census division. Price: EIA residential propane, week of ${week}; regional or U.S. average where EIA does not survey the state (*: U.S. average). –: RECS has no heating figure for the state itself.`}</caption>
+      <thead>
+        <tr>
+          <th>State</th>
+          <th>Gallons / year</th>
+          <th>Gallons / heating month</th>
+          <th>Price / gallon</th>
+          <th>Cost / year</th>
+        </tr>
+      </thead>
+      <tbody>
+        {rows.map((r) => (
+          <tr>
+            <td>
+              <a href={`/electricity-rates/${r.h.slug}/`}>{r.h.name}</a>
+            </td>
+            <td>{r.h.heatFromDivision ? '–' : round10(r.g)}</td>
+            <td>{r.h.heatFromDivision ? '–' : whole(r.month)}</td>
+            <td>
+              {`${dollars(r.h.prices.propane)}${r.h.national.includes('propane') ? '*' : ''}`}
+            </td>
+            <td>{r.h.heatFromDivision ? '–' : dollars(r.cost, 0)}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+
+  <h2>How we estimate it</h2>
+  <p>
+    {`RECS measures how much gas the average gas-heated home in each state burned for space heating. Times 85% for the efficiency of its furnace, that is the heat the house received. We scale it by the house's floor area ÷ the typical gas-heated home's area (RECS ${HEATING.recs.survey} Table HC10.9), then divide by the heat a gallon of propane gives: ${BTU.propaneGal.toLocaleString('en-US')} Btu (EIA) times the furnace efficiency. Heat need follows floor area only roughly: ceiling height, windows, insulation and the thermostat setting all move it.`}
+  </p>
+  <p>
+    Related: <a href="/tools/heating-cost-calculator/">heating cost calculator</a> ·{' '}
+    <a href="/tools/space-heater-vs-central-heat/">space heater vs central heat</a> ·{' '}
+    <a href="/methodology/">data & methodology</a>
+  </p>
+</Base>

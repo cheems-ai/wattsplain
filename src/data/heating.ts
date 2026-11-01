@@ -1,6 +1,7 @@
 // Typed access to src/data/heating.json (fuel prices, `npm run data:heating`) and
 // src/data/heat-need.json (RECS 2020, `npm run data:recs`), combined with electricity prices.
 import {
+  adjustHeat,
   cheapestOf,
   compareSystems,
   heatNeed,
@@ -126,6 +127,13 @@ export const HEATING_ROWS: readonly HeatingRow[] = STATE_ROWS.map((s) => {
     cheapest: cheapestOf(costs, national),
   };
 });
+
+/** The U.S. typical gas-heated home (RECS): delivered heat, MMBtu a year, and its floor area. */
+export const US_TYPICAL = { heat: heatNeed(need.us), typicalSqft: need.area.usGas };
+
+/** Delivered heat a home of `sqft` needs where the typical home needs `heat` (see adjustHeat). */
+export const heatForSqft = (home: { heat: number; typicalSqft: number }, sqft: number): number =>
+  adjustHeat(home.heat, { sqft, typicalSqft: home.typicalSqft, insulation: 'typical' });
 
 export const heatingRow = (code: string): HeatingRow | undefined =>
   HEATING_ROWS.find((r) => r.code === code);

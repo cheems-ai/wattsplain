@@ -26,6 +26,7 @@ for (const path of [
   '/electricity-rates/price-changes/',
   '/tools/space-heater-vs-central-heat/',
   '/guides/why-is-my-electric-bill-so-high-in-winter/',
+  '/guides/how-much-propane-to-heat-a-house/',
   '/tools/appliance-electricity-cost/',
   '/tools/space-heater-cost/',
   '/tools/heating-cost-calculator/',
