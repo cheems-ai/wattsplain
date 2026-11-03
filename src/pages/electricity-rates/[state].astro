@@ -62,6 +62,27 @@ const shortMonth = month.replace(/^(\w{3})\w*/, '$1');
 // "District of Columbia" pushes the title past what search results show; people search "DC".
 const titleName = s.code === 'DC' ? 'Washington, DC' : s.name;
 const title = `${titleName} electricity rates: ${cents(s.price)}/kWh (${shortMonth})`;
+// Short answers to the questions people search about a state (Search Console, Oct 2026), each
+// readable on its own so search snippets and AI assistants can quote it.
+const perDay = (monthly: number) => Math.round((monthly * 12) / 365);
+const vsUsText =
+  Math.abs(vsUs) < 0.5
+    ? `about the same as the U.S. average (${cents(us.price)})`
+    : `${Math.abs(vsUs).toFixed(0)}% ${vsUs > 0 ? 'above' : 'below'} the U.S. average of ${cents(us.price)}`;
+const answers: [string, string][] = [
+  [
+    `What does electricity cost in ${titleName}?`,
+    `Homes in ${titleName} paid an average of ${cents(s.price)} per kWh in ${month}, the latest month published by the U.S. Energy Information Administration. That is ${signedPct(s.change)} from ${prior} and ${vsUsText}. ${titleName} ranks #${s.rank} among the 50 states and DC, where #1 is the most expensive.`,
+  ],
+  [
+    `What is the average electric bill in ${titleName}?`,
+    `The average ${titleName} home paid ${dollars(s.avgBillAnnual)} a month in ${year} for ${kwh(s.avgKwh)} of electricity (EIA's latest annual figures). The same use at ${priceBasis} comes to about ${dollars(estBill, 0)} a month. Your bill depends on your home, the season and your utility's fixed charges.`,
+  ],
+  [
+    `How much electricity does a ${titleName} home use per day?`,
+    `About ${perDay(s.avgKwh)} kWh a day on average: ${kwh(s.avgKwh)} a month, or ${kwh(s.avgKwh * 12)} a year (EIA, ${year}). The U.S. average is about ${perDay(us.avgKwh)} kWh a day. Homes use more in months with heating or air conditioning, so winter and summer days run above the average.`,
+  ],
+];
 const description = `${s.name} homes paid ${cents(s.price)} per kWh in ${month}, ${signedPct(s.change)} vs a year earlier (EIA). Typical bill, 24-month trend, heating and appliance costs.`;
 ---
 
@@ -80,8 +101,8 @@ const description = `${s.name} homes paid ${cents(s.price)} per kWh in ${month},
     {`, ${comparison} a year earlier (${cents(s.pricePrior)}).`}
   </p>
   <p class="updated">
-    Source: EIA Table 5.6.A ({month}, preliminary) and EIA {year} averages. Checked{' '}
-    {ELECTRICITY.fetchedAt}.
+    Source: <a href={ELECTRICITY.monthly.source}>EIA Table 5.6.A</a> ({month}, preliminary) and{' '}
+    <a href={ELECTRICITY.annual.source}>EIA {year} averages</a>. Checked {ELECTRICITY.fetchedAt}.
   </p>
 
   <div class="stats">
@@ -264,6 +285,14 @@ const description = `${s.name} homes paid ${cents(s.price)} per kWh in ${month},
     </a>{' '}
     · <a href="/guides/how-much-propane-to-heat-a-house/">Propane by house size →</a>
   </p>
+
+  <h2>Electricity in {titleName}: quick answers</h2>
+  {answers.map(([q, a]) => (
+    <>
+      <h3>{q}</h3>
+      <p>{a}</p>
+    </>
+  ))}
 
   {neighbours.length > 0 && (
     <>

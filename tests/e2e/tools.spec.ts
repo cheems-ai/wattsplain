@@ -99,6 +99,34 @@ test('state page shows its own numbers and links the tools with the state', asyn
   );
 });
 
+test('state page answers the common questions with its own numbers and linked sources', async ({
+  page,
+}) => {
+  await page.goto('/electricity-rates/district-of-columbia/');
+  await expect(
+    page.getByRole('heading', { name: 'What does electricity cost in Washington, DC?' }),
+  ).toBeVisible();
+  const answer = page
+    .getByRole('heading', { name: /use per day\?$/ })
+    .locator('xpath=following-sibling::p[1]');
+  const dc = data.states.find((s) => s.code === 'DC') as unknown as { avgKwh: number };
+  await expect(answer).toContainText(`About ${Math.round((dc.avgKwh * 12) / 365)} kWh a day`);
+  await expect(page.locator('.updated a').first()).toHaveAttribute('href', /eia\.gov/);
+});
+
+test('llms.txt lists the tools and every state with its current price', async ({ request }) => {
+  const res = await request.get('/llms.txt');
+  expect(res.status()).toBe(200);
+  expect(res.headers()['content-type']).toContain('text/plain');
+  const text = await res.text();
+  expect(text).toMatch(/^# Wattsplain\n/);
+  expect(text).toContain('(https://wattsplain.com/tools/why-is-my-electric-bill-high/)');
+  expect(
+    text.match(/\]\(https:\/\/wattsplain\.com\/electricity-rates\/[a-z-]+\/\): [\d.]+¢ per kWh/g),
+  ).toHaveLength(51);
+  expect(text).toContain(`${cents(price('TX').price)} per kWh`);
+});
+
 test('pages fit the screen without horizontal scrolling', async ({ page }) => {
   for (const path of [
     '/',
