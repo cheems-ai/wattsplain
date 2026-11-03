@@ -34,6 +34,26 @@ const [eight, five] = compareScenarios(
 <Base
   title={`${SITE.name}: electricity prices by state and cost calculators`}
   description={SITE.description}
+  jsonLd={[
+    {
+      '@context': 'https://schema.org',
+      '@type': 'WebSite',
+      name: SITE.name,
+      url: `${SITE.origin}/`,
+      description: SITE.description,
+      inLanguage: 'en-US',
+      publisher: { '@id': `${SITE.origin}/#organization` },
+    },
+    {
+      '@context': 'https://schema.org',
+      '@type': 'Organization',
+      '@id': `${SITE.origin}/#organization`,
+      name: SITE.name,
+      url: `${SITE.origin}/`,
+      email: SITE.contactEmail,
+      description: SITE.description,
+    },
+  ]}
 >
   <h1>What electricity really costs where you live</h1>
   <p class="lede">
