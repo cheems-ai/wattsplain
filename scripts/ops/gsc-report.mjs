@@ -11,7 +11,13 @@
 import { readFileSync, writeFileSync } from 'node:fs';
 import { parseArgs } from 'node:util';
 
-import { analyticsTotals, coverageCounts, opportunities, serviceAccountJwt } from '../lib/gsc.mjs';
+import {
+  analyticsTotals,
+  coverageCounts,
+  opportunities,
+  positionBuckets,
+  serviceAccountJwt,
+} from '../lib/gsc.mjs';
 import { sitemapUrls } from '../lib/indexnow.mjs';
 
 const ORIGIN = 'https://wattsplain.com';
@@ -125,6 +131,17 @@ const table = (rows, label) => {
     '',
   ];
 };
+lines.push(
+  '### Queries by average position',
+  '',
+  '| Position | Queries | Impressions | Clicks | CTR | What it means |',
+  '|---|---|---|---|---|---|',
+  ...positionBuckets(byQuery).map(
+    (b) =>
+      `| ${b.label} | ${b.queries} | ${b.impressions} | ${b.clicks} | ${(b.ctr * 100).toFixed(1)}% | ${b.why} |`,
+  ),
+  '',
+);
 lines.push('### Top queries', '', ...table(byQuery, 'Queries'));
 lines.push('### Top pages', '', ...table(byPage, 'Pages'));
 const opp = opportunities(byQuery);

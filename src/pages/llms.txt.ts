@@ -32,6 +32,7 @@ export const GET: APIRoute = () => {
     `- [Electricity rates by state](${url('/electricity-rates/')}): price per kWh in every state and DC, year-over-year change, rank, average use and bill`,
     `- [Price changes over 12 months](${url('/electricity-rates/price-changes/')}): how much each state's price rose, and what that adds to a typical bill`,
     `- [Price changes as CSV](${url('/data/electricity-price-changes.csv')}): the same table for reuse`,
+    `- [Heating cost by state as CSV](${url('/data/heating-cost-by-state.csv')}): yearly cost of each heating system for the typical home in every state`,
     `- [Data & methodology](${url('/methodology/')}): sources, formulas and assumptions behind every calculator`,
     '',
     '## Tools',

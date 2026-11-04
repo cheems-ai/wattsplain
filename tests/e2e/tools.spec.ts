@@ -685,6 +685,24 @@ test('price changes page ranks every state and offers the CSV', async ({ page, r
   );
 });
 
+test('heating calculator offers its state table as CSV with a citation box', async ({
+  page,
+  request,
+}) => {
+  await page.goto('/tools/heating-cost-calculator/');
+  await expect(page.getByRole('link', { name: 'Download this table (CSV)' })).toHaveAttribute(
+    'href',
+    '/data/heating-cost-by-state.csv',
+  );
+  await expect(page.getByRole('heading', { name: 'Using these numbers?' })).toBeVisible();
+  const csv = await request.get('/data/heating-cost-by-state.csv');
+  expect(csv.status()).toBe(200);
+  const lines = (await csv.text()).trim().split('\n');
+  expect(lines[3]).toMatch(/^state,code,heat_needed_mmbtu_per_year,/);
+  // Three comment lines, the header, 50 states and DC.
+  expect(lines).toHaveLength(4 + 51);
+});
+
 test('propane guide answers by house size and by state', async ({ page }) => {
   await page.goto('/guides/how-much-propane-to-heat-a-house/');
   await expect(page.locator('h1')).toHaveText('How much propane does it take to heat a house?');

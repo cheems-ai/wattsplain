@@ -8,6 +8,7 @@ import {
   US_TYPICAL,
   heatForSqft,
 } from '../../data/heating';
+import CiteBox from '../../components/CiteBox.astro';
 import HeatingCost from '../../islands/HeatingCost';
 import Base from '../../layouts/Base.astro';
 import {
@@ -87,6 +88,31 @@ const description = `What a heat pump, gas, propane, oil or electric heat costs 
   title={title}
   description={description}
   crumbs={[['Heating cost', '/tools/heating-cost-calculator/']]}
+  jsonLd={[
+    {
+      '@context': 'https://schema.org',
+      '@type': 'Dataset',
+      name: 'Yearly home heating cost by U.S. state: heat pump, gas, propane, oil and electric heat',
+      description: `Yearly running cost of heating the typical gas-heated home in each U.S. state and DC with a heat pump, a natural gas, propane or oil furnace, or electric resistance heat, at EIA fuel prices (propane and heating oil for the week of ${week}, natural gas ${gasLabel}, electricity ${electricLabel}). Heat need from EIA RECS ${HEATING.recs.survey}.`,
+      url: 'https://wattsplain.com/tools/heating-cost-calculator/',
+      isBasedOn: [
+        'https://www.eia.gov/consumption/residential/',
+        'https://www.eia.gov/petroleum/heatingoilpropane/',
+        'https://www.eia.gov/naturalgas/',
+      ],
+      temporalCoverage: `${HEATING.gas.from}/${HEATING.propane.week}`,
+      spatialCoverage: 'United States',
+      dateModified: HEATING.fetchedAt,
+      variableMeasured: 'Yearly space heating cost (USD) by heating system',
+      distribution: {
+        '@type': 'DataDownload',
+        encodingFormat: 'text/csv',
+        contentUrl: 'https://wattsplain.com/data/heating-cost-by-state.csv',
+      },
+      license: 'https://wattsplain.com/terms/',
+      creator: { '@type': 'Organization', name: 'Wattsplain', url: 'https://wattsplain.com/' },
+    },
+  ]}
 >
   <h1>Heating cost calculator</h1>
   <p class="lede">
@@ -144,6 +170,9 @@ const description = `What a heat pump, gas, propane, oil or electric heat costs 
     Propane and heating oil prices come from the state where EIA surveys it, otherwise from the
     region. * U.S. average: EIA has no price for the state or its region, so that fuel is not
     counted as the cheapest. Homes in warm states need little heat, so every option is cheap there.
+  </p>
+  <p class="note">
+    <a href="/data/heating-cost-by-state.csv">Download this table (CSV)</a>
   </p>
 
   <h2>Heating fuel and cost by home size</h2>
@@ -250,4 +279,10 @@ const description = `What a heat pump, gas, propane, oil or electric heat costs 
     <a href="/tools/space-heater-vs-central-heat/">Space heater vs central heat</a> ·{' '}
     <a href="/guides/how-much-propane-to-heat-a-house/">Propane to heat a house</a>
   </p>
+  <CiteBox
+    name="Cheapest way to heat a home in each state"
+    path="/tools/heating-cost-calculator/"
+    basis={`EIA fuel prices (propane and heating oil, week of ${week}) and EIA RECS ${HEATING.recs.survey}`}
+    csv="/data/heating-cost-by-state.csv"
+  />
 </Base>

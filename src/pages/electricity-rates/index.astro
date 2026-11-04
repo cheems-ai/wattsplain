@@ -1,5 +1,6 @@
 ---
 import { ELECTRICITY, STATE_ROWS } from '../../data/electricity';
+import CiteBox from '../../components/CiteBox.astro';
 import Base from '../../layouts/Base.astro';
 import { cents, dollars, kwh, monthLabel, signedPct } from '../../lib/format';
 
@@ -121,4 +122,10 @@ const description = `Average residential electricity price in every U.S. state f
       winter.
     </li>
   </ul>
+  <CiteBox
+    name="Electricity rates by state"
+    path="/electricity-rates/"
+    basis={`EIA average residential electricity prices for ${month}`}
+    csv="/data/electricity-price-changes.csv"
+  />
 </Base>
