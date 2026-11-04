@@ -68,3 +68,32 @@ export function opportunities(rows, { minImpressions = 10 } = {}) {
     })
     .sort((a, b) => b.impressions - a.impressions);
 }
+
+/**
+ * Impressions and clicks grouped by average position (2026-11-04 traffic report, step 1 of the
+ * diagnosis): 1–10 with no clicks points at titles, snippets or AI answers; 11–20 is "near page
+ * one"; beyond 20 is a ranking problem (content depth, links, time), not a snippet problem.
+ * Rows are query (or query+page) rows from the Search Analytics API.
+ */
+export function positionBuckets(rows) {
+  const buckets = [
+    {
+      label: '1–10',
+      max: 10,
+      why: 'on page one: work on title, description, answer in the first lines',
+    },
+    { label: '11–20', max: 20, why: 'near page one: add depth and internal links to these pages' },
+    { label: '21–50', max: 50, why: 'ranking problem: content, links and time' },
+    { label: '51+', max: Infinity, why: 'too far to judge yet' },
+  ].map((b) => ({ ...b, queries: 0, impressions: 0, clicks: 0 }));
+  for (const r of rows) {
+    const b = buckets.find((x) => r.position <= x.max);
+    b.queries += 1;
+    b.impressions += r.impressions;
+    b.clicks += r.clicks;
+  }
+  return buckets.map(({ max: _max, ...b }) => ({
+    ...b,
+    ctr: b.impressions ? b.clicks / b.impressions : 0,
+  }));
+}

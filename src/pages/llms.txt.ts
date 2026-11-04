@@ -5,8 +5,9 @@ import type { APIRoute } from 'astro';
 
 import { SITE } from '../config/site';
 import { ELECTRICITY, STATE_ROWS } from '../data/electricity';
+import { HEATING } from '../data/heating';
 import { TOOL_GROUPS } from '../data/tools';
-import { cents, monthLabel, signedPct } from '../lib/format';
+import { cents, dollars, monthLabel, signedPct } from '../lib/format';
 
 const url = (path: string) => new URL(path, SITE.origin).href;
 
@@ -24,11 +25,14 @@ export const GET: APIRoute = () => {
     '',
     `U.S. average residential price: ${cents(us.price)} per kWh in ${month}, ${signedPct(us.change)} from ${prior}. Typical U.S. home: ${us.avgKwh} kWh a month (EIA, ${ELECTRICITY.annual.year}).`,
     '',
+    `Heating fuels, U.S. average residential prices (EIA): propane ${dollars(HEATING.propane.us)} and heating oil ${dollars(HEATING.oil.us)} per gallon, week of ${HEATING.propane.week} (surveyed weekly October to March); natural gas ${dollars(HEATING.gas.us.price)} per thousand cubic feet, 12-month average ${monthLabel(HEATING.gas.from)} to ${monthLabel(HEATING.gas.period)}.`,
+    '',
     '## Data',
     '',
     `- [Electricity rates by state](${url('/electricity-rates/')}): price per kWh in every state and DC, year-over-year change, rank, average use and bill`,
     `- [Price changes over 12 months](${url('/electricity-rates/price-changes/')}): how much each state's price rose, and what that adds to a typical bill`,
     `- [Price changes as CSV](${url('/data/electricity-price-changes.csv')}): the same table for reuse`,
+    `- [Heating cost by state as CSV](${url('/data/heating-cost-by-state.csv')}): yearly cost of each heating system for the typical home in every state`,
     `- [Data & methodology](${url('/methodology/')}): sources, formulas and assumptions behind every calculator`,
     '',
     '## Tools',

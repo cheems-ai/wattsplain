@@ -44,6 +44,12 @@ table(
     `SELECT source, SUM(CASE WHEN event = 'view' THEN count END) AS views, SUM(CASE WHEN event = 'tool' THEN count END) AS tool_uses FROM daily_events WHERE day >= '${since}' AND segment = 'real' GROUP BY source ORDER BY views DESC`,
   ),
 );
+console.log('Real visitors from AI assistants, by landing page (see also npm run ai-visibility):');
+const ai = query(
+  `SELECT path, SUM(CASE WHEN event = 'view' THEN count END) AS views, SUM(CASE WHEN event = 'tool' THEN count END) AS tool_uses, SUM(CASE WHEN event = 'result' THEN count END) AS results FROM daily_events WHERE day >= '${since}' AND segment = 'real' AND source = 'ai' GROUP BY path ORDER BY views DESC LIMIT 20`,
+);
+if (ai.length === 0) console.log('  none yet\n');
+else table(ai);
 console.log('Top pages (real visitors):');
 table(
   query(

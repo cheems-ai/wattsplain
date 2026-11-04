@@ -7,6 +7,7 @@ import {
   analyticsTotals,
   coverageCounts,
   opportunities,
+  positionBuckets,
   serviceAccountJwt,
 } from './gsc.mjs';
 
@@ -93,5 +94,19 @@ describe('opportunities', () => {
       ['top-low-ctr', ['shown but rarely clicked']],
       ['near', ['near page one']],
     ]);
+  });
+});
+
+describe('positionBuckets', () => {
+  it('groups query rows by average position', () => {
+    const r = (impressions, clicks, position) => ({ keys: ['q'], impressions, clicks, position });
+    const b = positionBuckets([r(10, 1, 4), r(5, 0, 10), r(3, 0, 15.5), r(20, 0, 42), r(7, 0, 88)]);
+    expect(b.map((x) => [x.label, x.queries, x.impressions, x.clicks])).toEqual([
+      ['1–10', 2, 15, 1],
+      ['11–20', 1, 3, 0],
+      ['21–50', 1, 20, 0],
+      ['51+', 1, 7, 0],
+    ]);
+    expect(b[0].ctr).toBeCloseTo(1 / 15);
   });
 });

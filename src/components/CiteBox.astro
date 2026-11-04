@@ -1,0 +1,66 @@
+---
+// "Using this data?" box for the pages reporters and researchers reuse (research report 2026-11-04:
+// ranking + source + a ready citation is the format newsrooms pick up). Plain text, no tracking,
+// no embed code. The next EIA release date comes from the data file, so the box stays current.
+import { SITE } from '../config/site';
+import { ELECTRICITY } from '../data/electricity';
+
+interface Props {
+  /** Page name as it should appear in a citation. */
+  name: string;
+  path: string;
+  /** What the numbers are based on, e.g. "EIA monthly residential prices through August 2026". */
+  basis: string;
+  csv?: string;
+}
+const { name, path, basis, csv } = Astro.props;
+const next = ELECTRICITY.monthly.nextRelease
+  ? new Date(`${ELECTRICITY.monthly.nextRelease}T00:00:00Z`).toLocaleDateString('en-US', {
+      month: 'long',
+      day: 'numeric',
+      year: 'numeric',
+      timeZone: 'UTC',
+    })
+  : undefined;
+const url = new URL(path, SITE.origin).href;
+---
+
+<aside class="cite" aria-labelledby="cite-h">
+  <h2 id="cite-h">Using these numbers?</h2>
+  <p>
+    You are welcome to quote them with a link. Suggested credit:{' '}
+    {`Wattsplain, “${name},” based on ${basis}, `}
+    <a href={path}>{url}</a>.
+  </p>
+  <p>
+    {csv && (
+      <>
+        <a href={csv}>Download the table (CSV)</a>
+        {' · '}
+      </>
+    )}
+    <a href="/methodology/">How it is calculated</a>
+    {next &&
+      ` · The next EIA monthly release is expected ${next}; this page updates itself after it.`}
+  </p>
+  <p>
+    Reporters: for a state breakdown or a check of your own numbers, email{' '}
+    <a href={`mailto:${SITE.contactEmail}`}>{SITE.contactEmail}</a>.
+  </p>
+</aside>
+
+<style>
+  .cite {
+    margin: 2rem 0;
+    padding: 1rem 1.25rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+  }
+  .cite h2 {
+    margin-top: 0;
+    font-size: 1.1rem;
+  }
+  .cite p {
+    margin: 0.5rem 0;
+  }
+</style>

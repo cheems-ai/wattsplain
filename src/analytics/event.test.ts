@@ -23,6 +23,40 @@ describe('classifyReferrer', () => {
   it('does not mistake look-alike hosts for search engines', () => {
     expect(c('https://google.evil.example/')).toBe('other');
   });
+
+  it('recognises more AI assistants by referrer', () => {
+    expect(c('https://copilot.microsoft.com/')).toBe('ai');
+    expect(c('https://grok.com/c/abc')).toBe('ai');
+    expect(c('https://chat.deepseek.com/')).toBe('ai');
+    expect(c('https://chat.mistral.ai/chat')).toBe('ai');
+  });
+});
+
+describe('classifyReferrer with an AI utm_source', () => {
+  const c = (r: string, q: string) => classifyReferrer(r, 'wattsplain.com', q);
+
+  it('counts a tagged visit without a referrer as AI, not direct', () => {
+    expect(c('', '?utm_source=chatgpt.com')).toBe('ai');
+    expect(c('', '?state=TX&utm_source=perplexity')).toBe('ai');
+    expect(c('', '?utm_source=ChatGPT.com')).toBe('ai');
+    expect(c('', '?utm_source=copilot.com')).toBe('ai');
+  });
+
+  it('lets the tag win over a search or other referrer', () => {
+    expect(c('https://www.bing.com/', '?utm_source=chatgpt.com')).toBe('ai');
+    expect(c('https://someblog.example/', '?utm_source=chatgpt.com')).toBe('ai');
+  });
+
+  it('keeps links on this site internal', () => {
+    expect(c('https://wattsplain.com/tools/', '?utm_source=chatgpt.com')).toBe('internal');
+  });
+
+  it('ignores other or partial tags', () => {
+    expect(c('', '?utm_source=newsletter')).toBe('direct');
+    expect(c('', '?utm_source=notchatgpt.com')).toBe('direct');
+    expect(c('', '?utm_medium=chatgpt.com')).toBe('direct');
+    expect(c('https://www.google.com/', '?utm_source=')).toBe('search');
+  });
 });
 
 describe('parseEvent', () => {
