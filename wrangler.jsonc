@@ -10,6 +10,9 @@
     "directory": "./dist",
     // Unknown URLs get dist/404.html with a real 404 status.
     "not_found_handling": "404-page",
+    // Every page URL ends in "/" (the zone's slashless -> slash 301 rule agrees). The default
+    // auto-trailing-slash served 404.html at /404, which looped with that rule.
+    "html_handling": "force-trailing-slash",
     // With 404-page handling, only these paths reach the Worker.
     "run_worker_first": ["/api/*"],
   },

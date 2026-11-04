@@ -210,6 +210,23 @@ if (HOST === 'wattsplain.com') {
     );
 }
 {
+  // Redirect rules on the zone and the assets' own trailing-slash handling must not disagree:
+  // on 2026-11-03 they bounced /404 <-> /404/ forever. Follow a few hops by hand.
+  for (const path of ['/404.html', '/about', '/tools/index.html']) {
+    let url = `${ORIGIN}${path}`;
+    let res;
+    for (let hop = 0; hop < 5; hop++) {
+      res = await get(url);
+      if (res.status < 300 || res.status >= 400 || !res.location) break;
+      url = new URL(res.location, url).href;
+      res = undefined;
+    }
+    if (!res) add('critical', path, 'redirect loop (still redirecting after 5 hops)');
+    else if (res.status === 0) add('unreachable', path, res.error);
+    else if (res.status !== 200) add('warn', path, `ends at HTTP ${res.status} (${url})`);
+  }
+}
+{
   const res = await get(`${ORIGIN}/no-such-page-audit/`);
   if (res.status === 0) add('unreachable', '/no-such-page-audit/', res.error);
   else if (res.status !== 404)
