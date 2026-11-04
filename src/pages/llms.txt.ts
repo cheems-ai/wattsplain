@@ -5,8 +5,9 @@ import type { APIRoute } from 'astro';
 
 import { SITE } from '../config/site';
 import { ELECTRICITY, STATE_ROWS } from '../data/electricity';
+import { HEATING } from '../data/heating';
 import { TOOL_GROUPS } from '../data/tools';
-import { cents, monthLabel, signedPct } from '../lib/format';
+import { cents, dollars, monthLabel, signedPct } from '../lib/format';
 
 const url = (path: string) => new URL(path, SITE.origin).href;
 
@@ -23,6 +24,8 @@ export const GET: APIRoute = () => {
     `Latest data: ${month} residential electricity prices from the U.S. Energy Information Administration (EIA Electric Power Monthly Table 5.6.A, preliminary), released ${ELECTRICITY.monthly.released}, checked ${ELECTRICITY.fetchedAt}. The next EIA release is expected ${ELECTRICITY.monthly.nextRelease}; the site updates itself after it.`,
     '',
     `U.S. average residential price: ${cents(us.price)} per kWh in ${month}, ${signedPct(us.change)} from ${prior}. Typical U.S. home: ${us.avgKwh} kWh a month (EIA, ${ELECTRICITY.annual.year}).`,
+    '',
+    `Heating fuels, U.S. average residential prices (EIA): propane ${dollars(HEATING.propane.us)} and heating oil ${dollars(HEATING.oil.us)} per gallon, week of ${HEATING.propane.week} (surveyed weekly October to March); natural gas ${dollars(HEATING.gas.us.price)} per thousand cubic feet, 12-month average ${monthLabel(HEATING.gas.from)} to ${monthLabel(HEATING.gas.period)}.`,
     '',
     '## Data',
     '',
