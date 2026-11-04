@@ -7,6 +7,7 @@ import {
   STATE_ROWS,
   US_PRICE_CHANGE,
 } from '../../data/electricity';
+import CiteBox from '../../components/CiteBox.astro';
 import Base from '../../layouts/Base.astro';
 import { cents, dollars, monthLabel, signedPct } from '../../lib/format';
 
@@ -177,4 +178,10 @@ const description = `How much home electricity prices rose in every state in the
   <p>
     <a href="/electricity-rates/">Current price in every state →</a>
   </p>
+  <CiteBox
+    name={`Electricity price increases by state, 12 months to ${last}`}
+    path="/electricity-rates/price-changes/"
+    basis={`EIA monthly average residential electricity prices, ${monthLabel(periods[0]!)} to ${last}`}
+    csv="/data/electricity-price-changes.csv"
+  />
 </Base>
