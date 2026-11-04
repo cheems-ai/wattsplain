@@ -13,7 +13,7 @@ export function track(event: EventName): void {
   const body = JSON.stringify({
     e: event,
     p: location.pathname,
-    s: classifyReferrer(document.referrer, location.hostname),
+    s: classifyReferrer(document.referrer, location.hostname, location.search),
     // Automated browsers (our own tests, scrapers) are counted separately from real visitors.
     a: navigator.webdriver ? 1 : 0,
   });

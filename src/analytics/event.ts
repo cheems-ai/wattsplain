@@ -16,20 +16,37 @@ export type Segment = 'real' | 'automation' | 'bot';
 const SEARCH =
   /(^|\.)(google|bing|duckduckgo|yahoo|ecosia|brave|yandex|baidu|startpage|qwant|kagi)\.(com|org|net|[a-z]{2}|co\.[a-z]{2}|com\.[a-z]{2})$/;
 const AI =
-  /(^|\.)(chatgpt\.com|openai\.com|perplexity\.ai|claude\.ai|copilot\.microsoft\.com|gemini\.google\.com|you\.com|phind\.com|meta\.ai)$/;
+  /(^|\.)(chatgpt\.com|openai\.com|perplexity\.ai|claude\.ai|copilot\.microsoft\.com|copilot\.com|gemini\.google\.com|you\.com|phind\.com|meta\.ai|grok\.com|deepseek\.com|mistral\.ai|kimi\.com|poe\.com|duck\.ai)$/;
+// AI assistants often open links without a referrer (apps, rel=noreferrer) but tag them, e.g.
+// ChatGPT adds ?utm_source=chatgpt.com. Only the category is kept, never the tag itself.
+const AI_UTM =
+  /^(chatgpt(\.com)?|openai|perplexity(\.ai)?|claude(\.ai)?|copilot(\.com|\.microsoft\.com)?|gemini|grok(\.com)?|deepseek|mistral|kimi|meta\.ai|you\.com|phind|poe)$/;
 const SOCIAL =
   /(^|\.)(reddit\.com|facebook\.com|instagram\.com|x\.com|t\.co|twitter\.com|linkedin\.com|lnkd\.in|pinterest\.com|youtube\.com|tiktok\.com|threads\.net|bsky\.app|news\.ycombinator\.com|quora\.com|nextdoor\.com)$/;
 
-/** Referrer → a coarse category; the referrer itself is never sent or stored. */
-export function classifyReferrer(referrer: string, ownHost: string): Source {
-  if (!referrer) return 'direct';
-  let host: string;
-  try {
-    host = new URL(referrer).hostname.toLowerCase();
-  } catch {
-    return 'other';
+/** True when the landing URL's query (location.search) carries an AI assistant's utm_source. */
+export function aiFromUtm(search: string): boolean {
+  const tag = new URLSearchParams(search).get('utm_source');
+  return tag !== null && AI_UTM.test(tag.trim().toLowerCase());
+}
+
+/**
+ * Referrer (+ the landing URL's query) → a coarse category; neither is ever sent or stored.
+ * A link on this site stays internal even if the URL still carries an AI tag.
+ */
+export function classifyReferrer(referrer: string, ownHost: string, search = ''): Source {
+  let host = '';
+  if (referrer) {
+    try {
+      host = new URL(referrer).hostname.toLowerCase();
+    } catch {
+      host = '?';
+    }
   }
   if (host === ownHost || host === `www.${ownHost}`) return 'internal';
+  if (aiFromUtm(search)) return 'ai';
+  if (!referrer) return 'direct';
+  if (host === '?') return 'other';
   if (AI.test(host)) return 'ai';
   if (SEARCH.test(host)) return 'search';
   if (SOCIAL.test(host)) return 'social';

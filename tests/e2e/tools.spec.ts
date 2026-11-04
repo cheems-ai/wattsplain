@@ -125,6 +125,12 @@ test('llms.txt lists the tools and every state with its current price', async ({
     text.match(/\]\(https:\/\/wattsplain\.com\/electricity-rates\/[a-z-]+\/\): [\d.]+¢ per kWh/g),
   ).toHaveLength(51);
   expect(text).toContain(`${cents(price('TX').price)} per kWh`);
+  // Heating fuel headline comes from the same data as the heating calculator.
+  const heating = JSON.parse(
+    readFileSync(new URL('../../src/data/heating.json', import.meta.url), 'utf8'),
+  ) as { propane: { us: number; week: string } };
+  expect(text).toContain(`propane $${heating.propane.us.toFixed(2)}`);
+  expect(text).toContain(`week of ${heating.propane.week}`);
 });
 
 test('pages fit the screen without horizontal scrolling', async ({ page }) => {
@@ -208,6 +214,19 @@ test('sends a cookieless page view and one tool event, with no visitor details',
   expect(events.filter((x) => x['e'] === 'tool')).toHaveLength(1);
   expect(await context.cookies()).toEqual([]);
   expect(await page.evaluate(() => localStorage.length + sessionStorage.length)).toBe(0);
+});
+
+test('a link from an AI assistant without a referrer counts as AI, and the tag is not sent', async ({
+  page,
+}) => {
+  const events: Record<string, unknown>[] = [];
+  await page.route('**/api/e', async (route) => {
+    events.push(JSON.parse(route.request().postData() ?? '{}'));
+    await route.fulfill({ status: 204 });
+  });
+  await page.goto('/electricity-rates/texas/?utm_source=chatgpt.com');
+  await expect.poll(() => events.length).toBe(1);
+  expect(events[0]).toEqual({ e: 'view', p: '/electricity-rates/texas/', s: 'ai', a: 1 });
 });
 
 test('keeps what the visitor typed before the calculator finished loading', async ({ page }) => {
