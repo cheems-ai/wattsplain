@@ -29,7 +29,8 @@
     "ai-visibility": "node scripts/ops/ai-visibility.mjs",
     "gsc": "node scripts/ops/gsc-report.mjs",
     "review": "node scripts/ops/monthly-review.mjs",
-    "og-image": "node scripts/og-image.mjs"
+    "og-image": "node scripts/og-image.mjs",
+    "favicon-ico": "node scripts/favicon-ico.mjs"
   },
   "dependencies": {
     "@astrojs/preact": "6.1.1",
