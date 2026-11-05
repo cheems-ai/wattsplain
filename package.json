@@ -32,7 +32,8 @@
     "og-image": "node scripts/og-image.mjs",
     "favicon-ico": "node scripts/favicon-ico.mjs",
     "data:utilities": "node scripts/data/fetch-utilities.mjs",
-    "gsc:snapshot": "node scripts/ops/gsc-snapshot.mjs"
+    "gsc:snapshot": "node scripts/ops/gsc-snapshot.mjs",
+    "seo:weekly": "node scripts/ops/seo-weekly.mjs"
   },
   "dependencies": {
     "@astrojs/preact": "6.1.1",
