@@ -290,6 +290,19 @@ test('state page compares heating costs and links the calculator with the state'
   );
 });
 
+test('state page lists prices by utility from EIA-861M', async ({ page }) => {
+  const utilities = JSON.parse(
+    readFileSync(new URL('../../src/data/utilities.json', import.meta.url), 'utf8'),
+  ) as { states: Record<string, { utilities: { name: string; price: number }[] }> };
+  const first = utilities.states['KS']!.utilities[0]!;
+  await page.goto('/electricity-rates/kansas/');
+  const table = page.getByRole('table', { name: /Average residential price by utility, Kansas/ });
+  await expect(table).toBeVisible();
+  const row = table.getByRole('row').filter({ hasText: first.name });
+  await expect(row).toContainText(cents(first.price));
+  await expect(page.getByText(/It is an average, not a tariff rate/)).toBeVisible();
+});
+
 test('heating page table fits a phone screen', async ({ page }, info) => {
   test.skip(info.project.name !== 'phone', 'phone layout only');
   await page.goto('/tools/heating-cost-calculator/');

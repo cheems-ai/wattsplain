@@ -3,7 +3,8 @@
 // the shared strings and the first sheet, and return the rows as arrays of strings/numbers.
 import { inflateRawSync } from 'node:zlib';
 
-function readZip(buf) {
+/** Entries of a zip archive (stored or deflated) by name. */
+export function readZip(buf) {
   const eocd = buf.lastIndexOf(Buffer.from([0x50, 0x4b, 0x05, 0x06]));
   if (eocd < 0) throw new Error('not a zip archive');
   const count = buf.readUInt16LE(eocd + 10);
