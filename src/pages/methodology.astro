@@ -2,6 +2,7 @@
 import { APPLIANCE_SOURCE } from '../data/appliances';
 import { ELECTRICITY, HISTORY, stateRow } from '../data/electricity';
 import { HEATING, heatingRow } from '../data/heating';
+import { UTILITIES } from '../data/utilities';
 import Base from '../layouts/Base.astro';
 import { applianceEnergy, cost } from '../lib/appliance';
 import { analyzeBills } from '../lib/energy';
@@ -74,6 +75,24 @@ const repo = 'https://github.com/cheems-ai/wattsplain';
           <td class="hide-sm">
             {`Released ${longDate(ELECTRICITY.monthly.released)}; next ${longDate(ELECTRICITY.monthly.nextRelease)}; checked ${ELECTRICITY.fetchedAt}`}
           </td>
+        </tr>
+        <tr>
+          <th scope="row">
+            <a href={UTILITIES.source}>EIA Form 861M</a>: residential revenue, sales and customers
+            of the larger utilities in each state
+          </th>
+          <td>{`${monthLabel(UTILITIES.period)} (preliminary) and the 12 months before`}</td>
+          <td>¢/kWh</td>
+          <td class="hide-sm">{`Checked ${UTILITIES.fetchedAt}`}</td>
+        </tr>
+        <tr>
+          <th scope="row">
+            <a href={UTILITIES.choice!.source}>EIA Form 861</a>: homes buying from a retail supplier
+            or community program, by state
+          </th>
+          <td>{UTILITIES.choice!.year}</td>
+          <td>share of homes</td>
+          <td class="hide-sm">{`Checked ${UTILITIES.fetchedAt}`}</td>
         </tr>
         <tr>
           <th scope="row">
@@ -266,6 +285,20 @@ const repo = 'https://github.com/cheems-ai/wattsplain';
       division).
     </li>
     <li>Year-to-date figures are simple averages of the monthly prices.</li>
+    <li>
+      Prices by utility = a utility's residential revenue ÷ the kWh it sold to homes (EIA Form
+      861M), for its full-service customers only. Like EIA's state averages they include energy,
+      delivery, fixed charges, taxes and fees, so they are averages, not tariff rates. The 12-month
+      figure is 12 months of revenue ÷ 12 months of kWh. EIA's monthly survey covers the larger
+      utilities; smaller ones, and homes that buy their supply from a retail supplier or a community
+      aggregation program, are only in the state average. The state totals in this file must match
+      Table 5.6.A before we publish them.
+    </li>
+    <li>
+      The retail-choice share = homes on delivery-only service (their supply comes from a retail
+      supplier or a community program) plus homes served by retail electric providers (Texas), as a
+      share of all homes, from the EIA-861 annual file.
+    </li>
   </ul>
 
   <h2>Price changes by state</h2>

@@ -1,0 +1,3786 @@
+{
+  "source": "https://www.eia.gov/electricity/data/eia861m/",
+  "fetchedAt": "2026-11-05",
+  "period": "2026-08",
+  "priorPeriod": "2025-08",
+  "choice": {
+    "year": 2025,
+    "source": "https://www.eia.gov/electricity/data/eia861/"
+  },
+  "states": {
+    "CT": {
+      "statePrice": 24.51,
+      "customers": 1613280,
+      "shownShare": 0.832,
+      "choiceShare": 0.159,
+      "utilities": [
+        {
+          "id": 4176,
+          "name": "Connecticut Light & Power Co",
+          "ownership": "Investor-owned",
+          "customers": 1038642,
+          "price": 23.94,
+          "priceYearAgo": 30.93,
+          "price12": 26.89
+        },
+        {
+          "id": 19497,
+          "name": "United Illuminating Co",
+          "ownership": "Investor-owned",
+          "customers": 270340,
+          "price": 28.27,
+          "priceYearAgo": 35.95,
+          "price12": 32.49
+        },
+        {
+          "id": 20038,
+          "name": "Town of Wallingford - (CT)",
+          "ownership": "City-owned",
+          "customers": 21453,
+          "price": 19.25,
+          "priceYearAgo": 17.53,
+          "price12": 18.5
+        },
+        {
+          "id": 7716,
+          "name": "Groton Dept of Utilities - (CT)",
+          "ownership": "City-owned",
+          "customers": 12596,
+          "price": 21.08,
+          "priceYearAgo": 17.79,
+          "price12": 19.26
+        }
+      ]
+    },
+    "ME": {
+      "statePrice": 32.11,
+      "customers": 763389,
+      "shownShare": 0.926,
+      "choiceShare": 0.071,
+      "utilities": [
+        {
+          "id": 3266,
+          "name": "Central Maine Power Co",
+          "ownership": "Investor-owned",
+          "customers": 556199,
+          "price": 32.32,
+          "priceYearAgo": 27.88,
+          "price12": 29.17
+        },
+        {
+          "id": 1179,
+          "name": "Versant Power",
+          "ownership": "Investor-owned",
+          "customers": 133343,
+          "price": 34.1,
+          "priceYearAgo": 31.44,
+          "price12": 32.93
+        },
+        {
+          "id": 5609,
+          "name": "Eastern Maine Electric Coop",
+          "ownership": "Co-op",
+          "customers": 10827,
+          "price": 22.41,
+          "priceYearAgo": 18.88,
+          "price12": 21.96
+        },
+        {
+          "id": 8883,
+          "name": "Houlton Water Company",
+          "ownership": "City-owned",
+          "customers": 3907,
+          "price": 15.55,
+          "priceYearAgo": 15.25,
+          "price12": 15.53
+        },
+        {
+          "id": 11477,
+          "name": "Town of Madison - (ME)",
+          "ownership": "City-owned",
+          "customers": 2466,
+          "price": 16.06,
+          "priceYearAgo": 15.11,
+          "price12": 15.88
+        }
+      ]
+    },
+    "MA": {
+      "statePrice": 30.48,
+      "customers": 2921850,
+      "shownShare": 0.245,
+      "choiceShare": 0.615,
+      "utilities": [
+        {
+          "id": 11804,
+          "name": "Massachusetts Electric Co",
+          "ownership": "Investor-owned",
+          "customers": 409610,
+          "price": 33.43,
+          "priceYearAgo": 36.91,
+          "price12": 33.86
+        },
+        {
+          "id": 54913,
+          "name": "NSTAR Electric Company",
+          "ownership": "Investor-owned",
+          "customers": 246514,
+          "price": 20.85,
+          "priceYearAgo": 19.66,
+          "price12": 19.73
+        },
+        {
+          "id": 15748,
+          "name": "Town of Reading - (MA)",
+          "ownership": "City-owned",
+          "customers": 27797,
+          "price": 19.24,
+          "priceYearAgo": 16.61,
+          "price12": 19.11
+        },
+        {
+          "id": 8774,
+          "name": "City of Holyoke - (MA)",
+          "ownership": "City-owned",
+          "customers": 15268,
+          "price": 17.82,
+          "priceYearAgo": 16.78,
+          "price12": 17.14
+        },
+        {
+          "id": 20310,
+          "name": "Town of Wellesley - (MA)",
+          "ownership": "City-owned",
+          "customers": 9373,
+          "price": 16.58,
+          "priceYearAgo": 16.64,
+          "price12": 16.19
+        },
+        {
+          "id": 6374,
+          "name": "Fitchburg Gas & Elec Light Co",
+          "ownership": "Investor-owned",
+          "customers": 4420,
+          "price": 39.89,
+          "priceYearAgo": 35.21,
+          "price12": 40.46
+        },
+        {
+          "id": 13206,
+          "name": "Nantucket Electric Co",
+          "ownership": "Investor-owned",
+          "customers": 2277,
+          "price": 38.15,
+          "priceYearAgo": 38.16,
+          "price12": 37.61
+        }
+      ]
+    },
+    "NH": {
+      "statePrice": 27.64,
+      "customers": 664129,
+      "shownShare": 0.541,
+      "choiceShare": 0.404,
+      "utilities": [
+        {
+          "id": 15472,
+          "name": "Public Service Co of NH",
+          "ownership": "Investor-owned",
+          "customers": 251887,
+          "price": 27.24,
+          "priceYearAgo": 24.77,
+          "price12": 26.17
+        },
+        {
+          "id": 13441,
+          "name": "New Hampshire Elec Coop Inc",
+          "ownership": "Co-op",
+          "customers": 70649,
+          "price": 29.07,
+          "priceYearAgo": 25.99,
+          "price12": 26.94
+        },
+        {
+          "id": 24590,
+          "name": "Unitil Energy Systems",
+          "ownership": "Investor-owned",
+          "customers": 24489,
+          "price": 27.3,
+          "priceYearAgo": 22.2,
+          "price12": 25.44
+        },
+        {
+          "id": 26510,
+          "name": "Liberty Utilities (Granite State Electric) Corp",
+          "ownership": "Investor-owned",
+          "customers": 12144,
+          "price": 26.4,
+          "priceYearAgo": 22.95,
+          "price12": 25.5
+        }
+      ]
+    },
+    "RI": {
+      "statePrice": 28.18,
+      "customers": 596290,
+      "shownShare": 0.788,
+      "choiceShare": 0.257,
+      "utilities": [
+        {
+          "id": 13214,
+          "name": "The Narragansett Electric Co",
+          "ownership": "Investor-owned",
+          "customers": 463936,
+          "price": 27.47,
+          "priceYearAgo": 26.58,
+          "price12": 29.26
+        },
+        {
+          "id": 14537,
+          "name": "Clear River Electric and Water District",
+          "ownership": "City-owned",
+          "customers": 4405,
+          "price": 18.38,
+          "priceYearAgo": 17.43,
+          "price12": 18.2
+        },
+        {
+          "id": 1857,
+          "name": "Block Island Utility District",
+          "ownership": "Public power district",
+          "customers": 1646,
+          "price": 49.56,
+          "priceYearAgo": 49.65,
+          "price12": 37.3
+        }
+      ]
+    },
+    "VT": {
+      "statePrice": 23.84,
+      "customers": 314483,
+      "shownShare": 0.9,
+      "choiceShare": 0,
+      "utilities": [
+        {
+          "id": 7601,
+          "name": "Green Mountain Power Corp",
+          "ownership": "Investor-owned",
+          "customers": 228816,
+          "price": 24.67,
+          "priceYearAgo": 22.77,
+          "price12": 24.44
+        },
+        {
+          "id": 19791,
+          "name": "Vermont Electric Cooperative, Inc",
+          "ownership": "Co-op",
+          "customers": 36132,
+          "price": 25.31,
+          "priceYearAgo": 24.48,
+          "price12": 24.9
+        },
+        {
+          "id": 2548,
+          "name": "City of Burlington Electric - (VT)",
+          "ownership": "City-owned",
+          "customers": 18168,
+          "price": 20.26,
+          "priceYearAgo": 19.38,
+          "price12": 20.34
+        }
+      ]
+    },
+    "NJ": {
+      "statePrice": 24.61,
+      "customers": 3790542,
+      "shownShare": 0.912,
+      "choiceShare": 0.059,
+      "utilities": [
+        {
+          "id": 15477,
+          "name": "Public Service Elec & Gas Co",
+          "ownership": "Investor-owned",
+          "customers": 1975037,
+          "price": 26.85,
+          "priceYearAgo": 28.59,
+          "price12": 25.91
+        },
+        {
+          "id": 9726,
+          "name": "Jersey Central Power & Lt Co",
+          "ownership": "Investor-owned",
+          "customers": 943986,
+          "price": 20.55,
+          "priceYearAgo": 20.38,
+          "price12": 19.32
+        },
+        {
+          "id": 963,
+          "name": "Atlantic City Electric Co",
+          "ownership": "Investor-owned",
+          "customers": 474417,
+          "price": 27.61,
+          "priceYearAgo": 27.54,
+          "price12": 27.75
+        },
+        {
+          "id": 16213,
+          "name": "Rockland Electric Co",
+          "ownership": "Investor-owned",
+          "customers": 64521,
+          "price": 26.4,
+          "priceYearAgo": 23.62,
+          "price12": 25.25
+        }
+      ]
+    },
+    "NY": {
+      "statePrice": 28.65,
+      "customers": 7517781,
+      "shownShare": 0.944,
+      "choiceShare": 0.072,
+      "utilities": [
+        {
+          "id": 4226,
+          "name": "Consolidated Edison Co-NY Inc",
+          "ownership": "Investor-owned",
+          "customers": 2987741,
+          "price": 39.96,
+          "priceYearAgo": 36.8,
+          "price12": 38.52
+        },
+        {
+          "id": 13573,
+          "name": "Niagara Mohawk Power Corp.",
+          "ownership": "Investor-owned",
+          "customers": 1481492,
+          "price": 22.61,
+          "priceYearAgo": 18.51,
+          "price12": 23.24
+        },
+        {
+          "id": 11171,
+          "name": "Long Island Power Authority",
+          "ownership": "State-owned",
+          "customers": 1036952,
+          "price": 26.97,
+          "priceYearAgo": 27.34,
+          "price12": 27.71
+        },
+        {
+          "id": 13511,
+          "name": "New York State Elec & Gas Corp",
+          "ownership": "Investor-owned",
+          "customers": 771460,
+          "price": 20.92,
+          "priceYearAgo": 22.55,
+          "price12": 24.86
+        },
+        {
+          "id": 16183,
+          "name": "Rochester Gas & Electric Corp",
+          "ownership": "Investor-owned",
+          "customers": 345119,
+          "price": 22.52,
+          "priceYearAgo": 20.37,
+          "price12": 23.88
+        },
+        {
+          "id": 3249,
+          "name": "Central Hudson Gas & Elec Corp",
+          "ownership": "Investor-owned",
+          "customers": 253605,
+          "price": 34.25,
+          "priceYearAgo": 30.09,
+          "price12": 30.71
+        },
+        {
+          "id": 14154,
+          "name": "Orange & Rockland Utils Inc",
+          "ownership": "Investor-owned",
+          "customers": 202541,
+          "price": 28.02,
+          "priceYearAgo": 28.73,
+          "price12": 28.04
+        },
+        {
+          "id": 9645,
+          "name": "Jamestown Board of Public Util",
+          "ownership": "City-owned",
+          "customers": 15549,
+          "price": 9.96,
+          "priceYearAgo": 8.54,
+          "price12": 8.93
+        },
+        {
+          "id": 66101,
+          "name": "FirstEnergy Pennsylvania Electric Co",
+          "ownership": "Investor-owned",
+          "customers": 3352,
+          "price": 18.69,
+          "priceYearAgo": 16.14,
+          "price12": 16.54
+        },
+        {
+          "id": 6369,
+          "name": "Fishers Island Utility Co Inc",
+          "ownership": "Investor-owned",
+          "customers": 658,
+          "price": 42.1,
+          "priceYearAgo": 43,
+          "price12": 42.61
+        }
+      ]
+    },
+    "PA": {
+      "statePrice": 21.77,
+      "customers": 5589846,
+      "shownShare": 0.748,
+      "choiceShare": 0.223,
+      "utilities": [
+        {
+          "id": 66101,
+          "name": "FirstEnergy Pennsylvania Electric Co",
+          "ownership": "Investor-owned",
+          "customers": 1497377,
+          "price": 21.33,
+          "priceYearAgo": 19.32,
+          "price12": 20.38
+        },
+        {
+          "id": 14940,
+          "name": "PECO Energy Co",
+          "ownership": "Investor-owned",
+          "customers": 1252402,
+          "price": 20.47,
+          "priceYearAgo": 18.52,
+          "price12": 19.49
+        },
+        {
+          "id": 14715,
+          "name": "PPL Electric Utilities Corp",
+          "ownership": "Investor-owned",
+          "customers": 914835,
+          "price": 20.96,
+          "priceYearAgo": 19.54,
+          "price12": 19.96
+        },
+        {
+          "id": 5487,
+          "name": "Duquesne Light Co",
+          "ownership": "Investor-owned",
+          "customers": 448182,
+          "price": 25.86,
+          "priceYearAgo": 23.69,
+          "price12": 25.39
+        },
+        {
+          "id": 19390,
+          "name": "UGI Utilities, Inc",
+          "ownership": "Investor-owned",
+          "customers": 54821,
+          "price": 21.65,
+          "priceYearAgo": 20.63,
+          "price12": 20.24
+        },
+        {
+          "id": 3597,
+          "name": "Citizens Electric Co - (PA)",
+          "ownership": "Investor-owned",
+          "customers": 6020,
+          "price": 18.9,
+          "priceYearAgo": 15.92,
+          "price12": 17.51
+        },
+        {
+          "id": 20334,
+          "name": "Wellsborough Electric Co",
+          "ownership": "Investor-owned",
+          "customers": 5164,
+          "price": 22.44,
+          "priceYearAgo": 20.2,
+          "price12": 21.47
+        },
+        {
+          "id": 15045,
+          "name": "Pike County Light & Power Co",
+          "ownership": "Investor-owned",
+          "customers": 3771,
+          "price": 25.61,
+          "priceYearAgo": 21.79,
+          "price12": 23.76
+        }
+      ]
+    },
+    "IL": {
+      "statePrice": 19.32,
+      "customers": 5416953,
+      "shownShare": 0.696,
+      "choiceShare": 0.223,
+      "utilities": [
+        {
+          "id": 4110,
+          "name": "Commonwealth Edison Co",
+          "ownership": "Investor-owned",
+          "customers": 3059080,
+          "price": 19.28,
+          "priceYearAgo": 18.42,
+          "price12": 19.33
+        },
+        {
+          "id": 56697,
+          "name": "Ameren Illinois Company",
+          "ownership": "Investor-owned",
+          "customers": 634558,
+          "price": 19.42,
+          "priceYearAgo": 17.84,
+          "price12": 17.44
+        },
+        {
+          "id": 12341,
+          "name": "MidAmerican Energy Co",
+          "ownership": "Investor-owned",
+          "customers": 73380,
+          "price": 16.41,
+          "priceYearAgo": 13.74,
+          "price12": 9.72
+        },
+        {
+          "id": 13032,
+          "name": "Mt Carmel Public Utility Co",
+          "ownership": "Investor-owned",
+          "customers": 4282,
+          "price": 21.61,
+          "priceYearAgo": 22.41,
+          "price12": 20.22
+        }
+      ]
+    },
+    "IN": {
+      "statePrice": 17.02,
+      "customers": 3039552,
+      "shownShare": 0.753,
+      "choiceShare": 0,
+      "utilities": [
+        {
+          "id": 15470,
+          "name": "Duke Energy Indiana, LLC",
+          "ownership": "Investor-owned",
+          "customers": 819956,
+          "price": 16.16,
+          "priceYearAgo": 14.88,
+          "price12": 15.91
+        },
+        {
+          "id": 9273,
+          "name": "AES Indiana",
+          "ownership": "Investor-owned",
+          "customers": 472208,
+          "price": 16.79,
+          "priceYearAgo": 15.32,
+          "price12": 15.43
+        },
+        {
+          "id": 13756,
+          "name": "Northern Indiana Pub Serv Co",
+          "ownership": "Investor-owned",
+          "customers": 434142,
+          "price": 23.43,
+          "priceYearAgo": 22.75,
+          "price12": 23.6
+        },
+        {
+          "id": 9324,
+          "name": "Indiana Michigan Power Co",
+          "ownership": "Investor-owned",
+          "customers": 426284,
+          "price": 14.63,
+          "priceYearAgo": 17.14,
+          "price12": 16.78
+        },
+        {
+          "id": 17633,
+          "name": "Southern Indiana Gas & Elec Co",
+          "ownership": "Investor-owned",
+          "customers": 135205,
+          "price": 22.16,
+          "priceYearAgo": 21.99,
+          "price12": 21.35
+        }
+      ]
+    },
+    "MI": {
+      "statePrice": 22.99,
+      "customers": 4559955,
+      "shownShare": 0.897,
+      "choiceShare": 0,
+      "utilities": [
+        {
+          "id": 5109,
+          "name": "DTE Electric Company",
+          "ownership": "Investor-owned",
+          "customers": 2085559,
+          "price": 23.25,
+          "priceYearAgo": 20.47,
+          "price12": 21.96
+        },
+        {
+          "id": 4254,
+          "name": "Consumers Energy Co - (MI)",
+          "ownership": "Investor-owned",
+          "customers": 1666844,
+          "price": 24.38,
+          "priceYearAgo": 22.04,
+          "price12": 21.7
+        },
+        {
+          "id": 9324,
+          "name": "Indiana Michigan Power Co",
+          "ownership": "Investor-owned",
+          "customers": 113556,
+          "price": 16.32,
+          "priceYearAgo": 16.51,
+          "price12": 16.66
+        },
+        {
+          "id": 10704,
+          "name": "City of Lansing - (MI)",
+          "ownership": "City-owned",
+          "customers": 87759,
+          "price": 19.46,
+          "priceYearAgo": 17.74,
+          "price12": 20.98
+        },
+        {
+          "id": 19578,
+          "name": "Upper Peninsula Power Company",
+          "ownership": "Investor-owned",
+          "customers": 47930,
+          "price": 29.03,
+          "priceYearAgo": 27.97,
+          "price12": 28.63
+        },
+        {
+          "id": 3828,
+          "name": "Cloverland Electric Co-op",
+          "ownership": "Co-op",
+          "customers": 36086,
+          "price": 15.81,
+          "priceYearAgo": 14.64,
+          "price12": 14.46
+        },
+        {
+          "id": 60631,
+          "name": "Upper Michigan Energy Resources Corp.",
+          "ownership": "Investor-owned",
+          "customers": 33416,
+          "price": 16.62,
+          "priceYearAgo": 17.3,
+          "price12": 18.41
+        },
+        {
+          "id": 392,
+          "name": "Alpena Power Co",
+          "ownership": "Investor-owned",
+          "customers": 13726,
+          "price": 18.53,
+          "priceYearAgo": 17.66,
+          "price12": 18.73
+        },
+        {
+          "id": 13780,
+          "name": "Northern States Power Co",
+          "ownership": "Investor-owned",
+          "customers": 7544,
+          "price": 15.72,
+          "priceYearAgo": 15.25,
+          "price12": 15.44
+        }
+      ]
+    },
+    "OH": {
+      "statePrice": 19.38,
+      "customers": 5122483,
+      "shownShare": 0.289,
+      "choiceShare": 0.58,
+      "utilities": [
+        {
+          "id": 14006,
+          "name": "Ohio Power Co",
+          "ownership": "Investor-owned",
+          "customers": 594401,
+          "price": 21.54,
+          "priceYearAgo": 19.87,
+          "price12": 20.48
+        },
+        {
+          "id": 3542,
+          "name": "Duke Energy Ohio Inc",
+          "ownership": "Investor-owned",
+          "customers": 272906,
+          "price": 18.48,
+          "priceYearAgo": 18.53,
+          "price12": 17.4
+        },
+        {
+          "id": 13998,
+          "name": "Ohio Edison Co",
+          "ownership": "Investor-owned",
+          "customers": 246156,
+          "price": 19.91,
+          "priceYearAgo": 16.86,
+          "price12": 17.52
+        },
+        {
+          "id": 4922,
+          "name": "Dayton Power & Light Co",
+          "ownership": "Investor-owned",
+          "customers": 152721,
+          "price": 20.62,
+          "priceYearAgo": 18.23,
+          "price12": 18.8
+        },
+        {
+          "id": 3755,
+          "name": "Cleveland Electric Illum Co",
+          "ownership": "Investor-owned",
+          "customers": 129635,
+          "price": 20.84,
+          "priceYearAgo": 16.5,
+          "price12": 18.38
+        },
+        {
+          "id": 18997,
+          "name": "The Toledo Edison Co",
+          "ownership": "Investor-owned",
+          "customers": 84485,
+          "price": 18.88,
+          "priceYearAgo": 17.13,
+          "price12": 17.56
+        }
+      ]
+    },
+    "WI": {
+      "statePrice": 19.41,
+      "customers": 2901598,
+      "shownShare": 0.812,
+      "choiceShare": 0,
+      "utilities": [
+        {
+          "id": 20847,
+          "name": "Wisconsin Electric Power Co",
+          "ownership": "Investor-owned",
+          "customers": 1063325,
+          "price": 21.76,
+          "priceYearAgo": 20.6,
+          "price12": 21.27
+        },
+        {
+          "id": 20856,
+          "name": "Wisconsin Power & Light Co",
+          "ownership": "Investor-owned",
+          "customers": 442869,
+          "price": 18.76,
+          "priceYearAgo": 18.05,
+          "price12": 18.93
+        },
+        {
+          "id": 20860,
+          "name": "Wisconsin Public Service Corp",
+          "ownership": "Investor-owned",
+          "customers": 419996,
+          "price": 17.56,
+          "priceYearAgo": 16.99,
+          "price12": 17.58
+        },
+        {
+          "id": 13780,
+          "name": "Northern States Power Co",
+          "ownership": "Investor-owned",
+          "customers": 224688,
+          "price": 18.28,
+          "priceYearAgo": 16.45,
+          "price12": 16.86
+        },
+        {
+          "id": 11479,
+          "name": "Madison Gas & Electric Co",
+          "ownership": "Investor-owned",
+          "customers": 155362,
+          "price": 21.02,
+          "priceYearAgo": 20.81,
+          "price12": 21.27
+        },
+        {
+          "id": 18336,
+          "name": "Superior Water and Light Co",
+          "ownership": "Investor-owned",
+          "customers": 13401,
+          "price": 17.21,
+          "priceYearAgo": 15.85,
+          "price12": 16.42
+        },
+        {
+          "id": 13815,
+          "name": "Northwestern Wisconsin Elec Co",
+          "ownership": "Investor-owned",
+          "customers": 13037,
+          "price": 17.89,
+          "priceYearAgo": 15.37,
+          "price12": 15.56
+        },
+        {
+          "id": 4715,
+          "name": "Dahlberg Light & Power Co",
+          "ownership": "Investor-owned",
+          "customers": 11084,
+          "price": 15.7,
+          "priceYearAgo": 14.34,
+          "price12": 13.23
+        },
+        {
+          "id": 5574,
+          "name": "East Central Energy",
+          "ownership": "Co-op",
+          "customers": 5213,
+          "price": 19.9,
+          "priceYearAgo": 19.37,
+          "price12": 17.51
+        },
+        {
+          "id": 13697,
+          "name": "North Central Power Co Inc",
+          "ownership": "Investor-owned",
+          "customers": 5055,
+          "price": 20.57,
+          "priceYearAgo": 17.61,
+          "price12": 17.91
+        },
+        {
+          "id": 15086,
+          "name": "Pioneer Power and Light Co",
+          "ownership": "Investor-owned",
+          "customers": 2013,
+          "price": 19.15,
+          "priceYearAgo": 18.31,
+          "price12": 17.86
+        },
+        {
+          "id": 40036,
+          "name": "Westfield Electric Company",
+          "ownership": "Investor-owned",
+          "customers": 622,
+          "price": 27.22,
+          "priceYearAgo": 18.66,
+          "price12": 20.68
+        }
+      ]
+    },
+    "IA": {
+      "statePrice": 17.06,
+      "customers": 1487439,
+      "shownShare": 0.717,
+      "choiceShare": 0,
+      "utilities": [
+        {
+          "id": 12341,
+          "name": "MidAmerican Energy Co",
+          "ownership": "Investor-owned",
+          "customers": 646536,
+          "price": 15.23,
+          "priceYearAgo": 13.18,
+          "price12": 11.58
+        },
+        {
+          "id": 9417,
+          "name": "Interstate Power and Light Co",
+          "ownership": "Investor-owned",
+          "customers": 419914,
+          "price": 21.48,
+          "priceYearAgo": 20.82,
+          "price12": 18.37
+        },
+        {
+          "id": 471,
+          "name": "Amana Society Service Co",
+          "ownership": "Investor-owned",
+          "customers": 705,
+          "price": 21.52,
+          "priceYearAgo": 18.57,
+          "price12": 18.87
+        }
+      ]
+    },
+    "KS": {
+      "statePrice": 15.47,
+      "customers": 1363110,
+      "shownShare": 0.744,
+      "choiceShare": 0,
+      "utilities": [
+        {
+          "id": 22500,
+          "name": "Evergy Kansas Central, Inc",
+          "ownership": "Investor-owned",
+          "customers": 347548,
+          "price": 15.71,
+          "priceYearAgo": 14.65,
+          "price12": 15.35
+        },
+        {
+          "id": 10005,
+          "name": "Evergy Kansas South, Inc",
+          "ownership": "Investor-owned",
+          "customers": 309321,
+          "price": 15.57,
+          "priceYearAgo": 14.51,
+          "price12": 15.35
+        },
+        {
+          "id": 10000,
+          "name": "Evergy Metro",
+          "ownership": "Investor-owned",
+          "customers": 250629,
+          "price": 14.28,
+          "priceYearAgo": 14.4,
+          "price12": 13.31
+        },
+        {
+          "id": 9996,
+          "name": "City of Kansas City - (KS)",
+          "ownership": "City-owned",
+          "customers": 62596,
+          "price": 13.93,
+          "priceYearAgo": 14.29,
+          "price12": 14.92
+        },
+        {
+          "id": 12524,
+          "name": "Midwest Energy Inc - (KS)",
+          "ownership": "Co-op",
+          "customers": 29754,
+          "price": 11.81,
+          "priceYearAgo": 11.01,
+          "price12": 12.44
+        },
+        {
+          "id": 5860,
+          "name": "Empire District Electric Co",
+          "ownership": "Investor-owned",
+          "customers": 9596,
+          "price": 15.22,
+          "priceYearAgo": 13.17,
+          "price12": 13.9
+        },
+        {
+          "id": 3892,
+          "name": "City of Coffeyville - (KS)",
+          "ownership": "City-owned",
+          "customers": 4713,
+          "price": 13.15,
+          "priceYearAgo": 11.66,
+          "price12": 13.91
+        }
+      ]
+    },
+    "MN": {
+      "statePrice": 17.2,
+      "customers": 2647049,
+      "shownShare": 0.7,
+      "choiceShare": 0,
+      "utilities": [
+        {
+          "id": 13781,
+          "name": "Northern States Power Co - Minnesota",
+          "ownership": "Investor-owned",
+          "customers": 1256017,
+          "price": 18.39,
+          "priceYearAgo": 18.45,
+          "price12": 17.22
+        },
+        {
+          "id": 689,
+          "name": "Connexus Energy",
+          "ownership": "Co-op",
+          "customers": 137811,
+          "price": 14.94,
+          "priceYearAgo": 14.55,
+          "price12": 15.1
+        },
+        {
+          "id": 12647,
+          "name": "ALLETE, Inc.",
+          "ownership": "Investor-owned",
+          "customers": 127596,
+          "price": 16.87,
+          "priceYearAgo": 15.12,
+          "price12": 16.71
+        },
+        {
+          "id": 25177,
+          "name": "Dakota Electric Association",
+          "ownership": "Co-op",
+          "customers": 110333,
+          "price": 14.62,
+          "priceYearAgo": 15.63,
+          "price12": 15.84
+        },
+        {
+          "id": 16181,
+          "name": "Rochester Public Utilities",
+          "ownership": "City-owned",
+          "customers": 56248,
+          "price": 20.5,
+          "priceYearAgo": 19.5,
+          "price12": 19.49
+        },
+        {
+          "id": 5574,
+          "name": "East Central Energy",
+          "ownership": "Co-op",
+          "customers": 56075,
+          "price": 17.97,
+          "priceYearAgo": 17.83,
+          "price12": 17.92
+        },
+        {
+          "id": 20996,
+          "name": "Wright-Hennepin Coop Elec Assn",
+          "ownership": "Co-op",
+          "customers": 55335,
+          "price": 17.05,
+          "priceYearAgo": 16.29,
+          "price12": 15.55
+        },
+        {
+          "id": 14232,
+          "name": "Otter Tail Power Co",
+          "ownership": "Investor-owned",
+          "customers": 50854,
+          "price": 14.06,
+          "priceYearAgo": 12.05,
+          "price12": 11.92
+        },
+        {
+          "id": 17267,
+          "name": "Sioux Valley SW Elec Coop",
+          "ownership": "Co-op",
+          "customers": 3376,
+          "price": 15.62,
+          "priceYearAgo": 14.05,
+          "price12": 14.42
+        }
+      ]
+    },
+    "MO": {
+      "statePrice": 16.02,
+      "customers": 2918171,
+      "shownShare": 0.72,
+      "choiceShare": 0,
+      "utilities": [
+        {
+          "id": 19436,
+          "name": "Union Electric Co - (MO)",
+          "ownership": "Investor-owned",
+          "customers": 1105902,
+          "price": 18.46,
+          "priceYearAgo": 17.81,
+          "price12": 14.07
+        },
+        {
+          "id": 12698,
+          "name": "Evergy Missouri West",
+          "ownership": "Investor-owned",
+          "customers": 311738,
+          "price": 14.62,
+          "priceYearAgo": 14.05,
+          "price12": 12.37
+        },
+        {
+          "id": 10000,
+          "name": "Evergy Metro",
+          "ownership": "Investor-owned",
+          "customers": 280208,
+          "price": 15.82,
+          "priceYearAgo": 16.13,
+          "price12": 13.67
+        },
+        {
+          "id": 5860,
+          "name": "Empire District Electric Co",
+          "ownership": "Investor-owned",
+          "customers": 153107,
+          "price": 16.3,
+          "priceYearAgo": 15.37,
+          "price12": 14.82
+        },
+        {
+          "id": 17833,
+          "name": "City Utilities of Springfield - (MO)",
+          "ownership": "City-owned",
+          "customers": 106728,
+          "price": 14.1,
+          "priceYearAgo": 12.85,
+          "price12": 12.54
+        },
+        {
+          "id": 4675,
+          "name": "Cuivre River Electric Coop Inc",
+          "ownership": "Co-op",
+          "customers": 76313,
+          "price": 11.45,
+          "priceYearAgo": 11.14,
+          "price12": 11.69
+        },
+        {
+          "id": 9231,
+          "name": "City of Independence - (MO)",
+          "ownership": "City-owned",
+          "customers": 54857,
+          "price": 16.98,
+          "priceYearAgo": 16.64,
+          "price12": 16.99
+        },
+        {
+          "id": 3093,
+          "name": "Carroll Electric Coop Corp - (AR)",
+          "ownership": "Co-op",
+          "customers": 12294,
+          "price": 14.08,
+          "priceYearAgo": 13.69,
+          "price12": 14.45
+        }
+      ]
+    },
+    "NE": {
+      "statePrice": 13.54,
+      "customers": 935806,
+      "shownShare": 0.766,
+      "choiceShare": 0,
+      "utilities": [
+        {
+          "id": 14127,
+          "name": "Omaha Public Power District",
+          "ownership": "Public power district",
+          "customers": 376340,
+          "price": 14.45,
+          "priceYearAgo": 13.7,
+          "price12": 13.94
+        },
+        {
+          "id": 11018,
+          "name": "Lincoln Electric System",
+          "ownership": "City-owned",
+          "customers": 139277,
+          "price": 12.21,
+          "priceYearAgo": 11.93,
+          "price12": 11.67
+        },
+        {
+          "id": 13337,
+          "name": "Nebraska Public Power District",
+          "ownership": "Public power district",
+          "customers": 74719,
+          "price": 12.55,
+          "priceYearAgo": 11.95,
+          "price12": 11.37
+        },
+        {
+          "id": 40606,
+          "name": "City of Grand Island - (NE)",
+          "ownership": "City-owned",
+          "customers": 22460,
+          "price": 10.3,
+          "priceYearAgo": 10.28,
+          "price12": 10.47
+        },
+        {
+          "id": 13664,
+          "name": "Norris Public Power District",
+          "ownership": "Public power district",
+          "customers": 19657,
+          "price": 10.25,
+          "priceYearAgo": 10.43,
+          "price12": 9.74
+        },
+        {
+          "id": 11251,
+          "name": "Loup River Public Power Dist",
+          "ownership": "Public power district",
+          "customers": 16631,
+          "price": 13.93,
+          "priceYearAgo": 12.76,
+          "price12": 11.47
+        },
+        {
+          "id": 4911,
+          "name": "Dawson Power District",
+          "ownership": "Public power district",
+          "customers": 16205,
+          "price": 12.9,
+          "priceYearAgo": 12.41,
+          "price12": 11.82
+        },
+        {
+          "id": 17642,
+          "name": "Southern Public Power District",
+          "ownership": "Public power district",
+          "customers": 15371,
+          "price": 12.2,
+          "priceYearAgo": 11.91,
+          "price12": 9.44
+        },
+        {
+          "id": 6779,
+          "name": "City of Fremont - (NE)",
+          "ownership": "City-owned",
+          "customers": 14234,
+          "price": 15.37,
+          "priceYearAgo": 14.64,
+          "price12": 12.91
+        },
+        {
+          "id": 8245,
+          "name": "City of Hastings - (NE)",
+          "ownership": "City-owned",
+          "customers": 11819,
+          "price": 10.7,
+          "priceYearAgo": 11.56,
+          "price12": 11.64
+        },
+        {
+          "id": 4373,
+          "name": "Cornhusker Public Power Dist",
+          "ownership": "Public power district",
+          "customers": 7376,
+          "price": 12.17,
+          "priceYearAgo": 11.42,
+          "price12": 11.81
+        },
+        {
+          "id": 12539,
+          "name": "Midwest Electric Member Corp - (NE)",
+          "ownership": "Co-op",
+          "customers": 2416,
+          "price": 12.99,
+          "priceYearAgo": 12.22,
+          "price12": 13.11
+        }
+      ]
+    },
+    "ND": {
+      "statePrice": 13.31,
+      "customers": 402484,
+      "shownShare": 0.865,
+      "choiceShare": 0,
+      "utilities": [
+        {
+          "id": 13781,
+          "name": "Northern States Power Co - Minnesota",
+          "ownership": "Investor-owned",
+          "customers": 83746,
+          "price": 14.42,
+          "priceYearAgo": 15.07,
+          "price12": 13.79
+        },
+        {
+          "id": 12199,
+          "name": "Montana-Dakota Utilities Co",
+          "ownership": "Investor-owned",
+          "customers": 79796,
+          "price": 11.48,
+          "priceYearAgo": 11.1,
+          "price12": 12.09
+        },
+        {
+          "id": 24949,
+          "name": "Cass County Elec Coop Inc",
+          "ownership": "Co-op",
+          "customers": 53303,
+          "price": 13.51,
+          "priceYearAgo": 13.61,
+          "price12": 12.95
+        },
+        {
+          "id": 14232,
+          "name": "Otter Tail Power Co",
+          "ownership": "Investor-owned",
+          "customers": 45452,
+          "price": 11.62,
+          "priceYearAgo": 11.11,
+          "price12": 11.17
+        },
+        {
+          "id": 12301,
+          "name": "Nodak Electric Coop Inc",
+          "ownership": "Co-op",
+          "customers": 20828,
+          "price": 14.92,
+          "priceYearAgo": 14.4,
+          "price12": 13.33
+        },
+        {
+          "id": 19790,
+          "name": "Verendrye Electric Coop Inc",
+          "ownership": "Co-op",
+          "customers": 14406,
+          "price": 14.79,
+          "priceYearAgo": 13.44,
+          "price12": 11.85
+        },
+        {
+          "id": 20413,
+          "name": "Mountrail-Williams Elec Coop",
+          "ownership": "Co-op",
+          "customers": 11539,
+          "price": 9.43,
+          "priceYearAgo": 8.45,
+          "price12": 7.83
+        },
+        {
+          "id": 55959,
+          "name": "Roughrider Electric Cooperativ",
+          "ownership": "Co-op",
+          "customers": 11362,
+          "price": 13.9,
+          "priceYearAgo": 12.65,
+          "price12": 11.66
+        },
+        {
+          "id": 13196,
+          "name": "Northern Plains Electric Coop",
+          "ownership": "Co-op",
+          "customers": 10487,
+          "price": 14.62,
+          "priceYearAgo": 13.38,
+          "price12": 11.36
+        },
+        {
+          "id": 13694,
+          "name": "North Central Elec Coop, Inc - (ND)",
+          "ownership": "Co-op",
+          "customers": 6100,
+          "price": 16.35,
+          "priceYearAgo": 16.09,
+          "price12": 11.12
+        },
+        {
+          "id": 4717,
+          "name": "Dakota Valley Elec Coop Inc",
+          "ownership": "Co-op",
+          "customers": 5857,
+          "price": 17.38,
+          "priceYearAgo": 15.73,
+          "price12": 13.51
+        },
+        {
+          "id": 12087,
+          "name": "McKenzie Electric Coop Inc",
+          "ownership": "Co-op",
+          "customers": 5410,
+          "price": 10.12,
+          "priceYearAgo": 9.64,
+          "price12": 8.38
+        }
+      ]
+    },
+    "SD": {
+      "statePrice": 15.15,
+      "customers": 450304,
+      "shownShare": 0.732,
+      "choiceShare": 0,
+      "utilities": [
+        {
+          "id": 13781,
+          "name": "Northern States Power Co - Minnesota",
+          "ownership": "Investor-owned",
+          "customers": 95427,
+          "price": 14.33,
+          "priceYearAgo": 12.71,
+          "price12": 14.97
+        },
+        {
+          "id": 19545,
+          "name": "Black Hills Power, Inc.",
+          "ownership": "Investor-owned",
+          "customers": 62956,
+          "price": 18.19,
+          "priceYearAgo": 15.94,
+          "price12": 15.58
+        },
+        {
+          "id": 13809,
+          "name": "NorthWestern Energy - (SD)",
+          "ownership": "Investor-owned",
+          "customers": 52078,
+          "price": 14.12,
+          "priceYearAgo": 14.12,
+          "price12": 14.13
+        },
+        {
+          "id": 17267,
+          "name": "Sioux Valley SW Elec Coop",
+          "ownership": "Co-op",
+          "customers": 23623,
+          "price": 15.95,
+          "priceYearAgo": 14.1,
+          "price12": 15.06
+        },
+        {
+          "id": 19293,
+          "name": "Southeastern Electric Coop Inc - (SD)",
+          "ownership": "Co-op",
+          "customers": 21562,
+          "price": 14.5,
+          "priceYearAgo": 13.36,
+          "price12": 13.94
+        },
+        {
+          "id": 20401,
+          "name": "West River Electric Assn Inc",
+          "ownership": "Co-op",
+          "customers": 19230,
+          "price": 16.66,
+          "priceYearAgo": 16.19,
+          "price12": 16.1
+        },
+        {
+          "id": 20187,
+          "name": "Watertown Municipal Utilities",
+          "ownership": "City-owned",
+          "customers": 11822,
+          "price": 9.32,
+          "priceYearAgo": 9.74,
+          "price12": 9.4
+        },
+        {
+          "id": 2285,
+          "name": "City of Brookings - (SD)",
+          "ownership": "City-owned",
+          "customers": 11219,
+          "price": 12.47,
+          "priceYearAgo": 10.77,
+          "price12": 11.14
+        },
+        {
+          "id": 1769,
+          "name": "Black Hills Electric Coop, Inc",
+          "ownership": "Co-op",
+          "customers": 9499,
+          "price": 18.2,
+          "priceYearAgo": 17.47,
+          "price12": 15.63
+        },
+        {
+          "id": 14232,
+          "name": "Otter Tail Power Co",
+          "ownership": "Investor-owned",
+          "customers": 9190,
+          "price": 12.64,
+          "priceYearAgo": 12.26,
+          "price12": 11.66
+        },
+        {
+          "id": 3236,
+          "name": "Central Electric Coop, Inc - (SD)",
+          "ownership": "Co-op",
+          "customers": 6546,
+          "price": 18.66,
+          "priceYearAgo": 16.44,
+          "price12": 16.15
+        },
+        {
+          "id": 12199,
+          "name": "Montana-Dakota Utilities Co",
+          "ownership": "Investor-owned",
+          "customers": 6339,
+          "price": 14.72,
+          "priceYearAgo": 12.71,
+          "price12": 13.99
+        }
+      ]
+    },
+    "DE": {
+      "statePrice": 18.7,
+      "customers": 483449,
+      "shownShare": 0.88,
+      "choiceShare": 0.055,
+      "utilities": [
+        {
+          "id": 5027,
+          "name": "Delmarva Power",
+          "ownership": "Investor-owned",
+          "customers": 281296,
+          "price": 20.09,
+          "priceYearAgo": 18.1,
+          "price12": 18.98
+        },
+        {
+          "id": 5070,
+          "name": "Delaware Electric Cooperative",
+          "ownership": "Co-op",
+          "customers": 110275,
+          "price": 14.74,
+          "priceYearAgo": 13.26,
+          "price12": 14.31
+        },
+        {
+          "id": 5335,
+          "name": "City of Dover - (DE)",
+          "ownership": "City-owned",
+          "customers": 21752,
+          "price": 17.79,
+          "priceYearAgo": 16.68,
+          "price12": 17.25
+        },
+        {
+          "id": 13519,
+          "name": "City of Newark - (DE)",
+          "ownership": "City-owned",
+          "customers": 12256,
+          "price": 22.31,
+          "priceYearAgo": 19.14,
+          "price12": 20.94
+        }
+      ]
+    },
+    "DC": {
+      "statePrice": 25.98,
+      "customers": 326954,
+      "shownShare": 0.906,
+      "choiceShare": 0.102,
+      "utilities": [
+        {
+          "id": 15270,
+          "name": "Potomac Electric Power Co",
+          "ownership": "Investor-owned",
+          "customers": 296138,
+          "price": 24.55,
+          "priceYearAgo": 21.98,
+          "price12": 23.17
+        }
+      ]
+    },
+    "FL": {
+      "statePrice": 14.99,
+      "customers": 10811324,
+      "shownShare": 0.793,
+      "choiceShare": 0,
+      "utilities": [
+        {
+          "id": 6452,
+          "name": "Florida Power & Light Co",
+          "ownership": "Investor-owned",
+          "customers": 5434323,
+          "price": 14.9,
+          "priceYearAgo": 14.75,
+          "price12": 14.81
+        },
+        {
+          "id": 6455,
+          "name": "Duke Energy Florida, LLC",
+          "ownership": "Investor-owned",
+          "customers": 1849632,
+          "price": 15.18,
+          "priceYearAgo": 18.43,
+          "price12": 17.12
+        },
+        {
+          "id": 18454,
+          "name": "Tampa Electric Co",
+          "ownership": "Investor-owned",
+          "customers": 779891,
+          "price": 16.39,
+          "priceYearAgo": 17.59,
+          "price12": 18.09
+        },
+        {
+          "id": 9617,
+          "name": "JEA",
+          "ownership": "City-owned",
+          "customers": 484753,
+          "price": 14.34,
+          "priceYearAgo": 13.59,
+          "price12": 14.76
+        },
+        {
+          "id": 6457,
+          "name": "Florida Public Utilities Co",
+          "ownership": "Investor-owned",
+          "customers": 26108,
+          "price": 18.83,
+          "priceYearAgo": 17.61,
+          "price12": 18.93
+        }
+      ]
+    },
+    "GA": {
+      "statePrice": 15.9,
+      "customers": 4927816,
+      "shownShare": 0.603,
+      "choiceShare": 0,
+      "utilities": [
+        {
+          "id": 7140,
+          "name": "Georgia Power Co",
+          "ownership": "Investor-owned",
+          "customers": 2502926,
+          "price": 18.01,
+          "priceYearAgo": 18.07,
+          "price12": 16.4
+        },
+        {
+          "id": 9601,
+          "name": "Jackson Electric Member Corp - (GA)",
+          "ownership": "Co-op",
+          "customers": 251907,
+          "price": 14.11,
+          "priceYearAgo": 12.83,
+          "price12": 12.86
+        },
+        {
+          "id": 3916,
+          "name": "Cobb Electric Membership Corp",
+          "ownership": "Co-op",
+          "customers": 205382,
+          "price": 10.78,
+          "priceYearAgo": 11.43,
+          "price12": 12.03
+        },
+        {
+          "id": 3408,
+          "name": "City of Chattanooga - (TN)",
+          "ownership": "City-owned",
+          "customers": 10513,
+          "price": 12.82,
+          "priceYearAgo": 16.54,
+          "price12": 13.03
+        }
+      ]
+    },
+    "MD": {
+      "statePrice": 21.4,
+      "customers": 2487119,
+      "shownShare": 0.968,
+      "choiceShare": 0.047,
+      "utilities": [
+        {
+          "id": 1167,
+          "name": "Baltimore Gas & Electric Co",
+          "ownership": "Investor-owned",
+          "customers": 1230019,
+          "price": 21.71,
+          "priceYearAgo": 20,
+          "price12": 22.26
+        },
+        {
+          "id": 15270,
+          "name": "Potomac Electric Power Co",
+          "ownership": "Investor-owned",
+          "customers": 561604,
+          "price": 25.76,
+          "priceYearAgo": 23.56,
+          "price12": 23.35
+        },
+        {
+          "id": 15263,
+          "name": "The Potomac Edison Company",
+          "ownership": "Investor-owned",
+          "customers": 260040,
+          "price": 17.65,
+          "priceYearAgo": 15.69,
+          "price12": 16.63
+        },
+        {
+          "id": 5027,
+          "name": "Delmarva Power",
+          "ownership": "Investor-owned",
+          "customers": 188659,
+          "price": 23,
+          "priceYearAgo": 21.66,
+          "price12": 22.68
+        },
+        {
+          "id": 17637,
+          "name": "Southern Maryland Elec Coop Inc",
+          "ownership": "Co-op",
+          "customers": 166668,
+          "price": 16.59,
+          "priceYearAgo": 17.05,
+          "price12": 18.41
+        },
+        {
+          "id": 84,
+          "name": "A & N Electric Coop",
+          "ownership": "Co-op",
+          "customers": 219,
+          "price": 17.86,
+          "priceYearAgo": 17.13,
+          "price12": 15.04
+        }
+      ]
+    },
+    "NC": {
+      "statePrice": 14.95,
+      "customers": 5262847,
+      "shownShare": 0.735,
+      "choiceShare": 0,
+      "utilities": [
+        {
+          "id": 5416,
+          "name": "Duke Energy Carolinas, LLC",
+          "ownership": "Investor-owned",
+          "customers": 2002585,
+          "price": 14.54,
+          "priceYearAgo": 13.95,
+          "price12": 14
+        },
+        {
+          "id": 3046,
+          "name": "Duke Energy Progress - (NC)",
+          "ownership": "Investor-owned",
+          "customers": 1414566,
+          "price": 16.05,
+          "priceYearAgo": 16.78,
+          "price12": 16.38
+        },
+        {
+          "id": 24889,
+          "name": "Brunswick Electric Member Corp",
+          "ownership": "Co-op",
+          "customers": 112509,
+          "price": 14.86,
+          "priceYearAgo": 13.59,
+          "price12": 14.74
+        },
+        {
+          "id": 19876,
+          "name": "Virginia Electric & Power Co",
+          "ownership": "Investor-owned",
+          "customers": 109550,
+          "price": 15.3,
+          "priceYearAgo": 13.9,
+          "price12": 13.48
+        },
+        {
+          "id": 9837,
+          "name": "Jones-Onslow Elec Member Corp",
+          "ownership": "Co-op",
+          "customers": 82626,
+          "price": 14.41,
+          "priceYearAgo": 13.68,
+          "price12": 14.33
+        },
+        {
+          "id": 6235,
+          "name": "Fayetteville Public Works Commission",
+          "ownership": "City-owned",
+          "customers": 76193,
+          "price": 12.6,
+          "priceYearAgo": 11.92,
+          "price12": 12.61
+        },
+        {
+          "id": 16496,
+          "name": "Rutherford Elec Member Corp",
+          "ownership": "Co-op",
+          "customers": 72529,
+          "price": 12.49,
+          "priceYearAgo": 12.77,
+          "price12": 13.15
+        }
+      ]
+    },
+    "SC": {
+      "statePrice": 15.76,
+      "customers": 2673519,
+      "shownShare": 0.693,
+      "choiceShare": 0,
+      "utilities": [
+        {
+          "id": 17539,
+          "name": "Dominion Energy South Carolina, Inc",
+          "ownership": "Investor-owned",
+          "customers": 721123,
+          "price": 17.38,
+          "priceYearAgo": 16.5,
+          "price12": 17.21
+        },
+        {
+          "id": 5416,
+          "name": "Duke Energy Carolinas, LLC",
+          "ownership": "Investor-owned",
+          "customers": 596321,
+          "price": 14.57,
+          "priceYearAgo": 13.56,
+          "price12": 14.07
+        },
+        {
+          "id": 17543,
+          "name": "South Carolina Public Service Authority",
+          "ownership": "State-owned",
+          "customers": 191121,
+          "price": 12.46,
+          "priceYearAgo": 12.28,
+          "price12": 14.07
+        },
+        {
+          "id": 3046,
+          "name": "Duke Energy Progress - (NC)",
+          "ownership": "Investor-owned",
+          "customers": 144744,
+          "price": 16.03,
+          "priceYearAgo": 14.81,
+          "price12": 15.04
+        },
+        {
+          "id": 1613,
+          "name": "Berkeley Electric Coop Inc",
+          "ownership": "Co-op",
+          "customers": 122066,
+          "price": 15.81,
+          "priceYearAgo": 16.07,
+          "price12": 16.69
+        },
+        {
+          "id": 14398,
+          "name": "Palmetto Electric Coop Inc",
+          "ownership": "Co-op",
+          "customers": 72082,
+          "price": 14.3,
+          "priceYearAgo": 13.58,
+          "price12": 15.27
+        },
+        {
+          "id": 11118,
+          "name": "Lockhart Power Co",
+          "ownership": "Investor-owned",
+          "customers": 4985,
+          "price": 15.61,
+          "priceYearAgo": 14.48,
+          "price12": 15.46
+        }
+      ]
+    },
+    "VA": {
+      "statePrice": 17.64,
+      "customers": 3728677,
+      "shownShare": 0.866,
+      "choiceShare": 0,
+      "utilities": [
+        {
+          "id": 19876,
+          "name": "Virginia Electric & Power Co",
+          "ownership": "Investor-owned",
+          "customers": 2433594,
+          "price": 18.82,
+          "priceYearAgo": 16.06,
+          "price12": 17.27
+        },
+        {
+          "id": 733,
+          "name": "Appalachian Power Co",
+          "ownership": "Investor-owned",
+          "customers": 469780,
+          "price": 15.63,
+          "priceYearAgo": 17.4,
+          "price12": 16.38
+        },
+        {
+          "id": 40228,
+          "name": "Rappahannock Electric Coop",
+          "ownership": "Co-op",
+          "customers": 174338,
+          "price": 16.69,
+          "priceYearAgo": 15.85,
+          "price12": 15.92
+        },
+        {
+          "id": 17066,
+          "name": "Shenandoah Valley Elec Coop",
+          "ownership": "Co-op",
+          "customers": 88055,
+          "price": 16.71,
+          "priceYearAgo": 15.47,
+          "price12": 14.91
+        },
+        {
+          "id": 84,
+          "name": "A & N Electric Coop",
+          "ownership": "Co-op",
+          "customers": 33269,
+          "price": 16.79,
+          "priceYearAgo": 15.95,
+          "price12": 14.92
+        },
+        {
+          "id": 10171,
+          "name": "Kentucky Utilities Co",
+          "ownership": "Investor-owned",
+          "customers": 22488,
+          "price": 15.92,
+          "priceYearAgo": 16.08,
+          "price12": 15.94
+        },
+        {
+          "id": 19882,
+          "name": "Virginia Tech Electric Service",
+          "ownership": "State-owned",
+          "customers": 6099,
+          "price": 19.45,
+          "priceYearAgo": 18.39,
+          "price12": 19.15
+        }
+      ]
+    },
+    "WV": {
+      "statePrice": 16.31,
+      "customers": 868208,
+      "shownShare": 0.989,
+      "choiceShare": 0,
+      "utilities": [
+        {
+          "id": 733,
+          "name": "Appalachian Power Co",
+          "ownership": "Investor-owned",
+          "customers": 346884,
+          "price": 18.31,
+          "priceYearAgo": 17.39,
+          "price12": 17.19
+        },
+        {
+          "id": 12796,
+          "name": "Monongahela Power Co",
+          "ownership": "Investor-owned",
+          "customers": 333665,
+          "price": 14.87,
+          "priceYearAgo": 14.25,
+          "price12": 14.5
+        },
+        {
+          "id": 15263,
+          "name": "The Potomac Edison Company",
+          "ownership": "Investor-owned",
+          "customers": 140897,
+          "price": 13.1,
+          "priceYearAgo": 13.22,
+          "price12": 12.92
+        },
+        {
+          "id": 20521,
+          "name": "Wheeling Power Co",
+          "ownership": "Investor-owned",
+          "customers": 34005,
+          "price": 18.65,
+          "priceYearAgo": 17.65,
+          "price12": 17.82
+        },
+        {
+          "id": 1764,
+          "name": "Black Diamond Power Co",
+          "ownership": "Investor-owned",
+          "customers": 3218,
+          "price": 20,
+          "priceYearAgo": 20.13,
+          "price12": 20.18
+        }
+      ]
+    },
+    "AL": {
+      "statePrice": 16.33,
+      "customers": 2458202,
+      "shownShare": 0.678,
+      "choiceShare": 0,
+      "utilities": [
+        {
+          "id": 195,
+          "name": "Alabama Power Co",
+          "ownership": "Investor-owned",
+          "customers": 1354827,
+          "price": 17.8,
+          "priceYearAgo": 18.14,
+          "price12": 18.07
+        },
+        {
+          "id": 9094,
+          "name": "City of Huntsville - (AL)",
+          "ownership": "City-owned",
+          "customers": 208842,
+          "price": 12.72,
+          "priceYearAgo": 12.95,
+          "price12": 12.73
+        },
+        {
+          "id": 6422,
+          "name": "City of Florence - (AL)",
+          "ownership": "City-owned",
+          "customers": 41899,
+          "price": 12.55,
+          "priceYearAgo": 12.37,
+          "price12": 12.71
+        },
+        {
+          "id": 9739,
+          "name": "Joe Wheeler Elec Member Corp",
+          "ownership": "Co-op",
+          "customers": 37533,
+          "price": 15.08,
+          "priceYearAgo": 14.98,
+          "price12": 15.7
+        },
+        {
+          "id": 4958,
+          "name": "Decatur Utilities",
+          "ownership": "City-owned",
+          "customers": 22741,
+          "price": 13.03,
+          "priceYearAgo": 13.15,
+          "price12": 12.37
+        },
+        {
+          "id": 17252,
+          "name": "Singing River Elec Cooperative",
+          "ownership": "Co-op",
+          "customers": 337,
+          "price": 13.24,
+          "priceYearAgo": 13.05,
+          "price12": 13.86
+        }
+      ]
+    },
+    "KY": {
+      "statePrice": 13.8,
+      "customers": 2032293,
+      "shownShare": 0.662,
+      "choiceShare": 0,
+      "utilities": [
+        {
+          "id": 10171,
+          "name": "Kentucky Utilities Co",
+          "ownership": "Investor-owned",
+          "customers": 456568,
+          "price": 12.5,
+          "priceYearAgo": 11.82,
+          "price12": 12.85
+        },
+        {
+          "id": 11249,
+          "name": "Louisville Gas & Electric Co",
+          "ownership": "Investor-owned",
+          "customers": 390978,
+          "price": 12.85,
+          "priceYearAgo": 12.13,
+          "price12": 13.33
+        },
+        {
+          "id": 19446,
+          "name": "Duke Energy Kentucky",
+          "ownership": "Investor-owned",
+          "customers": 142077,
+          "price": 13.05,
+          "priceYearAgo": 15.26,
+          "price12": 13.85
+        },
+        {
+          "id": 22053,
+          "name": "Kentucky Power Co",
+          "ownership": "Investor-owned",
+          "customers": 129474,
+          "price": 19.75,
+          "priceYearAgo": 16.21,
+          "price12": 16.95
+        },
+        {
+          "id": 17564,
+          "name": "South Kentucky Rural E C C",
+          "ownership": "Co-op",
+          "customers": 65835,
+          "price": 14.72,
+          "priceYearAgo": 12.61,
+          "price12": 14.83
+        },
+        {
+          "id": 20130,
+          "name": "Warren Rural Elec Coop Corp",
+          "ownership": "Co-op",
+          "customers": 63156,
+          "price": 12.94,
+          "priceYearAgo": 12.62,
+          "price12": 13.05
+        },
+        {
+          "id": 9964,
+          "name": "Kenergy Corp",
+          "ownership": "Co-op",
+          "customers": 47840,
+          "price": 14.69,
+          "priceYearAgo": 16,
+          "price12": 16.34
+        },
+        {
+          "id": 14724,
+          "name": "Pennyrile Rural Electric Coop",
+          "ownership": "Co-op",
+          "customers": 41252,
+          "price": 13.96,
+          "priceYearAgo": 13.84,
+          "price12": 14.17
+        },
+        {
+          "id": 49998,
+          "name": "City of Berea Municipal Utility",
+          "ownership": "City-owned",
+          "customers": 4745,
+          "price": 10.91,
+          "priceYearAgo": 8.95,
+          "price12": 10.89
+        },
+        {
+          "id": 7174,
+          "name": "Gibson Electric Members Corp",
+          "ownership": "Co-op",
+          "customers": 2531,
+          "price": 14.24,
+          "priceYearAgo": 14.1,
+          "price12": 14.29
+        }
+      ]
+    },
+    "MS": {
+      "statePrice": 14.43,
+      "customers": 1364303,
+      "shownShare": 0.601,
+      "choiceShare": 0,
+      "utilities": [
+        {
+          "id": 12685,
+          "name": "Entergy Mississippi LLC",
+          "ownership": "Investor-owned",
+          "customers": 386422,
+          "price": 14.78,
+          "priceYearAgo": 12.74,
+          "price12": 15.4
+        },
+        {
+          "id": 12686,
+          "name": "Mississippi Power Co",
+          "ownership": "Investor-owned",
+          "customers": 159297,
+          "price": 15.07,
+          "priceYearAgo": 16.23,
+          "price12": 16.27
+        },
+        {
+          "id": 3841,
+          "name": "Coast Electric Power Assn - (MS)",
+          "ownership": "Co-op",
+          "customers": 80790,
+          "price": 13.53,
+          "priceYearAgo": 13.15,
+          "price12": 14.18
+        },
+        {
+          "id": 17252,
+          "name": "Singing River Elec Cooperative",
+          "ownership": "Co-op",
+          "customers": 74684,
+          "price": 13.23,
+          "priceYearAgo": 13.12,
+          "price12": 13.91
+        },
+        {
+          "id": 17647,
+          "name": "Southern Pine Electric Cooperative",
+          "ownership": "Co-op",
+          "customers": 65804,
+          "price": 14.36,
+          "priceYearAgo": 14.03,
+          "price12": 15.07
+        },
+        {
+          "id": 6641,
+          "name": "4-County Electric Power Assn",
+          "ownership": "Co-op",
+          "customers": 42293,
+          "price": 13.2,
+          "priceYearAgo": 13.28,
+          "price12": 13.86
+        },
+        {
+          "id": 19273,
+          "name": "City of Tupelo - (MS)",
+          "ownership": "City-owned",
+          "customers": 10554,
+          "price": 11.76,
+          "priceYearAgo": 11.77,
+          "price12": 11.93
+        }
+      ]
+    },
+    "TN": {
+      "statePrice": 13.42,
+      "customers": 3159497,
+      "shownShare": 0.652,
+      "choiceShare": 0,
+      "utilities": [
+        {
+          "id": 13216,
+          "name": "Nashville Electric Service",
+          "ownership": "City-owned",
+          "customers": 434829,
+          "price": 13.88,
+          "priceYearAgo": 13.85,
+          "price12": 14.22
+        },
+        {
+          "id": 12293,
+          "name": "City of Memphis - (TN)",
+          "ownership": "City-owned",
+          "customers": 382810,
+          "price": 13.8,
+          "priceYearAgo": 13.19,
+          "price12": 13.85
+        },
+        {
+          "id": 12470,
+          "name": "Middle Tennessee E M C",
+          "ownership": "Co-op",
+          "customers": 320375,
+          "price": 12.24,
+          "priceYearAgo": 12.23,
+          "price12": 12.61
+        },
+        {
+          "id": 10421,
+          "name": "Knoxville Utilities Board",
+          "ownership": "City-owned",
+          "customers": 202283,
+          "price": 14.5,
+          "priceYearAgo": 13.93,
+          "price12": 14.33
+        },
+        {
+          "id": 3408,
+          "name": "City of Chattanooga - (TN)",
+          "ownership": "City-owned",
+          "customers": 168273,
+          "price": 12.8,
+          "priceYearAgo": 12.53,
+          "price12": 13.08
+        },
+        {
+          "id": 19898,
+          "name": "Volunteer Electric Coop",
+          "ownership": "Co-op",
+          "customers": 106858,
+          "price": 13.49,
+          "priceYearAgo": 12.7,
+          "price12": 13.71
+        },
+        {
+          "id": 4624,
+          "name": "Cumberland Elec Member Corp",
+          "ownership": "Co-op",
+          "customers": 103843,
+          "price": 13.56,
+          "priceYearAgo": 13.52,
+          "price12": 13.93
+        },
+        {
+          "id": 3704,
+          "name": "City of Clarksville - (TN)",
+          "ownership": "City-owned",
+          "customers": 80233,
+          "price": 13.84,
+          "priceYearAgo": 13.58,
+          "price12": 13.95
+        },
+        {
+          "id": 9777,
+          "name": "Johnson City - (TN)",
+          "ownership": "City-owned",
+          "customers": 73896,
+          "price": 14.1,
+          "priceYearAgo": 13.5,
+          "price12": 13.74
+        },
+        {
+          "id": 5399,
+          "name": "Duck River Elec Member Corp",
+          "ownership": "Co-op",
+          "customers": 73471,
+          "price": 13.56,
+          "priceYearAgo": 13.23,
+          "price12": 14.03
+        },
+        {
+          "id": 10906,
+          "name": "City of Lenoir - (TN)",
+          "ownership": "City-owned",
+          "customers": 65346,
+          "price": 13.18,
+          "priceYearAgo": 12.59,
+          "price12": 13.35
+        },
+        {
+          "id": 19574,
+          "name": "Upper Cumberland E M C",
+          "ownership": "Co-op",
+          "customers": 46435,
+          "price": 14.3,
+          "priceYearAgo": 13.51,
+          "price12": 14.45
+        }
+      ]
+    },
+    "AR": {
+      "statePrice": 14.37,
+      "customers": 1512161,
+      "shownShare": 0.721,
+      "choiceShare": 0,
+      "utilities": [
+        {
+          "id": 814,
+          "name": "Entergy Arkansas LLC",
+          "ownership": "Investor-owned",
+          "customers": 615191,
+          "price": 15.87,
+          "priceYearAgo": 14.61,
+          "price12": 14.14
+        },
+        {
+          "id": 17698,
+          "name": "Southwestern Electric Power Co",
+          "ownership": "Investor-owned",
+          "customers": 111577,
+          "price": 15.75,
+          "priceYearAgo": 12.64,
+          "price12": 14.51
+        },
+        {
+          "id": 3093,
+          "name": "Carroll Electric Coop Corp - (AR)",
+          "ownership": "Co-op",
+          "customers": 106365,
+          "price": 13.68,
+          "priceYearAgo": 13.25,
+          "price12": 13.98
+        },
+        {
+          "id": 6342,
+          "name": "First Electric Coop Corp",
+          "ownership": "Co-op",
+          "customers": 98351,
+          "price": 12.98,
+          "priceYearAgo": 11.22,
+          "price12": 13.28
+        },
+        {
+          "id": 14063,
+          "name": "Oklahoma Gas & Electric Co",
+          "ownership": "Investor-owned",
+          "customers": 59107,
+          "price": 13.85,
+          "priceYearAgo": 13.48,
+          "price12": 11.71
+        },
+        {
+          "id": 817,
+          "name": "Arkansas Valley Elec Coop Corp",
+          "ownership": "Co-op",
+          "customers": 55543,
+          "price": 13.64,
+          "priceYearAgo": 12.88,
+          "price12": 14.45
+        },
+        {
+          "id": 13718,
+          "name": "City of North Little Rock - (AR)",
+          "ownership": "City-owned",
+          "customers": 35973,
+          "price": 11.93,
+          "priceYearAgo": 11.73,
+          "price12": 12.8
+        },
+        {
+          "id": 5860,
+          "name": "Empire District Electric Co",
+          "ownership": "Investor-owned",
+          "customers": 5251,
+          "price": 17.13,
+          "priceYearAgo": 14.19,
+          "price12": 15.67
+        },
+        {
+          "id": 12681,
+          "name": "Mississippi County Electric Co",
+          "ownership": "Co-op",
+          "customers": 3261,
+          "price": 10.56,
+          "priceYearAgo": 10.25,
+          "price12": 9.57
+        }
+      ]
+    },
+    "LA": {
+      "statePrice": 12.87,
+      "customers": 2183490,
+      "shownShare": 0.742,
+      "choiceShare": 0,
+      "utilities": [
+        {
+          "id": 11241,
+          "name": "Entergy Louisiana LLC",
+          "ownership": "Investor-owned",
+          "customers": 969317,
+          "price": 11.7,
+          "priceYearAgo": 11.65,
+          "price12": 12.34
+        },
+        {
+          "id": 3265,
+          "name": "Cleco Power LLC",
+          "ownership": "Investor-owned",
+          "customers": 254356,
+          "price": 15.25,
+          "priceYearAgo": 15.44,
+          "price12": 14.61
+        },
+        {
+          "id": 17698,
+          "name": "Southwestern Electric Power Co",
+          "ownership": "Investor-owned",
+          "customers": 207828,
+          "price": 14.6,
+          "priceYearAgo": 13.5,
+          "price12": 14.53
+        },
+        {
+          "id": 13478,
+          "name": "Entergy New Orleans, LLC",
+          "ownership": "Investor-owned",
+          "customers": 189094,
+          "price": 14.02,
+          "priceYearAgo": 13.5,
+          "price12": 13.54
+        }
+      ]
+    },
+    "OK": {
+      "statePrice": 14.82,
+      "customers": 1927120,
+      "shownShare": 0.714,
+      "choiceShare": 0,
+      "utilities": [
+        {
+          "id": 14063,
+          "name": "Oklahoma Gas & Electric Co",
+          "ownership": "Investor-owned",
+          "customers": 724173,
+          "price": 13.53,
+          "priceYearAgo": 13.52,
+          "price12": 12.5
+        },
+        {
+          "id": 15474,
+          "name": "Public Service Co of Oklahoma",
+          "ownership": "Investor-owned",
+          "customers": 506421,
+          "price": 18.42,
+          "priceYearAgo": 17.3,
+          "price12": 15.89
+        },
+        {
+          "id": 14062,
+          "name": "Oklahoma Electric Coop Inc",
+          "ownership": "Co-op",
+          "customers": 60936,
+          "price": 13.34,
+          "priceYearAgo": 13.28,
+          "price12": 13.6
+        },
+        {
+          "id": 13734,
+          "name": "Northeast Oklahoma Electric Co",
+          "ownership": "Co-op",
+          "customers": 38486,
+          "price": 13.45,
+          "priceYearAgo": 13.31,
+          "price12": 14.74
+        },
+        {
+          "id": 19785,
+          "name": "Verdigris Valley Elec Coop Inc",
+          "ownership": "Co-op",
+          "customers": 36052,
+          "price": 10.9,
+          "priceYearAgo": 11.31,
+          "price12": 12.69
+        },
+        {
+          "id": 5860,
+          "name": "Empire District Electric Co",
+          "ownership": "Investor-owned",
+          "customers": 4667,
+          "price": 15.83,
+          "priceYearAgo": 12.37,
+          "price12": 16.02
+        },
+        {
+          "id": 817,
+          "name": "Arkansas Valley Elec Coop Corp",
+          "ownership": "Co-op",
+          "customers": 4304,
+          "price": 13.3,
+          "priceYearAgo": 12.29,
+          "price12": 14.19
+        }
+      ]
+    },
+    "TX": {
+      "statePrice": 15.91,
+      "customers": 12977001,
+      "shownShare": 0.163,
+      "choiceShare": 0.554,
+      "utilities": [
+        {
+          "id": 16604,
+          "name": "City of San Antonio - (TX)",
+          "ownership": "City-owned",
+          "customers": 909481,
+          "price": 13.47,
+          "priceYearAgo": 12.86,
+          "price12": 12.81
+        },
+        {
+          "id": 55937,
+          "name": "Entergy Texas Inc.",
+          "ownership": "Investor-owned",
+          "customers": 482148,
+          "price": 14.8,
+          "priceYearAgo": 13.98,
+          "price12": 14.38
+        },
+        {
+          "id": 5701,
+          "name": "El Paso Electric Co",
+          "ownership": "Investor-owned",
+          "customers": 325781,
+          "price": 17.33,
+          "priceYearAgo": 13.69,
+          "price12": 16.91
+        },
+        {
+          "id": 17718,
+          "name": "Southwestern Public Service Co",
+          "ownership": "Investor-owned",
+          "customers": 226232,
+          "price": 14.95,
+          "priceYearAgo": 15.68,
+          "price12": 14.01
+        },
+        {
+          "id": 17698,
+          "name": "Southwestern Electric Power Co",
+          "ownership": "Investor-owned",
+          "customers": 158138,
+          "price": 14.05,
+          "priceYearAgo": 14.31,
+          "price12": 13.43
+        },
+        {
+          "id": 13830,
+          "name": "Nueces Electric Cooperative",
+          "ownership": "Co-op",
+          "customers": 18959,
+          "price": 15.48,
+          "priceYearAgo": 15.25,
+          "price12": 15.02
+        }
+      ]
+    },
+    "AZ": {
+      "statePrice": 15.05,
+      "customers": 3215242,
+      "shownShare": 0.946,
+      "choiceShare": 0,
+      "utilities": [
+        {
+          "id": 803,
+          "name": "Arizona Public Service Co",
+          "ownership": "Investor-owned",
+          "customers": 1313477,
+          "price": 16.86,
+          "priceYearAgo": 16.72,
+          "price12": 17.1
+        },
+        {
+          "id": 16572,
+          "name": "Salt River Project",
+          "ownership": "Public power district",
+          "customers": 1087528,
+          "price": 13.82,
+          "priceYearAgo": 14.21,
+          "price12": 14.05
+        },
+        {
+          "id": 24211,
+          "name": "Tucson Electric Power Co",
+          "ownership": "Investor-owned",
+          "customers": 417921,
+          "price": 14.82,
+          "priceYearAgo": 14.61,
+          "price12": 14.92
+        },
+        {
+          "id": 19728,
+          "name": "UNS Electric, Inc",
+          "ownership": "Investor-owned",
+          "customers": 95984,
+          "price": 11.65,
+          "priceYearAgo": 16.89,
+          "price12": 13.92
+        },
+        {
+          "id": 19189,
+          "name": "Trico Electric Cooperative Inc",
+          "ownership": "Co-op",
+          "customers": 54665,
+          "price": 14.75,
+          "priceYearAgo": 13.57,
+          "price12": 15.17
+        },
+        {
+          "id": 21538,
+          "name": "Mohave Electric Cooperative, Inc.",
+          "ownership": "Co-op",
+          "customers": 42088,
+          "price": 8.34,
+          "priceYearAgo": 9.23,
+          "price12": 11.97
+        },
+        {
+          "id": 13314,
+          "name": "Navajo Tribal Utility Authority",
+          "ownership": "State-owned",
+          "customers": 27289,
+          "price": 19.28,
+          "priceYearAgo": 16.42,
+          "price12": 17.41
+        },
+        {
+          "id": 12919,
+          "name": "Morenci Water and Electric",
+          "ownership": "Investor-owned",
+          "customers": 2205,
+          "price": 6.66,
+          "priceYearAgo": 5.87,
+          "price12": 6.54
+        },
+        {
+          "id": 176,
+          "name": "Ajo Improvement Co",
+          "ownership": "Investor-owned",
+          "customers": 792,
+          "price": 12.91,
+          "priceYearAgo": 12.26,
+          "price12": 14.32
+        },
+        {
+          "id": 25866,
+          "name": "Ak-Chin Electric Utility Authority",
+          "ownership": "State-owned",
+          "customers": 364,
+          "price": 13.3,
+          "priceYearAgo": 13.31,
+          "price12": 12.86
+        }
+      ]
+    },
+    "CO": {
+      "statePrice": 17.17,
+      "customers": 2547437,
+      "shownShare": 0.831,
+      "choiceShare": 0,
+      "utilities": [
+        {
+          "id": 15466,
+          "name": "Public Service Co of Colorado",
+          "ownership": "Investor-owned",
+          "customers": 1388731,
+          "price": 18.03,
+          "priceYearAgo": 17.34,
+          "price12": 16.82
+        },
+        {
+          "id": 3989,
+          "name": "City of Colorado Springs - (CO)",
+          "ownership": "City-owned",
+          "customers": 222790,
+          "price": 16.29,
+          "priceYearAgo": 14.81,
+          "price12": 15.89
+        },
+        {
+          "id": 9336,
+          "name": "CORE Electric Cooperative",
+          "ownership": "Co-op",
+          "customers": 170150,
+          "price": 16.95,
+          "priceYearAgo": 15.94,
+          "price12": 17.08
+        },
+        {
+          "id": 19499,
+          "name": "United Power, Inc",
+          "ownership": "Co-op",
+          "customers": 106701,
+          "price": 16.76,
+          "priceYearAgo": 15.13,
+          "price12": 17.94
+        },
+        {
+          "id": 56146,
+          "name": "Black Hills Colorado Electric, LLC",
+          "ownership": "Investor-owned",
+          "customers": 90165,
+          "price": 20.83,
+          "priceYearAgo": 18.89,
+          "price12": 19.21
+        },
+        {
+          "id": 6604,
+          "name": "City of Fort Collins - (CO)",
+          "ownership": "City-owned",
+          "customers": 72706,
+          "price": 15.97,
+          "priceYearAgo": 15.14,
+          "price12": 14.91
+        },
+        {
+          "id": 15257,
+          "name": "Poudre Valley REA, Inc",
+          "ownership": "Co-op",
+          "customers": 51521,
+          "price": 12.04,
+          "priceYearAgo": 12.09,
+          "price12": 12.76
+        },
+        {
+          "id": 16603,
+          "name": "San Luis Valley R E C, Inc",
+          "ownership": "Co-op",
+          "customers": 9143,
+          "price": 23.12,
+          "priceYearAgo": 23.06,
+          "price12": 20.45
+        },
+        {
+          "id": 10066,
+          "name": "K C Electric Association",
+          "ownership": "Co-op",
+          "customers": 3416,
+          "price": 12.76,
+          "priceYearAgo": 12.79,
+          "price12": 13.4
+        },
+        {
+          "id": 12866,
+          "name": "Moon Lake Electric Assn Inc",
+          "ownership": "Co-op",
+          "customers": 1512,
+          "price": 9.06,
+          "priceYearAgo": 9.52,
+          "price12": 9.9
+        },
+        {
+          "id": 27058,
+          "name": "High West Energy, Inc",
+          "ownership": "Co-op",
+          "customers": 678,
+          "price": 15.44,
+          "priceYearAgo": 14.66,
+          "price12": 15.95
+        }
+      ]
+    },
+    "ID": {
+      "statePrice": 13.37,
+      "customers": 910205,
+      "shownShare": 0.914,
+      "choiceShare": 0,
+      "utilities": [
+        {
+          "id": 9191,
+          "name": "Idaho Power Co",
+          "ownership": "Investor-owned",
+          "customers": 555075,
+          "price": 13.57,
+          "priceYearAgo": 11.91,
+          "price12": 13.01
+        },
+        {
+          "id": 20169,
+          "name": "Avista Corp",
+          "ownership": "Investor-owned",
+          "customers": 131568,
+          "price": 13.19,
+          "priceYearAgo": 11.59,
+          "price12": 12.79
+        },
+        {
+          "id": 14354,
+          "name": "PacifiCorp",
+          "ownership": "Investor-owned",
+          "customers": 77382,
+          "price": 14.87,
+          "priceYearAgo": 15.08,
+          "price12": 13.45
+        },
+        {
+          "id": 10454,
+          "name": "Kootenai Electric Cooperative",
+          "ownership": "Co-op",
+          "customers": 32029,
+          "price": 14.36,
+          "priceYearAgo": 13.61,
+          "price12": 14.23
+        },
+        {
+          "id": 9187,
+          "name": "City of Idaho Falls - (ID)",
+          "ownership": "City-owned",
+          "customers": 30190,
+          "price": 9.64,
+          "priceYearAgo": 9.85,
+          "price12": 9.82
+        },
+        {
+          "id": 16565,
+          "name": "Salmon River Electric Coop Inc",
+          "ownership": "Co-op",
+          "customers": 2485,
+          "price": 12.32,
+          "priceYearAgo": 11.86,
+          "price12": 10.4
+        },
+        {
+          "id": 11273,
+          "name": "Lower Valley Energy Inc",
+          "ownership": "Co-op",
+          "customers": 1636,
+          "price": 9.37,
+          "priceYearAgo": 8.6,
+          "price12": 8.29
+        },
+        {
+          "id": 22814,
+          "name": "Raft Rural Elec Coop Inc",
+          "ownership": "Co-op",
+          "customers": 1399,
+          "price": 11.02,
+          "priceYearAgo": 11,
+          "price12": 10.97
+        },
+        {
+          "id": 12692,
+          "name": "Missoula Electric Coop, Inc",
+          "ownership": "Co-op",
+          "customers": 49,
+          "price": 13.39,
+          "priceYearAgo": 12.99,
+          "price12": 10.9
+        }
+      ]
+    },
+    "MT": {
+      "statePrice": 15.57,
+      "customers": 574569,
+      "shownShare": 0.83,
+      "choiceShare": 0,
+      "utilities": [
+        {
+          "id": 12825,
+          "name": "NorthWestern Energy LLC - (MT)",
+          "ownership": "Investor-owned",
+          "customers": 337936,
+          "price": 18.62,
+          "priceYearAgo": 16.06,
+          "price12": 15.9
+        },
+        {
+          "id": 6395,
+          "name": "Flathead Electric Coop Inc",
+          "ownership": "Co-op",
+          "customers": 65507,
+          "price": 11.23,
+          "priceYearAgo": 10.88,
+          "price12": 10.4
+        },
+        {
+          "id": 20997,
+          "name": "Yellowstone Valley Elec Co-op",
+          "ownership": "Co-op",
+          "customers": 21780,
+          "price": 14.01,
+          "priceYearAgo": 13.75,
+          "price12": 14.8
+        },
+        {
+          "id": 12199,
+          "name": "Montana-Dakota Utilities Co",
+          "ownership": "Investor-owned",
+          "customers": 19604,
+          "price": 14.53,
+          "priceYearAgo": 12.76,
+          "price12": 13.14
+        },
+        {
+          "id": 19603,
+          "name": "USBIA-Mission Valley Power",
+          "ownership": "Federal",
+          "customers": 16587,
+          "price": 9.45,
+          "priceYearAgo": 9.16,
+          "price12": 9.58
+        },
+        {
+          "id": 12692,
+          "name": "Missoula Electric Coop, Inc",
+          "ownership": "Co-op",
+          "customers": 15431,
+          "price": 12.43,
+          "priceYearAgo": 11.8,
+          "price12": 11.46
+        },
+        {
+          "id": 19156,
+          "name": "Powder River Energy Corp",
+          "ownership": "Co-op",
+          "customers": 51,
+          "price": 13.22,
+          "priceYearAgo": 14.41,
+          "price12": 13.41
+        },
+        {
+          "id": 12087,
+          "name": "McKenzie Electric Coop Inc",
+          "ownership": "Co-op",
+          "customers": 25,
+          "price": 10.22,
+          "priceYearAgo": 9.88,
+          "price12": 9.32
+        },
+        {
+          "id": 19545,
+          "name": "Black Hills Power, Inc.",
+          "ownership": "Investor-owned",
+          "customers": 12,
+          "price": 6.9,
+          "priceYearAgo": 7.17,
+          "price12": 6.89
+        },
+        {
+          "id": 20169,
+          "name": "Avista Corp",
+          "ownership": "Investor-owned",
+          "customers": 9,
+          "price": 8.68,
+          "priceYearAgo": 8.66,
+          "price12": 8.68
+        }
+      ]
+    },
+    "NV": {
+      "statePrice": 12.72,
+      "customers": 1355333,
+      "shownShare": 0.979,
+      "choiceShare": 0,
+      "utilities": [
+        {
+          "id": 13407,
+          "name": "Nevada Power Co",
+          "ownership": "Investor-owned",
+          "customers": 947119,
+          "price": 12.52,
+          "priceYearAgo": 12.38,
+          "price12": 13.29
+        },
+        {
+          "id": 17166,
+          "name": "Sierra Pacific Power Co",
+          "ownership": "Investor-owned",
+          "customers": 338695,
+          "price": 13.21,
+          "priceYearAgo": 13.03,
+          "price12": 13.68
+        },
+        {
+          "id": 19840,
+          "name": "Valley Electric Assn, Inc",
+          "ownership": "Co-op",
+          "customers": 23136,
+          "price": 15.85,
+          "priceYearAgo": 14.6,
+          "price12": 16.56
+        },
+        {
+          "id": 2008,
+          "name": "City of Boulder City - (NV)",
+          "ownership": "City-owned",
+          "customers": 7163,
+          "price": 10.82,
+          "priceYearAgo": 10.45,
+          "price12": 10.76
+        },
+        {
+          "id": 13073,
+          "name": "Mt Wheeler Power, Inc",
+          "ownership": "Co-op",
+          "customers": 5219,
+          "price": 12.68,
+          "priceYearAgo": 11.8,
+          "price12": 9.65
+        },
+        {
+          "id": 20332,
+          "name": "Wells Rural Electric Co",
+          "ownership": "Co-op",
+          "customers": 4614,
+          "price": 11.22,
+          "priceYearAgo": 11.03,
+          "price12": 10.76
+        },
+        {
+          "id": 22814,
+          "name": "Raft Rural Elec Coop Inc",
+          "ownership": "Co-op",
+          "customers": 1596,
+          "price": 15.26,
+          "priceYearAgo": 13.58,
+          "price12": 12.02
+        },
+        {
+          "id": 18260,
+          "name": "Surprise Valley Electrification",
+          "ownership": "Co-op",
+          "customers": 6,
+          "price": 17.8,
+          "priceYearAgo": 17.58,
+          "price12": 14.13
+        }
+      ]
+    },
+    "NM": {
+      "statePrice": 16.51,
+      "customers": 931691,
+      "shownShare": 0.823,
+      "choiceShare": 0,
+      "utilities": [
+        {
+          "id": 15473,
+          "name": "Public Service Co of NM",
+          "ownership": "Investor-owned",
+          "customers": 501037,
+          "price": 18.83,
+          "priceYearAgo": 18.1,
+          "price12": 17.02
+        },
+        {
+          "id": 17718,
+          "name": "Southwestern Public Service Co",
+          "ownership": "Investor-owned",
+          "customers": 102020,
+          "price": 13.02,
+          "priceYearAgo": 14.72,
+          "price12": 12.27
+        },
+        {
+          "id": 5701,
+          "name": "El Paso Electric Co",
+          "ownership": "Investor-owned",
+          "customers": 98892,
+          "price": 12.48,
+          "priceYearAgo": 11.18,
+          "price12": 10.09
+        },
+        {
+          "id": 6204,
+          "name": "City of Farmington - (NM)",
+          "ownership": "City-owned",
+          "customers": 36590,
+          "price": 12.31,
+          "priceYearAgo": 12.49,
+          "price12": 13.11
+        },
+        {
+          "id": 13314,
+          "name": "Navajo Tribal Utility Authority",
+          "ownership": "State-owned",
+          "customers": 9815,
+          "price": 19.11,
+          "priceYearAgo": 16.25,
+          "price12": 17.3
+        },
+        {
+          "id": 11204,
+          "name": "Los Alamos County - (NM)",
+          "ownership": "City-owned",
+          "customers": 8441,
+          "price": 16.39,
+          "priceYearAgo": 15.71,
+          "price12": 15.64
+        },
+        {
+          "id": 3287,
+          "name": "Central Valley Elec Coop, Inc",
+          "ownership": "Co-op",
+          "customers": 6206,
+          "price": 9.17,
+          "priceYearAgo": 9.73,
+          "price12": 9.67
+        },
+        {
+          "id": 22690,
+          "name": "Roosevelt County Elec Coop Inc",
+          "ownership": "Co-op",
+          "customers": 3911,
+          "price": 14.19,
+          "priceYearAgo": 14.04,
+          "price12": 14.4
+        }
+      ]
+    },
+    "UT": {
+      "statePrice": 13.31,
+      "customers": 1285592,
+      "shownShare": 0.873,
+      "choiceShare": 0,
+      "utilities": [
+        {
+          "id": 14354,
+          "name": "PacifiCorp",
+          "ownership": "Investor-owned",
+          "customers": 989254,
+          "price": 13.81,
+          "priceYearAgo": 14.43,
+          "price12": 13.68
+        },
+        {
+          "id": 15444,
+          "name": "Provo City Corp",
+          "ownership": "City-owned",
+          "customers": 35806,
+          "price": 11.59,
+          "priceYearAgo": 11.13,
+          "price12": 11.63
+        },
+        {
+          "id": 17874,
+          "name": "City of St George - (UT)",
+          "ownership": "City-owned",
+          "customers": 28871,
+          "price": 10.99,
+          "priceYearAgo": 11.09,
+          "price12": 11.68
+        },
+        {
+          "id": 11135,
+          "name": "City of Logan - (UT)",
+          "ownership": "City-owned",
+          "customers": 20191,
+          "price": 13.14,
+          "priceYearAgo": 13.08,
+          "price12": 13.26
+        },
+        {
+          "id": 2010,
+          "name": "City of Bountiful - (UT)",
+          "ownership": "City-owned",
+          "customers": 15772,
+          "price": 13.92,
+          "priceYearAgo": 13.42,
+          "price12": 13.81
+        },
+        {
+          "id": 12866,
+          "name": "Moon Lake Electric Assn Inc",
+          "ownership": "Co-op",
+          "customers": 13583,
+          "price": 9.04,
+          "priceYearAgo": 9.38,
+          "price12": 9.45
+        },
+        {
+          "id": 17845,
+          "name": "City of Springville - (UT)",
+          "ownership": "City-owned",
+          "customers": 11987,
+          "price": 13.24,
+          "priceYearAgo": 12.94,
+          "price12": 13.16
+        },
+        {
+          "id": 18206,
+          "name": "Strawberry Electric Serv Dist",
+          "ownership": "Public power district",
+          "customers": 3641,
+          "price": 14.8,
+          "priceYearAgo": 14.65,
+          "price12": 15.73
+        },
+        {
+          "id": 13314,
+          "name": "Navajo Tribal Utility Authority",
+          "ownership": "State-owned",
+          "customers": 1813,
+          "price": 16.53,
+          "priceYearAgo": 15.2,
+          "price12": 15.18
+        },
+        {
+          "id": 20332,
+          "name": "Wells Rural Electric Co",
+          "ownership": "Co-op",
+          "customers": 497,
+          "price": 11.6,
+          "priceYearAgo": 11.54,
+          "price12": 11.45
+        },
+        {
+          "id": 22814,
+          "name": "Raft Rural Elec Coop Inc",
+          "ownership": "Co-op",
+          "customers": 390,
+          "price": 12.59,
+          "priceYearAgo": 12.33,
+          "price12": 11.86
+        },
+        {
+          "id": 13073,
+          "name": "Mt Wheeler Power, Inc",
+          "ownership": "Co-op",
+          "customers": 212,
+          "price": 12.94,
+          "priceYearAgo": 11.39,
+          "price12": 10.88
+        }
+      ]
+    },
+    "WY": {
+      "statePrice": 14.43,
+      "customers": 292715,
+      "shownShare": 0.853,
+      "choiceShare": 0,
+      "utilities": [
+        {
+          "id": 14354,
+          "name": "PacifiCorp",
+          "ownership": "Investor-owned",
+          "customers": 118895,
+          "price": 14.34,
+          "priceYearAgo": 15.05,
+          "price12": 15.6
+        },
+        {
+          "id": 3461,
+          "name": "Cheyenne Light Fuel & Power",
+          "ownership": "Investor-owned",
+          "customers": 40981,
+          "price": 17.85,
+          "priceYearAgo": 17.15,
+          "price12": 18.07
+        },
+        {
+          "id": 11273,
+          "name": "Lower Valley Energy Inc",
+          "ownership": "Co-op",
+          "customers": 23175,
+          "price": 8.52,
+          "priceYearAgo": 7.9,
+          "price12": 7.49
+        },
+        {
+          "id": 19156,
+          "name": "Powder River Energy Corp",
+          "ownership": "Co-op",
+          "customers": 15796,
+          "price": 12.73,
+          "priceYearAgo": 12.8,
+          "price12": 12.39
+        },
+        {
+          "id": 12199,
+          "name": "Montana-Dakota Utilities Co",
+          "ownership": "Investor-owned",
+          "customers": 15144,
+          "price": 15.28,
+          "priceYearAgo": 12.52,
+          "price12": 13.86
+        },
+        {
+          "id": 7222,
+          "name": "City of Gillette - (WY)",
+          "ownership": "City-owned",
+          "customers": 14324,
+          "price": 12.43,
+          "priceYearAgo": 12.78,
+          "price12": 13.15
+        },
+        {
+          "id": 8566,
+          "name": "High Plains Power Inc",
+          "ownership": "Co-op",
+          "customers": 12859,
+          "price": 15.25,
+          "priceYearAgo": 16.13,
+          "price12": 14.86
+        },
+        {
+          "id": 27058,
+          "name": "High West Energy, Inc",
+          "ownership": "Co-op",
+          "customers": 6151,
+          "price": 15.12,
+          "priceYearAgo": 14.41,
+          "price12": 14.85
+        },
+        {
+          "id": 19545,
+          "name": "Black Hills Power, Inc.",
+          "ownership": "Investor-owned",
+          "customers": 1999,
+          "price": 13.8,
+          "priceYearAgo": 14.46,
+          "price12": 13.92
+        },
+        {
+          "id": 12825,
+          "name": "NorthWestern Energy LLC - (MT)",
+          "ownership": "Investor-owned",
+          "customers": 309,
+          "price": 15.34,
+          "priceYearAgo": 14.84,
+          "price12": 13.8
+        }
+      ]
+    },
+    "CA": {
+      "statePrice": 29.75,
+      "customers": 14138808,
+      "shownShare": 0.543,
+      "choiceShare": 0.402,
+      "utilities": [
+        {
+          "id": 17609,
+          "name": "Southern California Edison Co",
+          "ownership": "Investor-owned",
+          "customers": 3265393,
+          "price": 30.18,
+          "priceYearAgo": 29.53,
+          "price12": null
+        },
+        {
+          "id": 14328,
+          "name": "Pacific Gas & Electric Co.",
+          "ownership": "Investor-owned",
+          "customers": 1587449,
+          "price": 26.13,
+          "priceYearAgo": 37.33,
+          "price12": 34.74
+        },
+        {
+          "id": 11208,
+          "name": "Los Angeles Department of Water & Power",
+          "ownership": "City-owned",
+          "customers": 1428184,
+          "price": 30.02,
+          "priceYearAgo": 27.89,
+          "price12": 27.88
+        },
+        {
+          "id": 16534,
+          "name": "Sacramento Municipal Util Dist",
+          "ownership": "Public power district",
+          "customers": 608565,
+          "price": 23.29,
+          "priceYearAgo": 22.87,
+          "price12": 19.58
+        },
+        {
+          "id": 16609,
+          "name": "San Diego Gas & Electric Co",
+          "ownership": "Investor-owned",
+          "customers": 284716,
+          "price": 48.12,
+          "priceYearAgo": 43.79,
+          "price12": 47.56
+        },
+        {
+          "id": 9216,
+          "name": "Imperial Irrigation District",
+          "ownership": "Public power district",
+          "customers": 145726,
+          "price": 16.24,
+          "priceYearAgo": 16.29,
+          "price12": 20.2
+        },
+        {
+          "id": 12745,
+          "name": "Modesto Irrigation District",
+          "ownership": "Public power district",
+          "customers": 104888,
+          "price": 23.67,
+          "priceYearAgo": 23.28,
+          "price12": 23.54
+        },
+        {
+          "id": 19281,
+          "name": "Turlock Irrigation District",
+          "ownership": "Public power district",
+          "customers": 81679,
+          "price": 18.14,
+          "priceYearAgo": 17.6,
+          "price12": 18.08
+        },
+        {
+          "id": 14534,
+          "name": "City of Pasadena - (CA)",
+          "ownership": "City-owned",
+          "customers": 58764,
+          "price": 27.78,
+          "priceYearAgo": 25.93,
+          "price12": 25.49
+        },
+        {
+          "id": 16655,
+          "name": "City of Santa Clara - (CA)",
+          "ownership": "City-owned",
+          "customers": 55022,
+          "price": 18.62,
+          "priceYearAgo": 18.1,
+          "price12": 18.36
+        },
+        {
+          "id": 14354,
+          "name": "PacifiCorp",
+          "ownership": "Investor-owned",
+          "customers": 36440,
+          "price": 24.44,
+          "priceYearAgo": 24.93,
+          "price12": 24.67
+        },
+        {
+          "id": 17612,
+          "name": "Bear Valley Electric Service",
+          "ownership": "Investor-owned",
+          "customers": 23348,
+          "price": 44.24,
+          "priceYearAgo": 40.35,
+          "price12": 43.48
+        }
+      ]
+    },
+    "OR": {
+      "statePrice": 15.92,
+      "customers": 1905639,
+      "shownShare": 0.804,
+      "choiceShare": 0,
+      "utilities": [
+        {
+          "id": 15248,
+          "name": "Portland General Electric Co",
+          "ownership": "Investor-owned",
+          "customers": 846827,
+          "price": 19.56,
+          "priceYearAgo": 18.71,
+          "price12": 19.03
+        },
+        {
+          "id": 14354,
+          "name": "PacifiCorp",
+          "ownership": "Investor-owned",
+          "customers": 557373,
+          "price": 14.7,
+          "priceYearAgo": 15.49,
+          "price12": 14.85
+        },
+        {
+          "id": 6022,
+          "name": "City of Eugene - (OR)",
+          "ownership": "City-owned",
+          "customers": 87584,
+          "price": 15.98,
+          "priceYearAgo": 14.47,
+          "price12": 15.11
+        },
+        {
+          "id": 40437,
+          "name": "Emerald People's Utility Dist",
+          "ownership": "Public power district",
+          "customers": 20178,
+          "price": 12,
+          "priceYearAgo": 11.16,
+          "price12": 11.86
+        },
+        {
+          "id": 9191,
+          "name": "Idaho Power Co",
+          "ownership": "Investor-owned",
+          "customers": 14274,
+          "price": 12.1,
+          "priceYearAgo": 11.72,
+          "price12": 11.91
+        },
+        {
+          "id": 28541,
+          "name": "Clatskanie Peoples Util Dist",
+          "ownership": "Public power district",
+          "customers": 3800,
+          "price": 8.99,
+          "priceYearAgo": 8.75,
+          "price12": 7.89
+        },
+        {
+          "id": 18260,
+          "name": "Surprise Valley Electrification",
+          "ownership": "Co-op",
+          "customers": 1221,
+          "price": 14.09,
+          "priceYearAgo": 13.97,
+          "price12": 13.45
+        }
+      ]
+    },
+    "WA": {
+      "statePrice": 14.63,
+      "customers": 3440034,
+      "shownShare": 0.803,
+      "choiceShare": 0,
+      "utilities": [
+        {
+          "id": 15500,
+          "name": "Puget Sound Energy Inc",
+          "ownership": "Investor-owned",
+          "customers": 1115486,
+          "price": 20.92,
+          "priceYearAgo": 17.66,
+          "price12": 19.68
+        },
+        {
+          "id": 16868,
+          "name": "City of Seattle - (WA)",
+          "ownership": "City-owned",
+          "customers": 478430,
+          "price": 15.31,
+          "priceYearAgo": 15.23,
+          "price12": 15
+        },
+        {
+          "id": 17470,
+          "name": "PUD No 1 of Snohomish County - (WA)",
+          "ownership": "Public power district",
+          "customers": 353759,
+          "price": 13.19,
+          "priceYearAgo": 12.9,
+          "price12": 12.35
+        },
+        {
+          "id": 20169,
+          "name": "Avista Corp",
+          "ownership": "Investor-owned",
+          "customers": 249026,
+          "price": 14.93,
+          "priceYearAgo": 14.24,
+          "price12": 14.68
+        },
+        {
+          "id": 3660,
+          "name": "PUD No 1 of Clark County - (WA)",
+          "ownership": "Public power district",
+          "customers": 225567,
+          "price": 10.87,
+          "priceYearAgo": 10.73,
+          "price12": 10.66
+        },
+        {
+          "id": 18429,
+          "name": "City of Tacoma - (WA)",
+          "ownership": "City-owned",
+          "customers": 176126,
+          "price": 13.59,
+          "priceYearAgo": 12.72,
+          "price12": 12.02
+        },
+        {
+          "id": 14354,
+          "name": "PacifiCorp",
+          "ownership": "Investor-owned",
+          "customers": 115660,
+          "price": 14.81,
+          "priceYearAgo": 14.83,
+          "price12": 15.38
+        },
+        {
+          "id": 4442,
+          "name": "PUD No 1 of Cowlitz County",
+          "ownership": "Public power district",
+          "customers": 49699,
+          "price": 10.2,
+          "priceYearAgo": 9.75,
+          "price12": 9.52
+        },
+        {
+          "id": 10454,
+          "name": "Kootenai Electric Cooperative",
+          "ownership": "Co-op",
+          "customers": 100,
+          "price": 13.31,
+          "priceYearAgo": 12.32,
+          "price12": 13.12
+        }
+      ]
+    },
+    "AK": {
+      "statePrice": 29.41,
+      "customers": 305905,
+      "shownShare": 0.91,
+      "choiceShare": 0,
+      "utilities": [
+        {
+          "id": 3522,
+          "name": "Chugach Electric Assn Inc",
+          "ownership": "Co-op",
+          "customers": 97029,
+          "price": 24.43,
+          "priceYearAgo": 23.43,
+          "price12": 23.22
+        },
+        {
+          "id": 11824,
+          "name": "Matanuska Electric Assn Inc",
+          "ownership": "Co-op",
+          "customers": 67217,
+          "price": 27.55,
+          "priceYearAgo": 25.85,
+          "price12": 25.19
+        },
+        {
+          "id": 7353,
+          "name": "Golden Valley Elec Assn Inc",
+          "ownership": "Co-op",
+          "customers": 41097,
+          "price": 40.04,
+          "priceYearAgo": 34.82,
+          "price12": 35.05
+        },
+        {
+          "id": 19558,
+          "name": "Homer Electric Assn Inc",
+          "ownership": "Co-op",
+          "customers": 30637,
+          "price": 33.27,
+          "priceYearAgo": 31.64,
+          "price12": 32.26
+        },
+        {
+          "id": 213,
+          "name": "Alaska Electric Light & Power Co.",
+          "ownership": "Investor-owned",
+          "customers": 15721,
+          "price": 12.8,
+          "priceYearAgo": 13.73,
+          "price12": 13.22
+        },
+        {
+          "id": 221,
+          "name": "Alaska Village Elec Coop, Inc",
+          "ownership": "Co-op",
+          "customers": 8330,
+          "price": 68.51,
+          "priceYearAgo": 67.64,
+          "price12": 65.74
+        },
+        {
+          "id": 10210,
+          "name": "Ketchikan Public Utilities",
+          "ownership": "City-owned",
+          "customers": 6630,
+          "price": 15.99,
+          "priceYearAgo": 14.77,
+          "price12": 14.68
+        },
+        {
+          "id": 219,
+          "name": "Alaska Power and Telephone Co",
+          "ownership": "Investor-owned",
+          "customers": 5860,
+          "price": 40.78,
+          "priceYearAgo": 43.25,
+          "price12": 41
+        },
+        {
+          "id": 10433,
+          "name": "Kodiak Electric Assn Inc",
+          "ownership": "Co-op",
+          "customers": 4653,
+          "price": 19.77,
+          "priceYearAgo": 19.83,
+          "price12": 19.4
+        },
+        {
+          "id": 10451,
+          "name": "Kotzebue Electric Assn Inc",
+          "ownership": "Co-op",
+          "customers": 1208,
+          "price": 52.49,
+          "priceYearAgo": 54.43,
+          "price12": 50.53
+        }
+      ]
+    },
+    "HI": {
+      "statePrice": 47.18,
+      "customers": 451694,
+      "shownShare": 0.998,
+      "choiceShare": 0,
+      "utilities": [
+        {
+          "id": 19547,
+          "name": "Hawaiian Electric Co Inc",
+          "ownership": "Investor-owned",
+          "customers": 277379,
+          "price": 49.73,
+          "priceYearAgo": 38.99,
+          "price12": 44.75
+        },
+        {
+          "id": 8287,
+          "name": "Hawaii Electric Light Co Inc",
+          "ownership": "Investor-owned",
+          "customers": 80313,
+          "price": 46.79,
+          "priceYearAgo": 43.77,
+          "price12": 47.36
+        },
+        {
+          "id": 11843,
+          "name": "Maui Electric Co Ltd",
+          "ownership": "Investor-owned",
+          "customers": 62724,
+          "price": 47.84,
+          "priceYearAgo": 40.64,
+          "price12": 45.8
+        },
+        {
+          "id": 10071,
+          "name": "Kauai Island Utility Cooperative",
+          "ownership": "Co-op",
+          "customers": 30544,
+          "price": 42.41,
+          "priceYearAgo": 37.97,
+          "price12": 41.12
+        }
+      ]
+    }
+  }
+}

@@ -12,6 +12,7 @@ import {
   type StateRow,
 } from '../../data/electricity';
 import { ELECTRIC_BASIS, heatingRow } from '../../data/heating';
+import { UTILITIES, stateUtilities, utilityName } from '../../data/utilities';
 import Base from '../../layouts/Base.astro';
 import { applianceEnergy, cost } from '../../lib/appliance';
 import { breakEvenElectricity, perTherm } from '../../lib/heating';
@@ -83,6 +84,27 @@ const answers: [string, string][] = [
     `About ${perDay(s.avgKwh)} kWh a day on average: ${kwh(s.avgKwh)} a month, or ${kwh(s.avgKwh * 12)} a year (EIA, ${year}). The U.S. average is about ${perDay(us.avgKwh)} kWh a day. Homes use more in months with heating or air conditioning, so winter and summer days run above the average.`,
   ],
 ];
+// Prices by utility (EIA-861M): what "electricity rates in <state>" searchers usually want to see,
+// since the state average blends utilities that can differ by several cents.
+const util = stateUtilities(s.code)!;
+const utilMonth = monthLabel(UTILITIES.period);
+const utilShort = utilMonth.replace(/^(\w{3})\w*/, '$1');
+const utilPriorShort = monthLabel(UTILITIES.priorPeriod).replace(/^(\w{3})\w*/, '$1');
+// The range sentence covers utilities serving at least 2% of the state's homes, so a tiny island
+// or town utility does not set the "from … to" (it stays in the table).
+const ranged = util.utilities.filter(
+  (u) => u.price12 !== null && u.customers >= util.customers * 0.02,
+);
+const cheapest = ranged.reduce<(typeof ranged)[number] | undefined>(
+  (a, u) => (!a || u.price12! < a.price12! ? u : a),
+  undefined,
+);
+const dearest = ranged.reduce<(typeof ranged)[number] | undefined>(
+  (a, u) => (!a || u.price12! > a.price12! ? u : a),
+  undefined,
+);
+const pct = (x: number) => `${Math.round(x * 100)}%`;
+const choiceShare = util.choiceShare ?? 0;
 const description = `${s.name} homes paid ${cents(s.price)} per kWh in ${month}, ${signedPct(s.change)} vs a year earlier (EIA). Typical bill, 24-month trend, heating and appliance costs.`;
 ---
 
@@ -151,6 +173,59 @@ const description = `${s.name} homes paid ${cents(s.price)} per kWh in ${month},
         </p>
       )}
     </>
+  )}
+
+  <h2>Electricity prices by utility in {s.name}</h2>
+  {ranged.length >= 2 && cheapest && dearest && cheapest.id !== dearest.id ? (
+    <p>
+      {`What you pay per kWh depends on your utility. Over the 12 months to ${utilMonth}, utilities serving at least 2% of ${s.name} homes averaged from ${cents(cheapest.price12!)} at ${utilityName(cheapest.name)} to ${cents(dearest.price12!)} at ${utilityName(dearest.name)} for full-service homes.`}
+    </p>
+  ) : (
+    <p>
+      {`What you pay per kWh depends on your utility. EIA's monthly survey covers ${util.utilities.length === 1 ? 'one utility' : `${util.utilities.length} utilities`} in ${titleName}:`}
+    </p>
+  )}
+  <div class="table-scroll">
+    <table>
+      <caption>{`Average residential price by utility, ${s.name} (¢/kWh, all charges)`}</caption>
+      <thead>
+        <tr>
+          <th>Utility</th>
+          <th class="hide-sm">Homes</th>
+          <th>{utilShort}</th>
+          <th>12 months</th>
+          <th class="hide-sm">{utilPriorShort}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {util.utilities.map((u) => (
+          <tr>
+            <td>
+              {utilityName(u.name)} <span class="hint">{u.ownership}</span>
+            </td>
+            <td class="hide-sm">{u.customers.toLocaleString('en-US')}</td>
+            <td>{cents(u.price)}</td>
+            <td>{u.price12 === null ? '–' : cents(u.price12)}</td>
+            <td class="hide-sm">{u.priceYearAgo === null ? '–' : cents(u.priceYearAgo)}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+  <p class="note">
+    {`Revenue from full-service homes divided by the kWh they bought (EIA Form 861M, ${utilMonth} preliminary): energy, delivery, fixed charges, taxes and fees together. It is an average, not a tariff rate; a single month can be skewed by billing timing, so the 12-month figure is steadier. These utilities serve ${pct(util.shownShare)} of ${s.name} homes. Smaller utilities${choiceShare >= 0.005 ? ' and homes that buy from a retail supplier' : ''} appear only in EIA's state average.`}{' '}
+    <a href={UTILITIES.source}>Source: EIA-861M</a>
+  </p>
+  {choiceShare >= 0.005 ? (
+    <p>
+      {s.code === 'TX'
+        ? `In ${UTILITIES.choice!.year}, ${pct(choiceShare)} of Texas homes bought electricity from a retail electric provider (EIA-861), mostly in the ERCOT competitive area. There the price depends on the plan you pick, so compare plans' prices per kWh at your own monthly use, not these averages.`
+        : `In ${UTILITIES.choice!.year}, ${pct(choiceShare)} of ${s.name} homes bought their electricity supply from a retail supplier or a community aggregation program instead of from their utility (EIA-861); the utility still delivers it. To judge a supplier's offer, compare it with your utility's default supply rate (often shown on the bill as the “price to compare”), not with the all-in averages above.`}
+    </p>
+  ) : (
+    <p>
+      {`EIA-861 counts almost no ${s.name} homes buying electricity from a retail supplier (${UTILITIES.choice!.year}), so the price you pay is the rate of the utility that serves your address.`}
+    </p>
   )}
 
   <h2>Why is my electric bill so high in {s.name}?</h2>

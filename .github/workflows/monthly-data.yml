@@ -48,6 +48,8 @@ jobs:
         env:
           EIA_API_KEY: ${{ secrets.EIA_API_KEY }}
         run: npm run data:heating
+      - name: Fetch EIA-861M prices by utility
+        run: npm run data:utilities
       - name: Did the data change?
         id: diff
         run: node scripts/data/changed.mjs >> "$GITHUB_OUTPUT"
@@ -66,7 +68,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add src/data/electricity.json src/data/heating.json
+          git add src/data/electricity.json src/data/heating.json src/data/utilities.json
           git diff --cached --quiet || git commit -m "chore(data): EIA data, electricity $(node -p "require('./src/data/electricity.json').monthly.period"), heating fuels week $(node -p "require('./src/data/heating.json').propane.week")"
           git push
       - name: Deploy
