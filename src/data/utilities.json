@@ -1,6 +1,6 @@
 {
   "source": "https://www.eia.gov/electricity/data/eia861m/",
-  "fetchedAt": "2026-11-05",
+  "fetchedAt": "2026-11-12",
   "period": "2026-08",
   "priorPeriod": "2025-08",
   "choice": {
