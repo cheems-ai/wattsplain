@@ -11,9 +11,11 @@ interface Props {
   /** Breadcrumb trail after Home: [label, path][]; the last item is the current page. */
   crumbs?: [string, string][];
   jsonLd?: Record<string, unknown>[];
+  /** Error pages: noindex and no canonical (a 404 must not name itself, or /404/, as canonical). */
+  noindex?: boolean;
 }
 
-const { title, description, crumbs = [], jsonLd = [] } = Astro.props;
+const { title, description, crumbs = [], jsonLd = [], noindex = false } = Astro.props;
 const canonical = new URL(Astro.url.pathname, SITE.origin).href;
 const fullTitle = Astro.url.pathname === '/' ? title : `${title} | ${SITE.name}`;
 const path = Astro.url.pathname;
@@ -75,13 +77,14 @@ const ld = [...(breadcrumbLd ? [breadcrumbLd] : []), ...jsonLd];
     </script>
     <title>{fullTitle}</title>
     <meta name="description" content={description} />
-    <link rel="canonical" href={canonical} />
+    {!noindex && <link rel="canonical" href={canonical} />}
     {!SITE.indexable && <meta name="robots" content="noindex, nofollow" />}
+    {SITE.indexable && noindex && <meta name="robots" content="noindex, follow" />}
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content={SITE.name} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
-    <meta property="og:url" content={canonical} />
+    {!noindex && <meta property="og:url" content={canonical} />}
     <meta property="og:image" content={OG_IMAGE.url} />
     <meta property="og:image:width" content={String(OG_IMAGE.width)} />
     <meta property="og:image:height" content={String(OG_IMAGE.height)} />

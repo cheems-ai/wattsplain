@@ -231,6 +231,14 @@ if (HOST === 'wattsplain.com') {
   if (res.status === 0) add('unreachable', '/no-such-page-audit/', res.error);
   else if (res.status !== 404)
     add('critical', '/no-such-page-audit/', `missing page returns HTTP ${res.status}`);
+  else if (!/<meta name="robots" content="noindex/.test(res.body ?? ''))
+    add('warn', '/no-such-page-audit/', 'the 404 page is not noindex');
+}
+{
+  // /404/ itself answers 200 (assets serve 404.html as a page); it must stay out of the index.
+  const res = await get(`${ORIGIN}/404/`);
+  if (res.status === 200 && !/<meta name="robots" content="noindex/.test(res.body ?? ''))
+    add('warn', '/404/', 'answers 200 without noindex (soft 404 in Search Console)');
 }
 {
   // The analytics Worker answers; an invalid event is rejected (400) and nothing is stored.
