@@ -26,9 +26,15 @@ for (const f of files) {
   const need = [
     [/<title>[^<]+<\/title>/, 'title'],
     [/<meta name="description" content="[^"]+"/, 'description'],
-    [/<link rel="canonical" href="[^"]+"/, 'canonical'],
     [/<meta property="og:image" content="https:\/\/[^"]+"/, 'og:image'],
   ];
+  // The 404 page is served with status 200 at /404/, so it must be noindex and name no canonical
+  // (Search Console otherwise files it under soft 404 / duplicate). Every other page needs one.
+  if (/404\.html$/.test(f)) {
+    if (!/<meta name="robots" content="noindex/.test(html))
+      problems.push(`${f}: 404 page lacks noindex`);
+    if (/rel="canonical"/.test(html)) problems.push(`${f}: 404 page has a canonical`);
+  } else need.push([/<link rel="canonical" href="[^"]+"/, 'canonical']);
   for (const [rx, what] of need) if (!rx.test(html)) problems.push(`${f}: missing ${what}`);
   // Text running straight into an inline element: Astro drops a line break between the two.
   // Charts are SVG labels, not prose (each chart has a text alternative).
