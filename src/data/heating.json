@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-11-12",
+  "fetchedAt": "2026-11-18",
   "gas": {
     "period": "2026-08",
     "from": "2025-09",
@@ -217,211 +217,211 @@
     "source": "https://www.eia.gov/naturalgas/monthly/"
   },
   "propane": {
-    "week": "2026-11-09",
-    "us": 2.826,
+    "week": "2026-11-16",
+    "us": 2.817,
     "byState": {
       "CT": {
-        "price": 4.431,
+        "price": 4.412,
         "area": "state"
       },
       "ME": {
-        "price": 3.685,
+        "price": 3.684,
         "area": "state"
       },
       "MA": {
-        "price": 3.842,
+        "price": 3.82,
         "area": "state"
       },
       "NH": {
-        "price": 3.941,
+        "price": 3.896,
         "area": "state"
       },
       "RI": {
-        "price": 4.063,
+        "price": 4.123,
         "area": "state"
       },
       "VT": {
-        "price": 3.994,
+        "price": 3.99,
         "area": "state"
       },
       "NJ": {
-        "price": 4.133,
+        "price": 4.117,
         "area": "state"
       },
       "NY": {
-        "price": 3.807,
+        "price": 3.823,
         "area": "state"
       },
       "PA": {
-        "price": 3.332,
+        "price": 3.27,
         "area": "state"
       },
       "IL": {
-        "price": 2.007,
+        "price": 2.016,
         "area": "state"
       },
       "IN": {
-        "price": 2.747,
+        "price": 2.732,
         "area": "state"
       },
       "MI": {
-        "price": 2.528,
+        "price": 2.544,
         "area": "state"
       },
       "OH": {
-        "price": 2.824,
+        "price": 2.815,
         "area": "state"
       },
       "WI": {
-        "price": 2.15,
+        "price": 2.131,
         "area": "state"
       },
       "IA": {
-        "price": 1.849,
+        "price": 1.79,
         "area": "state"
       },
       "KS": {
-        "price": 2.296,
+        "price": 2.293,
         "area": "state"
       },
       "MN": {
-        "price": 2.191,
+        "price": 2.176,
         "area": "state"
       },
       "MO": {
-        "price": 2.369,
+        "price": 2.31,
         "area": "state"
       },
       "NE": {
-        "price": 1.883,
+        "price": 1.842,
         "area": "state"
       },
       "ND": {
-        "price": 1.852,
+        "price": 1.855,
         "area": "state"
       },
       "SD": {
-        "price": 2.056,
+        "price": 2.005,
         "area": "state"
       },
       "DE": {
-        "price": 3.945,
+        "price": 3.972,
         "area": "state"
       },
       "DC": {
-        "price": 3.699,
+        "price": 3.692,
         "area": "R1Y"
       },
       "FL": {
-        "price": 5.106,
+        "price": 5.167,
         "area": "state"
       },
       "GA": {
-        "price": 3.369,
+        "price": 3.365,
         "area": "state"
       },
       "MD": {
-        "price": 3.927,
+        "price": 3.956,
         "area": "state"
       },
       "NC": {
-        "price": 3.731,
+        "price": 3.763,
         "area": "state"
       },
       "SC": {
-        "price": 3.77,
+        "price": 3.785,
         "area": "R1Z"
       },
       "VA": {
-        "price": 3.8,
+        "price": 3.793,
         "area": "state"
       },
       "WV": {
-        "price": 3.77,
+        "price": 3.785,
         "area": "R1Z"
       },
       "AL": {
-        "price": 3.703,
+        "price": 3.708,
         "area": "state"
       },
       "KY": {
-        "price": 2.929,
+        "price": 2.931,
         "area": "state"
       },
       "MS": {
-        "price": 3.201,
+        "price": 3.195,
         "area": "state"
       },
       "TN": {
-        "price": 3.418,
+        "price": 3.396,
         "area": "state"
       },
       "AR": {
-        "price": 2.592,
+        "price": 2.603,
         "area": "state"
       },
       "LA": {
-        "price": 3.085,
+        "price": 3.091,
         "area": "R30"
       },
       "OK": {
-        "price": 2.467,
+        "price": 2.477,
         "area": "state"
       },
       "TX": {
-        "price": 3.199,
+        "price": 3.209,
         "area": "state"
       },
       "AZ": {
-        "price": 2.826,
+        "price": 2.817,
         "area": "US"
       },
       "CO": {
-        "price": 2.445,
+        "price": 2.512,
         "area": "state"
       },
       "ID": {
-        "price": 2.775,
+        "price": 2.773,
         "area": "state"
       },
       "MT": {
-        "price": 2.369,
+        "price": 2.276,
         "area": "state"
       },
       "NV": {
-        "price": 2.826,
+        "price": 2.817,
         "area": "US"
       },
       "NM": {
-        "price": 3.085,
+        "price": 3.091,
         "area": "R30"
       },
       "UT": {
-        "price": 2.573,
+        "price": 2.559,
         "area": "state"
       },
       "WY": {
-        "price": 2.491,
+        "price": 2.492,
         "area": "R40"
       },
       "CA": {
-        "price": 2.826,
+        "price": 2.817,
         "area": "US"
       },
       "OR": {
-        "price": 2.826,
+        "price": 2.817,
         "area": "US"
       },
       "WA": {
-        "price": 2.826,
+        "price": 2.817,
         "area": "US"
       },
       "AK": {
-        "price": 2.826,
+        "price": 2.817,
         "area": "US"
       },
       "HI": {
-        "price": 2.826,
+        "price": 2.817,
         "area": "US"
       }
     },
@@ -429,211 +429,211 @@
     "source": "https://www.eia.gov/petroleum/heatingoilpropane/"
   },
   "oil": {
-    "week": "2026-11-09",
-    "us": 5.915,
+    "week": "2026-11-16",
+    "us": 5.717,
     "byState": {
       "CT": {
-        "price": 5.667,
+        "price": 5.446,
         "area": "state"
       },
       "ME": {
-        "price": 5.833,
+        "price": 5.686,
         "area": "state"
       },
       "MA": {
-        "price": 5.962,
+        "price": 5.675,
         "area": "state"
       },
       "NH": {
-        "price": 5.926,
+        "price": 5.739,
         "area": "state"
       },
       "RI": {
-        "price": 5.957,
+        "price": 5.676,
         "area": "state"
       },
       "VT": {
-        "price": 5.806,
+        "price": 5.624,
         "area": "state"
       },
       "NJ": {
-        "price": 6.052,
+        "price": 5.854,
         "area": "state"
       },
       "NY": {
-        "price": 6.142,
+        "price": 5.971,
         "area": "state"
       },
       "PA": {
-        "price": 5.708,
+        "price": 5.552,
         "area": "state"
       },
       "IL": {
-        "price": 5.75,
+        "price": 5.482,
         "area": "R20"
       },
       "IN": {
-        "price": 5.792,
+        "price": 5.601,
         "area": "state"
       },
       "MI": {
-        "price": 5.775,
+        "price": 5.523,
         "area": "state"
       },
       "OH": {
-        "price": 6.008,
+        "price": 5.7,
         "area": "state"
       },
       "WI": {
-        "price": 5.465,
+        "price": 5.249,
         "area": "state"
       },
       "IA": {
-        "price": 5.499,
+        "price": 5.194,
         "area": "state"
       },
       "KS": {
-        "price": 5.75,
+        "price": 5.482,
         "area": "R20"
       },
       "MN": {
-        "price": 5.609,
+        "price": 5.299,
         "area": "state"
       },
       "MO": {
-        "price": 5.75,
+        "price": 5.482,
         "area": "R20"
       },
       "NE": {
-        "price": 5.3,
+        "price": 5.11,
         "area": "state"
       },
       "ND": {
-        "price": 5.75,
+        "price": 5.482,
         "area": "R20"
       },
       "SD": {
-        "price": 5.75,
+        "price": 5.482,
         "area": "R20"
       },
       "DE": {
-        "price": 6.123,
+        "price": 5.885,
         "area": "state"
       },
       "DC": {
-        "price": 6.002,
+        "price": 5.838,
         "area": "R1Y"
       },
       "FL": {
-        "price": 5.835,
+        "price": 5.694,
         "area": "R1Z"
       },
       "GA": {
-        "price": 5.835,
+        "price": 5.694,
         "area": "R1Z"
       },
       "MD": {
-        "price": 6.152,
+        "price": 6.066,
         "area": "state"
       },
       "NC": {
-        "price": 5.773,
+        "price": 5.617,
         "area": "state"
       },
       "SC": {
-        "price": 5.835,
+        "price": 5.694,
         "area": "R1Z"
       },
       "VA": {
-        "price": 5.882,
+        "price": 5.751,
         "area": "state"
       },
       "WV": {
-        "price": 5.835,
+        "price": 5.694,
         "area": "R1Z"
       },
       "AL": {
-        "price": 5.915,
+        "price": 5.717,
         "area": "US"
       },
       "KY": {
-        "price": 5.817,
+        "price": 5.638,
         "area": "state"
       },
       "MS": {
-        "price": 5.915,
+        "price": 5.717,
         "area": "US"
       },
       "TN": {
-        "price": 5.75,
+        "price": 5.482,
         "area": "R20"
       },
       "AR": {
-        "price": 5.915,
+        "price": 5.717,
         "area": "US"
       },
       "LA": {
-        "price": 5.915,
+        "price": 5.717,
         "area": "US"
       },
       "OK": {
-        "price": 5.75,
+        "price": 5.482,
         "area": "R20"
       },
       "TX": {
-        "price": 5.915,
+        "price": 5.717,
         "area": "US"
       },
       "AZ": {
-        "price": 5.915,
+        "price": 5.717,
         "area": "US"
       },
       "CO": {
-        "price": 5.915,
+        "price": 5.717,
         "area": "US"
       },
       "ID": {
-        "price": 5.915,
+        "price": 5.717,
         "area": "US"
       },
       "MT": {
-        "price": 5.915,
+        "price": 5.717,
         "area": "US"
       },
       "NV": {
-        "price": 5.915,
+        "price": 5.717,
         "area": "US"
       },
       "NM": {
-        "price": 5.915,
+        "price": 5.717,
         "area": "US"
       },
       "UT": {
-        "price": 5.915,
+        "price": 5.717,
         "area": "US"
       },
       "WY": {
-        "price": 5.915,
+        "price": 5.717,
         "area": "US"
       },
       "CA": {
-        "price": 5.915,
+        "price": 5.717,
         "area": "US"
       },
       "OR": {
-        "price": 5.915,
+        "price": 5.717,
         "area": "US"
       },
       "WA": {
-        "price": 5.915,
+        "price": 5.717,
         "area": "US"
       },
       "AK": {
-        "price": 5.915,
+        "price": 5.717,
         "area": "US"
       },
       "HI": {
-        "price": 5.915,
+        "price": 5.717,
         "area": "US"
       }
     },
