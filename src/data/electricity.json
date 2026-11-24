@@ -1,19 +1,19 @@
 {
-  "fetchedAt": "2026-11-18",
+  "fetchedAt": "2026-11-24",
   "monthly": {
-    "period": "2026-08",
-    "priorPeriod": "2025-08",
+    "period": "2026-09",
+    "priorPeriod": "2025-09",
     "source": "https://www.eia.gov/electricity/monthly/epm_table_grapher.php?t=epmt_5_6_a",
-    "released": "2026-10-23",
-    "nextRelease": "2026-11-24"
+    "released": "2026-11-24",
+    "nextRelease": "2026-12-23"
   },
   "annual": {
     "year": 2024,
     "source": "https://www.eia.gov/electricity/sales_revenue_price/xls/table_5A.xlsx"
   },
   "us": {
-    "price": 18.16,
-    "pricePrior": 17.57,
+    "price": 18.17,
+    "pricePrior": 18.05,
     "avgKwh": 863,
     "avgPriceAnnual": 16.48,
     "avgBillAnnual": 142.26
@@ -21,296 +21,296 @@
   "states": [
     {
       "code": "CT",
-      "price": 24.51,
-      "pricePrior": 30.17,
+      "price": 27.09,
+      "pricePrior": 30.41,
       "avgKwh": 695,
       "avgPriceAnnual": 28.75,
       "avgBillAnnual": 199.66
     },
     {
       "code": "ME",
-      "price": 32.11,
-      "pricePrior": 28.14,
+      "price": 31.29,
+      "pricePrior": 27.88,
       "avgKwh": 550,
       "avgPriceAnnual": 24.29,
       "avgBillAnnual": 133.6
     },
     {
       "code": "MA",
-      "price": 30.48,
-      "pricePrior": 30.55,
+      "price": 30.97,
+      "pricePrior": 30.31,
       "avgKwh": 570,
       "avgPriceAnnual": 29.35,
       "avgBillAnnual": 167.2
     },
     {
       "code": "NH",
-      "price": 27.64,
-      "pricePrior": 24.44,
+      "price": 29.17,
+      "pricePrior": 27.74,
       "avgKwh": 619,
       "avgPriceAnnual": 23.4,
       "avgBillAnnual": 144.87
     },
     {
       "code": "RI",
-      "price": 28.18,
-      "pricePrior": 26.53,
+      "price": 29.93,
+      "pricePrior": 28.33,
       "avgKwh": 567,
       "avgPriceAnnual": 28.65,
       "avgBillAnnual": 162.4
     },
     {
       "code": "VT",
-      "price": 23.84,
-      "pricePrior": 22.1,
+      "price": 24.83,
+      "pricePrior": 23.79,
       "avgKwh": 574,
       "avgPriceAnnual": 21.9,
       "avgBillAnnual": 125.66
     },
     {
       "code": "NJ",
-      "price": 24.61,
-      "pricePrior": 24.7,
+      "price": 24.64,
+      "pricePrior": 23.32,
       "avgKwh": 662,
       "avgPriceAnnual": 19.34,
       "avgBillAnnual": 128.13
     },
     {
       "code": "NY",
-      "price": 28.65,
-      "pricePrior": 26.64,
+      "price": 28.42,
+      "pricePrior": 27.28,
       "avgKwh": 571,
       "avgPriceAnnual": 24.43,
       "avgBillAnnual": 139.53
     },
     {
       "code": "PA",
-      "price": 21.77,
-      "pricePrior": 19.93,
+      "price": 22.2,
+      "pricePrior": 20.43,
       "avgKwh": 817,
       "avgPriceAnnual": 17.77,
       "avgBillAnnual": 145.17
     },
     {
       "code": "IL",
-      "price": 19.32,
-      "pricePrior": 18.03,
+      "price": 19.14,
+      "pricePrior": 19.01,
       "avgKwh": 693,
       "avgPriceAnnual": 15.87,
       "avgBillAnnual": 109.99
     },
     {
       "code": "IN",
-      "price": 17.02,
-      "pricePrior": 16.21,
+      "price": 17.05,
+      "pricePrior": 16.99,
       "avgKwh": 901,
       "avgPriceAnnual": 14.77,
       "avgBillAnnual": 133.06
     },
     {
       "code": "MI",
-      "price": 22.99,
-      "pricePrior": 20.73,
+      "price": 23.17,
+      "pricePrior": 21.22,
       "avgKwh": 618,
       "avgPriceAnnual": 19.3,
       "avgBillAnnual": 119.31
     },
     {
       "code": "OH",
-      "price": 19.38,
-      "pricePrior": 17.55,
+      "price": 19.09,
+      "pricePrior": 17.53,
       "avgKwh": 846,
       "avgPriceAnnual": 15.99,
       "avgBillAnnual": 135.16
     },
     {
       "code": "WI",
-      "price": 19.41,
-      "pricePrior": 18.44,
+      "price": 19.42,
+      "pricePrior": 18.63,
       "avgKwh": 645,
       "avgPriceAnnual": 17.18,
       "avgBillAnnual": 110.87
     },
     {
       "code": "IA",
-      "price": 17.06,
-      "pricePrior": 15.48,
+      "price": 14.99,
+      "pricePrior": 14.67,
       "avgKwh": 832,
       "avgPriceAnnual": 13.4,
       "avgBillAnnual": 111.54
     },
     {
       "code": "KS",
-      "price": 15.47,
-      "pricePrior": 14.65,
+      "price": 15.83,
+      "pricePrior": 15.06,
       "avgKwh": 876,
       "avgPriceAnnual": 14.15,
       "avgBillAnnual": 123.9
     },
     {
       "code": "MN",
-      "price": 17.2,
-      "pricePrior": 16.89,
+      "price": 17.37,
+      "pricePrior": 17.07,
       "avgKwh": 712,
       "avgPriceAnnual": 15.45,
       "avgBillAnnual": 110.06
     },
     {
       "code": "MO",
-      "price": 16.02,
-      "pricePrior": 15.32,
+      "price": 16.01,
+      "pricePrior": 15.62,
       "avgKwh": 1001,
       "avgPriceAnnual": 12.91,
       "avgBillAnnual": 129.18
     },
     {
       "code": "NE",
-      "price": 13.54,
-      "pricePrior": 12.8,
+      "price": 13.87,
+      "pricePrior": 13.46,
       "avgKwh": 956,
       "avgPriceAnnual": 11.53,
       "avgBillAnnual": 110.28
     },
     {
       "code": "ND",
-      "price": 13.31,
-      "pricePrior": 12.97,
+      "price": 14.29,
+      "pricePrior": 13.65,
       "avgKwh": 1029,
       "avgPriceAnnual": 11.51,
       "avgBillAnnual": 118.38
     },
     {
       "code": "SD",
-      "price": 15.15,
-      "pricePrior": 13.9,
+      "price": 16.31,
+      "pricePrior": 14.68,
       "avgKwh": 994,
       "avgPriceAnnual": 12.86,
       "avgBillAnnual": 127.81
     },
     {
       "code": "DE",
-      "price": 18.7,
-      "pricePrior": 16.85,
+      "price": 18.89,
+      "pricePrior": 18.14,
       "avgKwh": 911,
       "avgPriceAnnual": 16.57,
       "avgBillAnnual": 150.87
     },
     {
       "code": "DC",
-      "price": 25.98,
-      "pricePrior": 23.18,
+      "price": 25.82,
+      "pricePrior": 23.64,
       "avgKwh": 639,
       "avgPriceAnnual": 17.71,
       "avgBillAnnual": 113.23
     },
     {
       "code": "FL",
-      "price": 14.99,
-      "pricePrior": 15.33,
+      "price": 14.74,
+      "pricePrior": 15.77,
       "avgKwh": 1104,
       "avgPriceAnnual": 14.14,
       "avgBillAnnual": 156.09
     },
     {
       "code": "GA",
-      "price": 15.9,
-      "pricePrior": 15.55,
+      "price": 16.27,
+      "pricePrior": 15.28,
       "avgKwh": 1074,
       "avgPriceAnnual": 14.08,
       "avgBillAnnual": 151.25
     },
     {
       "code": "MD",
-      "price": 21.4,
-      "pricePrior": 19.89,
+      "price": 21.54,
+      "pricePrior": 21.1,
       "avgKwh": 929,
       "avgPriceAnnual": 17.86,
       "avgBillAnnual": 165.87
     },
     {
       "code": "NC",
-      "price": 14.95,
-      "pricePrior": 14.59,
+      "price": 15.41,
+      "pricePrior": 15.08,
       "avgKwh": 1015,
       "avgPriceAnnual": 14.13,
       "avgBillAnnual": 143.5
     },
     {
       "code": "SC",
-      "price": 15.76,
-      "pricePrior": 15.16,
+      "price": 16.5,
+      "pricePrior": 15.51,
       "avgKwh": 1050,
       "avgPriceAnnual": 14.23,
       "avgBillAnnual": 149.51
     },
     {
       "code": "VA",
-      "price": 17.64,
-      "pricePrior": 15.85,
+      "price": 17.74,
+      "pricePrior": 16.61,
       "avgKwh": 1032,
       "avgPriceAnnual": 14.41,
       "avgBillAnnual": 148.77
     },
     {
       "code": "WV",
-      "price": 16.31,
-      "pricePrior": 15.62,
+      "price": 16.23,
+      "pricePrior": 16.11,
       "avgKwh": 1027,
       "avgPriceAnnual": 15.07,
       "avgBillAnnual": 154.76
     },
     {
       "code": "AL",
-      "price": 16.33,
-      "pricePrior": 16.26,
+      "price": 16.64,
+      "pricePrior": 16.4,
       "avgKwh": 1143,
       "avgPriceAnnual": 15.18,
       "avgBillAnnual": 173.5
     },
     {
       "code": "KY",
-      "price": 13.8,
-      "pricePrior": 13.1,
+      "price": 13.54,
+      "pricePrior": 13.4,
       "avgKwh": 1047,
       "avgPriceAnnual": 12.79,
       "avgBillAnnual": 133.81
     },
     {
       "code": "MS",
-      "price": 14.43,
-      "pricePrior": 13.61,
+      "price": 14.47,
+      "pricePrior": 13.96,
       "avgKwh": 1156,
       "avgPriceAnnual": 13.39,
       "avgBillAnnual": 154.83
     },
     {
       "code": "TN",
-      "price": 13.42,
-      "pricePrior": 13.09,
+      "price": 13.29,
+      "pricePrior": 13.3,
       "avgKwh": 1154,
       "avgPriceAnnual": 12.42,
       "avgBillAnnual": 143.32
     },
     {
       "code": "AR",
-      "price": 14.37,
-      "pricePrior": 13.33,
+      "price": 14.54,
+      "pricePrior": 13.82,
       "avgKwh": 1048,
       "avgPriceAnnual": 12.32,
       "avgBillAnnual": 129.13
     },
     {
       "code": "LA",
-      "price": 12.87,
-      "pricePrior": 12.55,
+      "price": 13.33,
+      "pricePrior": 12.33,
       "avgKwh": 1202,
       "avgPriceAnnual": 11.73,
       "avgBillAnnual": 140.96
     },
     {
       "code": "OK",
-      "price": 14.82,
-      "pricePrior": 14.42,
+      "price": 15.22,
+      "pricePrior": 14.89,
       "avgKwh": 1079,
       "avgPriceAnnual": 12.24,
       "avgBillAnnual": 132.05
@@ -318,111 +318,111 @@
     {
       "code": "TX",
       "price": 15.91,
-      "pricePrior": 15.4,
+      "pricePrior": 15.77,
       "avgKwh": 1096,
       "avgPriceAnnual": 14.94,
       "avgBillAnnual": 163.72
     },
     {
       "code": "AZ",
-      "price": 15.05,
-      "pricePrior": 15.09,
+      "price": 14.92,
+      "pricePrior": 15.26,
       "avgKwh": 1075,
       "avgPriceAnnual": 14.91,
       "avgBillAnnual": 160.24
     },
     {
       "code": "CO",
-      "price": 17.17,
-      "pricePrior": 16.21,
+      "price": 17.88,
+      "pricePrior": 16.49,
       "avgKwh": 674,
       "avgPriceAnnual": 14.92,
       "avgBillAnnual": 100.57
     },
     {
       "code": "ID",
-      "price": 13.37,
-      "pricePrior": 12.08,
+      "price": 14.39,
+      "pricePrior": 12.5,
       "avgKwh": 944,
       "avgPriceAnnual": 11.52,
       "avgBillAnnual": 108.73
     },
     {
       "code": "MT",
-      "price": 15.57,
-      "pricePrior": 14.29,
+      "price": 15.69,
+      "pricePrior": 14.64,
       "avgKwh": 852,
       "avgPriceAnnual": 12.66,
       "avgBillAnnual": 107.91
     },
     {
       "code": "NV",
-      "price": 12.72,
-      "pricePrior": 12.54,
+      "price": 13.25,
+      "pricePrior": 13.28,
       "avgKwh": 930,
       "avgPriceAnnual": 15,
       "avgBillAnnual": 139.39
     },
     {
       "code": "NM",
-      "price": 16.51,
-      "pricePrior": 15.98,
+      "price": 16.96,
+      "pricePrior": 16.26,
       "avgKwh": 654,
       "avgPriceAnnual": 14.2,
       "avgBillAnnual": 92.88
     },
     {
       "code": "UT",
-      "price": 13.31,
-      "pricePrior": 13.62,
+      "price": 13.41,
+      "pricePrior": 14.03,
       "avgKwh": 774,
       "avgPriceAnnual": 12.22,
       "avgBillAnnual": 94.57
     },
     {
       "code": "WY",
-      "price": 14.43,
-      "pricePrior": 14.33,
+      "price": 14.96,
+      "pricePrior": 14.97,
       "avgKwh": 863,
       "avgPriceAnnual": 12.47,
       "avgBillAnnual": 107.65
     },
     {
       "code": "CA",
-      "price": 29.75,
-      "pricePrior": 30.92,
+      "price": 30.86,
+      "pricePrior": 31.89,
       "avgKwh": 503,
       "avgPriceAnnual": 31.97,
       "avgBillAnnual": 160.86
     },
     {
       "code": "OR",
-      "price": 15.92,
-      "pricePrior": 15.85,
+      "price": 15.73,
+      "pricePrior": 16.04,
       "avgKwh": 882,
       "avgPriceAnnual": 14.7,
       "avgBillAnnual": 129.62
     },
     {
       "code": "WA",
-      "price": 14.63,
-      "pricePrior": 13.65,
+      "price": 15,
+      "pricePrior": 13.8,
       "avgKwh": 955,
       "avgPriceAnnual": 11.9,
       "avgBillAnnual": 113.68
     },
     {
       "code": "AK",
-      "price": 29.41,
-      "pricePrior": 27.79,
+      "price": 28,
+      "pricePrior": 27.22,
       "avgKwh": 578,
       "avgPriceAnnual": 24.82,
       "avgBillAnnual": 143.54
     },
     {
       "code": "HI",
-      "price": 47.18,
-      "pricePrior": 38.53,
+      "price": 48.31,
+      "pricePrior": 39.53,
       "avgKwh": 495,
       "avgPriceAnnual": 42.86,
       "avgBillAnnual": 212.12
@@ -430,7 +430,6 @@
   ],
   "history": {
     "periods": [
-      "2024-09",
       "2024-10",
       "2024-11",
       "2024-12",
@@ -453,10 +452,10 @@
       "2026-05",
       "2026-06",
       "2026-07",
-      "2026-08"
+      "2026-08",
+      "2026-09"
     ],
     "us": [
-      16.82,
       17.09,
       16.85,
       16.27,
@@ -479,11 +478,11 @@
       18.44,
       18.35,
       18.31,
-      18.16
+      18.16,
+      18.17
     ],
     "byState": {
       "CT": [
-        33.05,
         30,
         29.15,
         28.12,
@@ -506,10 +505,10 @@
         27.37,
         24.32,
         24.16,
-        24.51
+        24.51,
+        27.09
       ],
       "ME": [
-        26.26,
         25.78,
         25.17,
         26.21,
@@ -532,10 +531,10 @@
         28.63,
         29.59,
         32.41,
-        32.11
+        32.11,
+        31.29
       ],
       "MA": [
-        29.26,
         29.25,
         30.22,
         31.17,
@@ -558,10 +557,10 @@
         28.82,
         29.61,
         30.49,
-        30.48
+        30.48,
+        30.97
       ],
       "NH": [
-        24.93,
         24.78,
         24.46,
         23.68,
@@ -584,10 +583,10 @@
         27.33,
         27.01,
         26.6,
-        27.64
+        27.64,
+        29.17
       ],
       "RI": [
-        28.71,
         27.76,
         35.61,
         25.4,
@@ -610,10 +609,10 @@
         29.46,
         29.23,
         28.29,
-        28.18
+        28.18,
+        29.93
       ],
       "VT": [
-        22.46,
         23.04,
         25.16,
         22.05,
@@ -636,10 +635,10 @@
         24.89,
         24.44,
         23.75,
-        23.84
+        23.84,
+        24.83
       ],
       "NJ": [
-        19.32,
         19.56,
         19.58,
         19.41,
@@ -662,10 +661,10 @@
         23.27,
         24.95,
         25.19,
-        24.61
+        24.61,
+        24.64
       ],
       "NY": [
-        25.05,
         25.05,
         24.74,
         24.41,
@@ -688,10 +687,10 @@
         29.93,
         29.49,
         29.89,
-        28.65
+        28.65,
+        28.42
       ],
       "PA": [
-        17.78,
         18.43,
         18.04,
         17.56,
@@ -714,10 +713,10 @@
         21.55,
         21.73,
         21.71,
-        21.77
+        21.77,
+        22.2
       ],
       "IL": [
-        15.8,
         16.48,
         17.06,
         15.96,
@@ -740,10 +739,10 @@
         23.85,
         19.89,
         19.22,
-        19.32
+        19.32,
+        19.14
       ],
       "IN": [
-        14.82,
         15.73,
         16.24,
         14.33,
@@ -766,10 +765,10 @@
         18.15,
         17.51,
         16.73,
-        17.02
+        17.02,
+        17.05
       ],
       "MI": [
-        20.12,
         19.4,
         18.84,
         18.42,
@@ -792,10 +791,10 @@
         22.01,
         22.99,
         23.05,
-        22.99
+        22.99,
+        23.17
       ],
       "OH": [
-        15.75,
         16.57,
         16.47,
         15.88,
@@ -818,10 +817,10 @@
         19.52,
         19.19,
         19.45,
-        19.38
+        19.38,
+        19.09
       ],
       "WI": [
-        17.73,
         17.16,
         16.93,
         16.26,
@@ -844,10 +843,10 @@
         19.74,
         19.56,
         19.06,
-        19.41
+        19.41,
+        19.42
       ],
       "IA": [
-        14.05,
         13.17,
         13.18,
         12.3,
@@ -870,10 +869,10 @@
         14.14,
         15.93,
         15.99,
-        17.06
+        17.06,
+        14.99
       ],
       "KS": [
-        14.69,
         14.34,
         14.67,
         13.8,
@@ -896,10 +895,10 @@
         15.13,
         15.71,
         15.27,
-        15.47
+        15.47,
+        15.83
       ],
       "MN": [
-        16.45,
         15.96,
         15.01,
         14.1,
@@ -922,10 +921,10 @@
         16.95,
         17.52,
         17.45,
-        17.2
+        17.2,
+        17.37
       ],
       "MO": [
-        14.62,
         12.4,
         12.53,
         11.57,
@@ -948,10 +947,10 @@
         13.68,
         16.22,
         16.09,
-        16.02
+        16.02,
+        16.01
       ],
       "NE": [
-        12.91,
         11.88,
         11.96,
         10.58,
@@ -974,10 +973,10 @@
         13.59,
         13.25,
         13.78,
-        13.54
+        13.54,
+        13.87
       ],
       "ND": [
-        12.85,
         12.08,
         11.31,
         10.23,
@@ -1000,10 +999,10 @@
         13.61,
         14.12,
         13.41,
-        13.31
+        13.31,
+        14.29
       ],
       "SD": [
-        13.84,
         13.66,
         13.27,
         12.27,
@@ -1026,10 +1025,10 @@
         15.73,
         15.36,
         15.37,
-        15.15
+        15.15,
+        16.31
       ],
       "DE": [
-        16.8,
         18.07,
         18.22,
         16.79,
@@ -1052,10 +1051,10 @@
         19.38,
         19.29,
         18.48,
-        18.7
+        18.7,
+        18.89
       ],
       "DC": [
-        18.03,
         18.59,
         18.93,
         18.79,
@@ -1078,10 +1077,10 @@
         25.4,
         24.39,
         25.21,
-        25.98
+        25.98,
+        25.82
       ],
       "FL": [
-        14.01,
         14.16,
         14.23,
         14.19,
@@ -1104,10 +1103,10 @@
         15.17,
         15.1,
         15.03,
-        14.99
+        14.99,
+        14.74
       ],
       "GA": [
-        13.63,
         13.92,
         14.23,
         13.46,
@@ -1130,10 +1129,10 @@
         15.84,
         16.36,
         16.27,
-        15.9
+        15.9,
+        16.27
       ],
       "MD": [
-        18.36,
         19.21,
         18.4,
         18.13,
@@ -1156,10 +1155,10 @@
         21.78,
         21.84,
         21.41,
-        21.4
+        21.4,
+        21.54
       ],
       "NC": [
-        14.87,
         15.23,
         14.86,
         13.51,
@@ -1182,10 +1181,10 @@
         15.09,
         14.74,
         15.16,
-        14.95
+        14.95,
+        15.41
       ],
       "SC": [
-        14.79,
         15.4,
         15.62,
         13.95,
@@ -1208,10 +1207,10 @@
         16.18,
         15.55,
         15.47,
-        15.76
+        15.76,
+        16.5
       ],
       "VA": [
-        15.24,
         14.79,
         14.73,
         14.37,
@@ -1234,10 +1233,10 @@
         17.61,
         17.22,
         17.55,
-        17.64
+        17.64,
+        17.74
       ],
       "WV": [
-        15.84,
         16.36,
         15.84,
         14.48,
@@ -1260,10 +1259,10 @@
         16.8,
         15.45,
         15.78,
-        16.31
+        16.31,
+        16.23
       ],
       "AL": [
-        15.45,
         15.63,
         15.57,
         14.97,
@@ -1286,10 +1285,10 @@
         16.77,
         16.4,
         16.4,
-        16.33
+        16.33,
+        16.64
       ],
       "KY": [
-        12.41,
         13.31,
         13.75,
         13.09,
@@ -1312,10 +1311,10 @@
         14.98,
         14.26,
         13.81,
-        13.8
+        13.8,
+        13.54
       ],
       "MS": [
-        13.15,
         13.69,
         14.17,
         13.57,
@@ -1338,10 +1337,10 @@
         16.16,
         14.88,
         14.54,
-        14.43
+        14.43,
+        14.47
       ],
       "TN": [
-        12.42,
         12.74,
         13.56,
         12.93,
@@ -1364,10 +1363,10 @@
         14.47,
         14.07,
         13.71,
-        13.42
+        13.42,
+        13.29
       ],
       "AR": [
-        12.83,
         12.69,
         12.64,
         11.77,
@@ -1390,10 +1389,10 @@
         14.36,
         14.12,
         14.33,
-        14.37
+        14.37,
+        14.54
       ],
       "LA": [
-        12.04,
         11.95,
         11.99,
         11.81,
@@ -1416,10 +1415,10 @@
         14.15,
         13.49,
         12.72,
-        12.87
+        12.87,
+        13.33
       ],
       "OK": [
-        13.81,
         13.87,
         12.87,
         11.67,
@@ -1442,10 +1441,10 @@
         13.38,
         14.33,
         14.35,
-        14.82
+        14.82,
+        15.22
       ],
       "TX": [
-        15.06,
         15.67,
         15.68,
         15.36,
@@ -1468,10 +1467,10 @@
         16.44,
         15.94,
         15.88,
+        15.91,
         15.91
       ],
       "AZ": [
-        14.91,
         14.98,
         15.11,
         15.14,
@@ -1494,10 +1493,10 @@
         15.23,
         15.18,
         15.38,
-        15.05
+        15.05,
+        14.92
       ],
       "CO": [
-        15.57,
         15.26,
         14.9,
         15.1,
@@ -1520,10 +1519,10 @@
         16.16,
         17.13,
         17,
-        17.17
+        17.17,
+        17.88
       ],
       "ID": [
-        12.36,
         12.2,
         11.28,
         10.95,
@@ -1546,10 +1545,10 @@
         12.35,
         14.37,
         13.73,
-        13.37
+        13.37,
+        14.39
       ],
       "MT": [
-        13.45,
         13.32,
         12.51,
         11.88,
@@ -1572,10 +1571,10 @@
         14.67,
         15.14,
         14.99,
-        15.57
+        15.57,
+        15.69
       ],
       "NV": [
-        14.03,
         14.6,
         15.25,
         14.87,
@@ -1598,10 +1597,10 @@
         13.6,
         13.11,
         12.77,
-        12.72
+        12.72,
+        13.25
       ],
       "NM": [
-        15.04,
         14.08,
         13.98,
         14.3,
@@ -1624,10 +1623,10 @@
         14.12,
         15.06,
         16.09,
-        16.51
+        16.51,
+        16.96
       ],
       "UT": [
-        13.6,
         12.82,
         12.2,
         12.27,
@@ -1650,10 +1649,10 @@
         12.96,
         13.37,
         13.12,
-        13.31
+        13.31,
+        13.41
       ],
       "WY": [
-        13.91,
         14.05,
         12.75,
         11.77,
@@ -1676,10 +1675,10 @@
         14.8,
         15.24,
         14.36,
-        14.43
+        14.43,
+        14.96
       ],
       "CA": [
-        31.83,
         32.45,
         30.18,
         30.62,
@@ -1702,10 +1701,10 @@
         33.25,
         34.74,
         33.61,
-        29.75
+        29.75,
+        30.86
       ],
       "OR": [
-        15.29,
         15.33,
         14.91,
         14.19,
@@ -1728,10 +1727,10 @@
         16.27,
         16.32,
         15.97,
-        15.92
+        15.92,
+        15.73
       ],
       "WA": [
-        12.39,
         12.48,
         12.37,
         11.85,
@@ -1754,10 +1753,10 @@
         14.95,
         14.91,
         14.71,
-        14.63
+        14.63,
+        15
       ],
       "AK": [
-        25.84,
         25.64,
         24.81,
         23.65,
@@ -1780,10 +1779,10 @@
         28.19,
         28.21,
         28.83,
-        29.41
+        29.41,
+        28
       ],
       "HI": [
-        40.88,
         41.42,
         39.66,
         42.39,
@@ -1806,7 +1805,8 @@
         52,
         52.72,
         48,
-        47.18
+        47.18,
+        48.31
       ]
     },
     "source": "https://www.eia.gov/opendata/browser/electricity/retail-sales"
