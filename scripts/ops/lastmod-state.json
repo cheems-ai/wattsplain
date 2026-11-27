@@ -4,216 +4,216 @@
     "lastmod": "2026-11-24"
   },
   "/electricity-rates/": {
-    "hash": "60c64c5f2cdea2d6",
-    "lastmod": "2026-11-26"
+    "hash": "6ded8766c71c3c9e",
+    "lastmod": "2026-11-27"
   },
   "/electricity-rates/price-changes/": {
-    "hash": "a10bf0bc73d3b829",
-    "lastmod": "2026-11-26"
+    "hash": "b9ce0526f343708f",
+    "lastmod": "2026-11-27"
   },
   "/electricity-rates/connecticut/": {
-    "hash": "c5eb4faacd006e64",
-    "lastmod": "2026-11-26"
+    "hash": "b8e7da946fd4c37c",
+    "lastmod": "2026-11-27"
   },
   "/electricity-rates/maine/": {
-    "hash": "8d163ca4c258fe40",
-    "lastmod": "2026-11-26"
+    "hash": "7b88ef3fbc0e97a9",
+    "lastmod": "2026-11-27"
   },
   "/electricity-rates/massachusetts/": {
-    "hash": "298ac06b714c3a75",
-    "lastmod": "2026-11-26"
+    "hash": "5f5eb4b567a693a5",
+    "lastmod": "2026-11-27"
   },
   "/electricity-rates/new-hampshire/": {
-    "hash": "09fbc0d64f1bb35c",
-    "lastmod": "2026-11-26"
+    "hash": "471d502757ca8314",
+    "lastmod": "2026-11-27"
   },
   "/electricity-rates/rhode-island/": {
-    "hash": "fbd354c5ee23b127",
-    "lastmod": "2026-11-26"
+    "hash": "51c8dd07ca1cc1e3",
+    "lastmod": "2026-11-27"
   },
   "/electricity-rates/vermont/": {
-    "hash": "4fa56b9c36bbc060",
-    "lastmod": "2026-11-26"
+    "hash": "b45b683e50c974ee",
+    "lastmod": "2026-11-27"
   },
   "/electricity-rates/new-jersey/": {
-    "hash": "84ad512a546ecb0a",
-    "lastmod": "2026-11-26"
+    "hash": "ed69eba36a922ee7",
+    "lastmod": "2026-11-27"
   },
   "/electricity-rates/new-york/": {
-    "hash": "258ffb1e6a6afb81",
-    "lastmod": "2026-11-26"
+    "hash": "492bdd64b7cb95c6",
+    "lastmod": "2026-11-27"
   },
   "/electricity-rates/pennsylvania/": {
-    "hash": "62796631d43614da",
-    "lastmod": "2026-11-26"
+    "hash": "19d1a4320caa61a7",
+    "lastmod": "2026-11-27"
   },
   "/electricity-rates/illinois/": {
-    "hash": "1c68686e385ffbfd",
-    "lastmod": "2026-11-26"
+    "hash": "0ae93e3084d011da",
+    "lastmod": "2026-11-27"
   },
   "/electricity-rates/indiana/": {
-    "hash": "711fa0ec61c5b6d7",
-    "lastmod": "2026-11-26"
+    "hash": "aeda3260c6d5362c",
+    "lastmod": "2026-11-27"
   },
   "/electricity-rates/michigan/": {
-    "hash": "63c3c674166f626d",
-    "lastmod": "2026-11-26"
+    "hash": "eb67fbc76c7c6ba1",
+    "lastmod": "2026-11-27"
   },
   "/electricity-rates/ohio/": {
-    "hash": "a8dab65dd1ee8768",
-    "lastmod": "2026-11-26"
+    "hash": "324556e215f45274",
+    "lastmod": "2026-11-27"
   },
   "/electricity-rates/wisconsin/": {
-    "hash": "22e3e5fa3196e1eb",
-    "lastmod": "2026-11-26"
+    "hash": "d54b66b4341e692c",
+    "lastmod": "2026-11-27"
   },
   "/electricity-rates/iowa/": {
-    "hash": "8420faa824f3ef57",
-    "lastmod": "2026-11-26"
+    "hash": "64e6d5f59a18f453",
+    "lastmod": "2026-11-27"
   },
   "/electricity-rates/kansas/": {
-    "hash": "266d49186a3eade2",
-    "lastmod": "2026-11-26"
+    "hash": "bc95a164356057d4",
+    "lastmod": "2026-11-27"
   },
   "/electricity-rates/minnesota/": {
-    "hash": "50e7a2fce3ca13f4",
-    "lastmod": "2026-11-26"
+    "hash": "5eaab81c1e9ef695",
+    "lastmod": "2026-11-27"
   },
   "/electricity-rates/missouri/": {
-    "hash": "8d603da6c1b0ea95",
-    "lastmod": "2026-11-26"
+    "hash": "0bbea49a0cbcb7c8",
+    "lastmod": "2026-11-27"
   },
   "/electricity-rates/nebraska/": {
-    "hash": "cdc694a09ca964c0",
-    "lastmod": "2026-11-26"
+    "hash": "be584265f1cd4a46",
+    "lastmod": "2026-11-27"
   },
   "/electricity-rates/north-dakota/": {
-    "hash": "a76312ba007a8f98",
-    "lastmod": "2026-11-26"
+    "hash": "1fbfd63bd575c2a4",
+    "lastmod": "2026-11-27"
   },
   "/electricity-rates/south-dakota/": {
-    "hash": "1c68187fedee3b5f",
-    "lastmod": "2026-11-26"
+    "hash": "db1927c1dfd121ec",
+    "lastmod": "2026-11-27"
   },
   "/electricity-rates/delaware/": {
-    "hash": "db08102963724171",
-    "lastmod": "2026-11-26"
+    "hash": "c37388d788066f9c",
+    "lastmod": "2026-11-27"
   },
   "/electricity-rates/district-of-columbia/": {
-    "hash": "cfc9840f313ca3d1",
-    "lastmod": "2026-11-26"
+    "hash": "0a03e7f75e9832ce",
+    "lastmod": "2026-11-27"
   },
   "/electricity-rates/florida/": {
-    "hash": "045093f8774d65f7",
-    "lastmod": "2026-11-26"
+    "hash": "82615cfcfe202c36",
+    "lastmod": "2026-11-27"
   },
   "/electricity-rates/georgia/": {
-    "hash": "4f650cd377d99e79",
-    "lastmod": "2026-11-26"
+    "hash": "1c13a217b9c23741",
+    "lastmod": "2026-11-27"
   },
   "/electricity-rates/maryland/": {
-    "hash": "f418534bd81371c1",
-    "lastmod": "2026-11-26"
+    "hash": "b629e1c44f16ee9c",
+    "lastmod": "2026-11-27"
   },
   "/electricity-rates/north-carolina/": {
-    "hash": "aeed2a89c71f925a",
-    "lastmod": "2026-11-26"
+    "hash": "23eb066628bbf38a",
+    "lastmod": "2026-11-27"
   },
   "/electricity-rates/south-carolina/": {
-    "hash": "5caebf318d848f43",
-    "lastmod": "2026-11-26"
+    "hash": "22668d1c59246ab5",
+    "lastmod": "2026-11-27"
   },
   "/electricity-rates/virginia/": {
-    "hash": "8615bec044c13691",
-    "lastmod": "2026-11-26"
+    "hash": "f3665faa6ca36401",
+    "lastmod": "2026-11-27"
   },
   "/electricity-rates/west-virginia/": {
-    "hash": "b0ff06db573db15d",
-    "lastmod": "2026-11-26"
+    "hash": "3a23976828ea2069",
+    "lastmod": "2026-11-27"
   },
   "/electricity-rates/alabama/": {
-    "hash": "78fa680dfad5797c",
-    "lastmod": "2026-11-26"
+    "hash": "aa32c21b86600c49",
+    "lastmod": "2026-11-27"
   },
   "/electricity-rates/kentucky/": {
-    "hash": "5f20c47b267ca0ff",
-    "lastmod": "2026-11-26"
+    "hash": "0d7d1e6c1e57831a",
+    "lastmod": "2026-11-27"
   },
   "/electricity-rates/mississippi/": {
-    "hash": "6515ec80befd85cc",
-    "lastmod": "2026-11-26"
+    "hash": "7da32f6dfb4007d3",
+    "lastmod": "2026-11-27"
   },
   "/electricity-rates/tennessee/": {
-    "hash": "e068b28e63f7de22",
-    "lastmod": "2026-11-26"
+    "hash": "b4c37d9b8b17b3aa",
+    "lastmod": "2026-11-27"
   },
   "/electricity-rates/arkansas/": {
-    "hash": "ba6369f5f7d590bc",
-    "lastmod": "2026-11-26"
+    "hash": "733413356f8e06a9",
+    "lastmod": "2026-11-27"
   },
   "/electricity-rates/louisiana/": {
-    "hash": "a7b93c0e5b230de4",
-    "lastmod": "2026-11-26"
+    "hash": "fe08965e94d76cc0",
+    "lastmod": "2026-11-27"
   },
   "/electricity-rates/oklahoma/": {
-    "hash": "fdbbf7979050c01d",
-    "lastmod": "2026-11-26"
+    "hash": "922c6db2b835da52",
+    "lastmod": "2026-11-27"
   },
   "/electricity-rates/texas/": {
-    "hash": "53e8b78268a21cd0",
-    "lastmod": "2026-11-26"
+    "hash": "d715127c8f4e8616",
+    "lastmod": "2026-11-27"
   },
   "/electricity-rates/arizona/": {
-    "hash": "48f2551714f1482f",
-    "lastmod": "2026-11-26"
+    "hash": "8db3717c0b72bb60",
+    "lastmod": "2026-11-27"
   },
   "/electricity-rates/colorado/": {
-    "hash": "5b189bfd28b7c1bc",
-    "lastmod": "2026-11-26"
+    "hash": "9434725f495b4597",
+    "lastmod": "2026-11-27"
   },
   "/electricity-rates/idaho/": {
-    "hash": "1a1eac25d2d967e2",
-    "lastmod": "2026-11-26"
+    "hash": "afc130e84cff22aa",
+    "lastmod": "2026-11-27"
   },
   "/electricity-rates/montana/": {
-    "hash": "2d98dd7acfb579f0",
-    "lastmod": "2026-11-26"
+    "hash": "c1d5fcddf0c697d2",
+    "lastmod": "2026-11-27"
   },
   "/electricity-rates/nevada/": {
-    "hash": "09d4dad24df8f2ab",
-    "lastmod": "2026-11-26"
+    "hash": "32a1b6da60513b48",
+    "lastmod": "2026-11-27"
   },
   "/electricity-rates/new-mexico/": {
-    "hash": "878ae804f04edfd0",
-    "lastmod": "2026-11-26"
+    "hash": "2c5715865b84deed",
+    "lastmod": "2026-11-27"
   },
   "/electricity-rates/utah/": {
-    "hash": "1a683a40416af6df",
-    "lastmod": "2026-11-26"
+    "hash": "8886e0024aeec203",
+    "lastmod": "2026-11-27"
   },
   "/electricity-rates/wyoming/": {
-    "hash": "d6b06e2a4f5fa5d7",
-    "lastmod": "2026-11-26"
+    "hash": "1ca26ea4c37c1868",
+    "lastmod": "2026-11-27"
   },
   "/electricity-rates/california/": {
-    "hash": "11f12ada5dfa7dfc",
-    "lastmod": "2026-11-26"
+    "hash": "79859344af1e40d9",
+    "lastmod": "2026-11-27"
   },
   "/electricity-rates/oregon/": {
-    "hash": "b88184baa57f649c",
-    "lastmod": "2026-11-26"
+    "hash": "5949ba040d01f9fa",
+    "lastmod": "2026-11-27"
   },
   "/electricity-rates/washington/": {
-    "hash": "4af6db6de22eefd6",
-    "lastmod": "2026-11-26"
+    "hash": "2f4c2880403dd655",
+    "lastmod": "2026-11-27"
   },
   "/electricity-rates/alaska/": {
-    "hash": "e334a246eeeae5fc",
-    "lastmod": "2026-11-26"
+    "hash": "7450b8645ffc3786",
+    "lastmod": "2026-11-27"
   },
   "/electricity-rates/hawaii/": {
-    "hash": "69c7c3c07ffb1859",
-    "lastmod": "2026-11-26"
+    "hash": "0d0f997bb9ff4b05",
+    "lastmod": "2026-11-27"
   },
   "/tools/": {
     "hash": "c066e39ef2479537",
@@ -240,28 +240,28 @@
     "lastmod": "2026-11-24"
   },
   "/tools/space-heater-vs-central-heat/": {
-    "hash": "ce332e771f9d9dbd",
-    "lastmod": "2026-11-26"
+    "hash": "25e8016f18363daf",
+    "lastmod": "2026-11-27"
   },
   "/tools/heating-cost-calculator/": {
-    "hash": "921aa2e032244b1a",
-    "lastmod": "2026-11-26"
+    "hash": "01581243b0049746",
+    "lastmod": "2026-11-27"
   },
   "/guides/why-is-my-electric-bill-so-high-in-winter/": {
-    "hash": "07a663664ef5a76b",
-    "lastmod": "2026-11-26"
+    "hash": "3bd50e81c83bfd85",
+    "lastmod": "2026-11-27"
   },
   "/guides/how-much-propane-to-heat-a-house/": {
-    "hash": "a2eddc5cacde4db1",
-    "lastmod": "2026-11-26"
+    "hash": "3e2b8fa7810f5dd9",
+    "lastmod": "2026-11-27"
   },
   "/about/": {
     "hash": "6e6a4a0f55ddbc25",
     "lastmod": "2026-10-30"
   },
   "/methodology/": {
-    "hash": "cd9493f8e5dacc05",
-    "lastmod": "2026-11-26"
+    "hash": "d337bac0c3d5f889",
+    "lastmod": "2026-11-27"
   },
   "/privacy/": {
     "hash": "e9d19a42e213e72d",
